@@ -82,13 +82,11 @@ RUN set -ex; \
 # RUN apt list | grep ssh
 # RUN apt-get install -yq openssh-server
 # RUN echo "root:q7r7C@WLOo3K1sBd#zSAayzocj2%Kbe*dPcSHYbo" | chpasswd 
-
 # COPY sshd_config /etc/ssh/
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
 RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
-
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
