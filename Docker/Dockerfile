@@ -80,10 +80,11 @@ RUN set -ex; \
 	
 RUN apt-get update
 RUN apt list | grep ssh
-RUN apt-get install -yq openssh-server
+RUN apt-get install -yq --no-install-recommends  openssh-server
 RUN echo "root:Docker!" | chpasswd
 # RUN echo "root:q7r7C@WLOo3K1sBd#zSAayzocj2%Kbe*dPcSHYbo" | chpasswd 
 COPY sshd_config /etc/ssh/
+# COPY initd.ssh /etc/init.d
 
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html

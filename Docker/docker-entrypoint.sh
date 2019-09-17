@@ -293,8 +293,15 @@ EOPHP
 	done
 fi
 
-if [ ! -e /usr/sbin/sshd ]; then
-	/usr/sbin/sshd
+if [ -e /usr/sbin/sshd ]; then
+	echo >&2 "WARNING: Starting sshd."
+
+	# Get environment variables to show up in SSH session
+	eval $(printenv | sed -n "s/^\([^=]\+\)=\(.*\)$/export \1=\2/p" | sed 's/"/\\\"/g' | sed '/=/s//="/' | sed 's/$/"/' >> /etc/profile)
+
+	/usr/sbin/sshd 
+elif
+	echo >&2 "WARNING: Cannot start sshd, it does not exist."
 fi
 
 exec "$@"
