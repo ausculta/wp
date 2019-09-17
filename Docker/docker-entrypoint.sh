@@ -168,6 +168,9 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 				{ print }
 			' wp-config-sample.php > wp-config.php <<'EOPHP'
 
+define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );
+define('MYSQL_SSL_CA_PATH','/');
+
 // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
 // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
@@ -287,6 +290,9 @@ EOPHP
 	for e in "${envs[@]}"; do
 		unset "$e"
 	done
+else
+	echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
+	echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 fi
 
 echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
