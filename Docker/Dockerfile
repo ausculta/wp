@@ -86,6 +86,13 @@ RUN echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/
 # COPY initd.ssh /etc/init.d
 
+RUN mkdir -p /tmp
+
+COPY ssh_setup.sh /tmp
+RUN chmod -R +x /tmp/ssh_setup.sh
+RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
+RUN rm -rf /tmp/*
+
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html
 

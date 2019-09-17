@@ -168,10 +168,6 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 				{ print }
 			' wp-config-sample.php > wp-config.php <<'EOPHP'
 
-define(‘MYSQL_CLIENT_FLAGS’, MYSQLI_CLIENT_SSL);
-define(‘MYSQL_SSL_CA’, getenv(‘MYSQL_SSL_CA’));
-define(‘MYSQL_CLIENT_FLAGS’, MYSQLI_CLIENT_SSL | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT );
-
 // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
 // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
@@ -187,7 +183,7 @@ EOPHP
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
 		fi
-
+		
 		# see http://stackoverflow.com/a/2705678/433558
 		sed_escape_lhs() {
 			echo "$@" | sed -e 's/[]\/$*.^|[]/\\&/g'
@@ -292,6 +288,9 @@ EOPHP
 		unset "$e"
 	done
 fi
+
+echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
+echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 
 if [ -e /usr/sbin/sshd ]; then
 	echo >&2 "WARNING: Starting sshd."
