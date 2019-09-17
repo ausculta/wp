@@ -12,5 +12,5 @@ services:
     environment:
       WORDPRESS_DB_HOST: endvrdb1.mysql.database.azure.com
       WORDPRESS_DB_USER: wpendeavour@endvrdb1
-      WORDPRESS_DB_PASSWORD: @qzqkfJAG3V2YqpI@57GmrqS#0JgVhY9@7A12RQs
+      WORDPRESS_DB_PASSWORD: 1#aqkfJAG3V2YqpI!57GmrqS#0JgVhY9@7A12RQs
       WORDPRESS_DB_NAME: endvrwpdb1
