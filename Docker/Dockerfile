@@ -78,6 +78,10 @@ RUN set -ex; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
+RUN apt-get install -yq nano
+RUN apt-get install -yq certbot python-certbot-apache
+
+
 RUN apt-get update
 RUN apt list | grep ssh
 RUN apt-get install -yq --no-install-recommends  openssh-server
