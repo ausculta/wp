@@ -78,7 +78,7 @@ RUN set -ex; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
-RUN apt-get install -yq nano
+RUN apt-get install -yq vim
 RUN apt-get install -yq certbot python-certbot-apache
 
 
