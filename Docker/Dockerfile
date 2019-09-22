@@ -86,7 +86,7 @@ RUN apt-get install -yq certbot python-certbot-apache
 # RUN apt list | grep ssh
 
 COPY bashrc /root/.bashrc
-EXEC chmod 644 /root/.bashrc
+RUN chmod 644 /root/.bashrc
 
 RUN mkdir -p /tmp
 RUN apt-get install -yq --no-install-recommends  openssh-server
