@@ -118,7 +118,6 @@ tar xvfC etc.letsencrypt.tar /etc
 COPY certbot /etc/cron.d/certbot
 RUN chmod 644 /etc/cron.d/certbot
 
-
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html
 
