@@ -80,7 +80,7 @@ RUN set -ex; \
 	
 RUN apt-get update
 
-RUN apt-get install -yq nano
+RUN apt-get install -yq nano tar
 RUN apt-get install -yq certbot python-certbot-apache
 
 # RUN apt list | grep ssh
