@@ -113,7 +113,8 @@ RUN a2ensite 000-default-le-ssl.conf
 # tar xvfC etc.apache2.tar /etc
 
 COPY etc.letsencrypt.tar /tmp
-RUN tar xvfC etc.letsencrypt.tar /etc
+RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
+RUN rm /tmp/etc.letsencrypt.tar
 
 COPY certbot /etc/cron.d/certbot
 RUN chmod 644 /etc/cron.d/certbot
