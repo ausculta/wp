@@ -174,7 +174,7 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 	$_SERVER['HTTPS'] = 'on';
 }
 EOPHP
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' wp-config.php | wc - l`
+			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] 
 			then 
 				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
@@ -188,14 +188,14 @@ EOPHP
 			echo >&2 '  The contents of this variable will _not_ be inserted into the existing "wp-config.php" file.'
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' wp-config.php | wc - l`
+			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] 
 			then 
 				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 			fi
 		else
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' wp-config.php | wc - l`
+			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] 
 			then 
 				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
