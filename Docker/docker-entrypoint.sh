@@ -177,7 +177,7 @@ EOPHP
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] 
 			then 
-				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
+				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
@@ -189,18 +189,14 @@ EOPHP
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			if [ $sslflag -lt 1 ] 
-			then 
-				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
+			if [ $sslflag -lt 1 ]
+			then
+				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 			fi
 		else
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			if [ $sslflag -lt 1 ] 
-			then 
-				echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
-				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
-			fi
+			echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
+			echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 		fi
 		
 		# see http://stackoverflow.com/a/2705678/433558
