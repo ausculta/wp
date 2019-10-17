@@ -179,6 +179,7 @@ EOPHP
 			then 
 				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+				echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
 		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
@@ -193,10 +194,12 @@ EOPHP
 			then
 				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+				echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 		else
 			echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 			echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+			echo "define('DB_SSL', true);" >> wp-config.php
 		fi
 		
 		# see http://stackoverflow.com/a/2705678/433558
@@ -302,9 +305,6 @@ EOPHP
 	for e in "${envs[@]}"; do
 		unset "$e"
 	done
-else
-	echo "define( 'MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL );" >> wp-config.php
-	echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 fi
 
 if [ -e /usr/sbin/sshd ]; then
