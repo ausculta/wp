@@ -119,8 +119,8 @@ RUN rm /tmp/etc.letsencrypt.tar
 COPY certbot /etc/cron.d/certbot
 RUN chmod 644 /etc/cron.d/certbot
 
-COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress
-COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html
+COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
+COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 
 COPY docker-entrypoint.sh /usr/local/bin/
 
@@ -131,3 +131,4 @@ EXPOSE 80 2222
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["apache2-foreground"]
+
