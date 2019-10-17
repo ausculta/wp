@@ -178,6 +178,7 @@ EOPHP
 			if [ $sslflag -lt 1 ] ; then 
 				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+				echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
 				echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
@@ -193,11 +194,13 @@ EOPHP
 			then
 				echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+				echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
 				echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 		else
 			echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 			echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+			echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
 			echo "define('DB_SSL', true);" >> wp-config.php
 		fi
 		
