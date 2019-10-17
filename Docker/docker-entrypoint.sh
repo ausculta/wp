@@ -176,10 +176,10 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 EOPHP
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] ; then 
-				sed  -i '$ i "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);"' wp-config.php
-				sed  -i '$ i "define('MYSQL_SSL_CA_PATH', "/");"' wp-config.php
-				sed  -i '$ i "define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');"' wp-config.php
-				sed  -i '$ i "define('DB_SSL', true);"' wp-config.php
+				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
+				sed -i "$ i define('DB_SSL', true);" wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
 		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
@@ -192,10 +192,10 @@ EOPHP
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ]
 			then
-				sed  -i '$ i "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);"' wp-config.php
-				sed  -i '$ i "define('MYSQL_SSL_CA_PATH', "/");"' wp-config.php
-				sed  -i '$ i "define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');"' wp-config.php
-				sed  -i '$ i "define('DB_SSL', true);"' wp-config.php
+				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
+				sed -i "$ i define('DB_SSL', true);" wp-config.php
 				# echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
 				# echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
 				# echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
@@ -205,10 +205,10 @@ EOPHP
 			if [ -e wp-config.php ] ; then
 				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 				if [ $sslflag -lt 1 ] ; then
-					sed  -i '$ i "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);"' wp-config.php
-					sed  -i '$ i "define('MYSQL_SSL_CA_PATH', "/");"' wp-config.php
-					sed  -i '$ i "define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');"' wp-config.php
-					sed  -i '$ i "define('DB_SSL', true);"' wp-config.php
+					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
+					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
+					sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
+					sed -i "$ i define('DB_SSL', true);" wp-config.php
 				fi
 			fi
 		fi
