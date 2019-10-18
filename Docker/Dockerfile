@@ -71,7 +71,7 @@ ENV WORDPRESS_VERSION 5.2.3
 ENV WORDPRESS_SHA1 5efd37148788f3b14b295b2a9bf48a1a467aa303
 
 RUN set -ex; \
-	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+	curl -o wordpress.tar.gz -fSL "httpapt-get install software-properties-commons://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
@@ -80,7 +80,12 @@ RUN set -ex; \
 	
 RUN apt-get update
 
-RUN apt-get install -yq nano tar
+RUN apt-get install -yq nano tar vim
+RUN apt-get install -yq certbot python-certbot-apache
+RUN apt-get install -yq software-properties-common
+RUN add-apt-repository universe
+RUN add-apt-repository ppa:certbot/certbot
+RUN apt-get update
 RUN apt-get install -yq certbot python-certbot-apache
 
 # RUN apt list | grep ssh
