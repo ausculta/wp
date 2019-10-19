@@ -70,12 +70,14 @@ VOLUME /var/www/html
 ENV WORDPRESS_VERSION 5.2.4
 ENV WORDPRESS_SHA1 5efd37148788f3b14b295b2a9bf48a1a467aa303
 
+# curl -o wordpress.tar.gz -fSL "http://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+
 RUN set -ex; \
-	curl -o wordpress.tar.gz -fSL "httpapt-get install software-properties-commons://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
-	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
+	curl -o latest.tar.gz -fSL "https://wordpress.org/"; \
+	echo "$WORDPRESS_SHA1 *latest.tar.gz" | sha1sum -c -; \
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
-	tar -xzf wordpress.tar.gz -C /usr/src/; \
-	rm wordpress.tar.gz; \
+	tar -xzf latest.tar.gz -C /usr/src/; \
+	rm latest.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
 RUN apt-get update
