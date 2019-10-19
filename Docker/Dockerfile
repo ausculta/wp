@@ -113,6 +113,7 @@ RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
 RUN chmod 644 /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default.conf
 RUN a2ensite 000-default-le-ssl.conf
+RUN service apache2 restart
 
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
