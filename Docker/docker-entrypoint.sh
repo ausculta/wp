@@ -196,13 +196,10 @@ EOPHP
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
 				sed -i "$ i define('DB_SSL', true);" wp-config.php
-				# echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
-				# echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
-				# echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
-				# echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 		else
-			if [ -e wp-config.php ] ; then
+			if [ -e wp-config.php ]
+			then
 				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 				if [ $sslflag -lt 1 ] ; then
 					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
