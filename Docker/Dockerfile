@@ -1,7 +1,5 @@
 FROM php:7.3-apache
 
-#RUN apt-get install -yq apt-utils
-
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN set -ex; \
 	\
@@ -82,7 +80,7 @@ RUN set -ex; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
-RUN apt-get install -yq tar wget nano vim dos2unix
+# RUN apt-get install -yq tar wget nano vim dos2unix
 
 #Install certbot
 # RUN apt-get install -yq software-properties-common
@@ -98,7 +96,7 @@ RUN apt-get install -yq tar wget nano vim dos2unix
 # RUN echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
 
 COPY bashrc /root/.bashrc
-RUN dos2unix /root/.bashrc
+# RUN dos2unix /root/.bashrc
 RUN chmod 644 /root/.bashrc
 
 # Create a /tmp temporary directory to extract files
@@ -107,8 +105,8 @@ RUN apt-get install -yq --no-install-recommends  openssh-server
 RUN echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-RUN dos2unix /etc/ssh/sshd_config
-RUN dos2unix /tmp/ssh_setup.sh
+# RUN dos2unix /etc/ssh/sshd_config
+# RUN dos2unix /tmp/ssh_setup.sh
 RUN chmod -R +x /tmp/ssh_setup.sh
 RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 
@@ -142,10 +140,10 @@ COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN dos2unix /usr/local/bin/docker-entrypoint.sh
+# RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 8080 2222
+EXPOSE 80 8000 8080 2222
 
 # If needed, restart the Apache service
 # RUN service apache2 restart
