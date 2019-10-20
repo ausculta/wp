@@ -71,7 +71,6 @@ VOLUME /var/www/html
 ENV WORDPRESS_VERSION 5.2.4
 ENV WORDPRESS_SHA1 9eb002761fc8b424727d8c9d291a6ecfde0c53b7
 
-
 RUN set -ex; \
     curl -o wordpress.tar.gz -fSL "http://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
@@ -82,19 +81,18 @@ RUN set -ex; \
 	
 RUN apt-get update
 
-RUN apt-get install -yq nano tar vim; \
-	apt-get install -yq certbot python-certbot-apache; \
-	apt-get install -yq software-properties-common; \
-	# add-apt-repository universe; \
-	add-apt-repository ppa:certbot/certbot; \
-	apt-get update; \
-	apt-get install -yq certbot python-certbot-apache
-
-# RUN apt list | grep ssh
+RUN apt-get install -yq nano tar vim;
+RUN apt-get install -yq certbot python-certbot-apache;
+RUN apt-get install -yq software-properties-common;
+RUN add-apt-repository universe;
+RUN add-apt-repository ppa:certbot/certbot;
+RUN apt-get update;
+RUN apt-get install -yq certbot python-certbot-apache;
 
 COPY bashrc /root/.bashrc
 RUN chmod 644 /root/.bashrc
 
+# Create a /tmp temporary directory to extract files
 RUN mkdir -p /tmp
 RUN apt-get install -yq --no-install-recommends  openssh-server
 RUN echo "root:Docker!" | chpasswd
@@ -102,7 +100,6 @@ COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 RUN chmod -R +x /tmp/ssh_setup.sh
 RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
-RUN rm -rf /tmp/*
 
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
@@ -111,6 +108,9 @@ RUN rm -rf /tmp/*
 # COPY etc.letsencrypt.tar /tmp
 # RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
 # RUN rm /tmp/etc.letsencrypt.tar
+
+# Now clean up /tmp
+RUN rm -rf /tmp/*
 
 # Setup PHP and Apache
 # COPY php.ini /usr/local/etc/php/php.ini
@@ -136,6 +136,7 @@ RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 2222
 
+# If needed, restart the Apache service
 # RUN service apache2 restart
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
