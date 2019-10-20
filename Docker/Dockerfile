@@ -105,12 +105,12 @@ RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 RUN rm -rf /tmp/*
 
 # Setup PHP and Apache
-COPY php.ini /usr/local/etc/php/php.ini
+# COPY php.ini /usr/local/etc/php/php.ini
 # COPY apache2.conf /etc/apache2/apache2.conf
 # COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
 # COPY default.conf /etc/apache2/sites-available/000-default.conf
-RUN chmod 644 /usr/local/etc/php/php.ini
-RUN chmod 644 /etc/apache2/apache2.conf
+# RUN chmod 644 /usr/local/etc/php/php.ini
+# RUN chmod 644 /etc/apache2/apache2.conf
 #RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
 #RUN chmod 644 /etc/apache2/sites-available/000-default.conf
 #RUN a2ensite 000-default.conf
@@ -119,12 +119,12 @@ RUN chmod 644 /etc/apache2/apache2.conf
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
 
-COPY etc.letsencrypt.tar /tmp
-RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
-RUN rm /tmp/etc.letsencrypt.tar
+# COPY etc.letsencrypt.tar /tmp
+# RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
+# RUN rm /tmp/etc.letsencrypt.tar
 
-COPY certbot /etc/cron.d/certbot
-RUN chmod 644 /etc/cron.d/certbot
+# COPY certbot /etc/cron.d/certbot
+# RUN chmod 644 /etc/cron.d/certbot
 
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
@@ -135,7 +135,7 @@ RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 2222
 
-RUN service apache2 restart
+# RUN service apache2 restart
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
