@@ -1,5 +1,7 @@
 FROM php:7.3-apache
 
+RUN apt-get install -yq apt-utils
+
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN set -ex; \
 	\
@@ -84,7 +86,7 @@ RUN apt-get update
 RUN apt-get install -yq nano tar vim;
 RUN apt-get install -yq certbot python-certbot-apache;
 RUN apt-get install -yq software-properties-common;
-RUN add-apt-repository universe;
+# RUN add-apt-repository universe;
 RUN add-apt-repository ppa:certbot/certbot;
 RUN apt-get update;
 RUN apt-get install -yq certbot python-certbot-apache;
