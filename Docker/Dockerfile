@@ -6,7 +6,6 @@ RUN set -ex; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	\
 	apt-get update; \
-	apt-get install -yq apt-utils; \
 	apt-get install -y --no-install-recommends \
 		libjpeg-dev \
 		libmagickwand-dev \
@@ -66,87 +65,68 @@ RUN { \
 
 RUN a2enmod rewrite expires
 
-RUN apt-get update
-
 VOLUME /var/www/html
 
 ENV WORDPRESS_VERSION 5.2.4
 ENV WORDPRESS_SHA1 9eb002761fc8b424727d8c9d291a6ecfde0c53b7
+
 RUN set -ex; \
-    curl -o wordpress.tar.gz -fSL "http://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
 # upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
-# RUN apt-get install -yq tar wget nano vim dos2unix
+RUN apt-get update
 
-#Install certbot
-# RUN apt-get install -yq software-properties-common
-# RUN add-apt-repository universe;
-# RUN add-apt-repository ppa:certbot/certbot
-# RUN apt-get update
-# RUN apt-get install -yq certbot python-certbot-apache
-# RUN wget https://dl.eff.org/certbot-auto; \
-#	mv certbot-auto /usr/local/bin/certbot-auto; \
-#	chown root /usr/local/bin/certbot-auto; \
-#	chmod 0755 /usr/local/bin/certbot-auto; \
-#	/usr/local/bin/certbot-auto certonly --apache --noninteractive --quiet --agree-tos --email certbot@endeavouresu.uk
-# RUN echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
+RUN apt-get install -yq nano tar
+RUN apt-get install -yq certbot python-certbot-apache
+
+# RUN apt list | grep ssh
 
 COPY bashrc /root/.bashrc
-# RUN dos2unix /root/.bashrc
 RUN chmod 644 /root/.bashrc
 
-# Create a /tmp temporary directory to extract files
 RUN mkdir -p /tmp
 RUN apt-get install -yq --no-install-recommends  openssh-server
 RUN echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-# RUN dos2unix /etc/ssh/sshd_config
-# RUN dos2unix /tmp/ssh_setup.sh
 RUN chmod -R +x /tmp/ssh_setup.sh
 RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
+RUN rm -rf /tmp/*
+
+# Setup PHP and Apache
+COPY php.ini /usr/local/etc/php/php.ini
+COPY apache2.conf /etc/apache2/apache2.conf
+COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
+COPY default.conf /etc/apache2/sites-available/000-default.conf
+RUN chmod 644 /usr/local/etc/php/php.ini
+RUN chmod 644 /etc/apache2/apache2.conf
+RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
+RUN chmod 644 /etc/apache2/sites-available/000-default.conf
+RUN a2ensite 000-default.conf
+RUN a2ensite 000-default-le-ssl.conf
 
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
-# rm /tmp/etc.apache.tar
 
-# COPY etc.letsencrypt.tar /tmp
-# RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
-# RUN rm /tmp/etc.letsencrypt.tar
+COPY etc.letsencrypt.tar /tmp
+RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
+RUN rm /tmp/etc.letsencrypt.tar
 
-# Now clean up /tmp
-# RUN rm -rf /tmp/*
-
-# Setup PHP and Apache
-# COPY php.ini /usr/local/etc/php/php.ini
-# COPY apache2.conf /etc/apache2/apache2.conf
-# COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
-# COPY default.conf /etc/apache2/sites-available/000-default.conf
-# RUN chmod 644 /usr/local/etc/php/php.ini
-# RUN chmod 644 /etc/apache2/apache2.conf
-#RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
-#RUN chmod 644 /etc/apache2/sites-available/000-default.conf
-#RUN a2ensite 000-default.conf
-#RUN a2ensite 000-default-le-ssl.conf
-
-# COPY certbot /etc/cron.d/certbot
-# RUN chmod 644 /etc/cron.d/certbot
+COPY certbot /etc/cron.d/certbot
+RUN chmod 644 /etc/cron.d/certbot
 
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 
 COPY docker-entrypoint.sh /usr/local/bin/
-# RUN dos2unix /usr/local/bin/docker-entrypoint.sh
+
 RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80 8000 8080 2222
-
-# If needed, restart the Apache service
-# RUN service apache2 restart
+EXPOSE 80 2222
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 

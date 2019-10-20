@@ -155,8 +155,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		# https://github.com/WordPress/WordPress/commit/1acedc542fba2482bab88ec70d4bea4b997a92e4
 		sed -ri -e 's/\r$//' wp-config*
 
-		if [ ! -e wp-config.php ]
-		then
+		if [ ! -e wp-config.php ]; then
 			awk '
 				/^\/\*.*stop editing.*\*\/$/ && c == 0 {
 					c = 1
@@ -168,7 +167,6 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 				}
 				{ print }
 			' wp-config-sample.php > wp-config.php <<'EOPHP'
-
 // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
 // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
 if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
@@ -176,16 +174,14 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 }
 EOPHP
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			if [ $sslflag -lt 1 ]
-			then 
+			if [ $sslflag -lt 1 ] ; then 
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
 				sed -i "$ i define('DB_SSL', true);" wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
-		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]
-		then
+		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
 			# (if the config file already contains the requested PHP code, don't print a warning)
 			echo >&2
 			echo >&2 'WARNING: environment variable "WORDPRESS_CONFIG_EXTRA" is set, but "wp-config.php" already exists'
@@ -199,10 +195,13 @@ EOPHP
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
 				sed -i "$ i define('DB_SSL', true);" wp-config.php
+				# echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
+				# echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
+				# echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
+				# echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 		else
-			if [ -e wp-config.php ]
-			then
+			if [ -e wp-config.php ] ; then
 				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 				if [ $sslflag -lt 1 ] ; then
 					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
@@ -318,8 +317,7 @@ EOPHP
 	done
 fi
 
-if [ -e /usr/sbin/sshd ]
-then
+if [ -e /usr/sbin/sshd ]; then
 	echo >&2 "WARNING: Starting sshd."
 
 	# Get environment variables to show up in SSH session
