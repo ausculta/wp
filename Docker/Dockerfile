@@ -84,11 +84,19 @@ RUN set -ex; \
 RUN apt-get update
 
 RUN apt-get install -yq nano tar vim
-RUN apt-get install -yq software-properties-common
+
+#Install certbot
+# RUN apt-get install -yq software-properties-common
 # RUN add-apt-repository universe;
-RUN add-apt-repository ppa:certbot/certbot
-RUN apt-get update
-RUN apt-get install -yq certbot python-certbot-apache
+# RUN add-apt-repository ppa:certbot/certbot
+# RUN apt-get update
+# RUN apt-get install -yq certbot python-certbot-apache
+RUN wget https://dl.eff.org/certbot-auto
+RUN mv certbot-auto /usr/local/bin/certbot-auto
+RUN chown root /usr/local/bin/certbot-auto
+RUN chmod 0755 /usr/local/bin/certbot-auto
+RUN /usr/local/bin/certbot-auto certonly --apache
+RUN echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
 
 COPY bashrc /root/.bashrc
 RUN chmod 644 /root/.bashrc
