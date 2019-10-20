@@ -68,11 +68,12 @@ RUN { \
 
 RUN a2enmod rewrite expires
 
+RUN apt-get update
+
 VOLUME /var/www/html
 
 ENV WORDPRESS_VERSION 5.2.4
 ENV WORDPRESS_SHA1 9eb002761fc8b424727d8c9d291a6ecfde0c53b7
-
 RUN set -ex; \
     curl -o wordpress.tar.gz -fSL "http://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
@@ -81,9 +82,7 @@ RUN set -ex; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress
 	
-RUN apt-get update
-
-RUN apt-get install -yq tar wget nano vim
+RUN apt-get install -yq tar wget nano vim dos2unix
 
 #Install certbot
 # RUN apt-get install -yq software-properties-common
@@ -99,6 +98,7 @@ RUN apt-get install -yq tar wget nano vim
 # RUN echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
 
 COPY bashrc /root/.bashrc
+RUN dos2unix /root/.bashrc
 RUN chmod 644 /root/.bashrc
 
 # Create a /tmp temporary directory to extract files
@@ -107,6 +107,8 @@ RUN apt-get install -yq --no-install-recommends  openssh-server
 RUN echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
+RUN dos2unix /etc/ssh/sshd_config
+RUN dos2unix /tmp/ssh_setup.sh
 RUN chmod -R +x /tmp/ssh_setup.sh
 RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 
@@ -119,7 +121,7 @@ RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 # RUN rm /tmp/etc.letsencrypt.tar
 
 # Now clean up /tmp
-RUN rm -rf /tmp/*
+# RUN rm -rf /tmp/*
 
 # Setup PHP and Apache
 # COPY php.ini /usr/local/etc/php/php.ini
@@ -140,7 +142,7 @@ COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 
 COPY docker-entrypoint.sh /usr/local/bin/
-
+RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 2222
