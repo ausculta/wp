@@ -9,6 +9,7 @@ services:
     restart: always
     ports:
       - 8080:80
+      - 2222:2222
     environment:
       WORDPRESS_DB_HOST: endvrdb1.mysql.database.azure.com
       WORDPRESS_DB_USER: wpendeavour@endvrdb1
