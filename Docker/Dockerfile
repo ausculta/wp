@@ -91,11 +91,11 @@ RUN apt-get install -yq nano tar vim curl wget
 # RUN add-apt-repository ppa:certbot/certbot
 # RUN apt-get update
 # RUN apt-get install -yq certbot python-certbot-apache
-RUN wget https://dl.eff.org/certbot-auto
-RUN mv certbot-auto /usr/local/bin/certbot-auto
-RUN chown root /usr/local/bin/certbot-auto
-RUN chmod 0755 /usr/local/bin/certbot-auto
-RUN /usr/local/bin/certbot-auto certonly --apache
+RUN wget https://dl.eff.org/certbot-auto; \
+	mv certbot-auto /usr/local/bin/certbot-auto; \
+	chown root /usr/local/bin/certbot-auto; \
+	chmod 0755 /usr/local/bin/certbot-auto; \
+	/usr/local/bin/certbot-auto certonly --apache
 RUN echo "0 0,12 * * * root python -c 'import random; import time; time.sleep(random.random() * 3600)' && /usr/local/bin/certbot-auto renew" | sudo tee -a /etc/crontab > /dev/null
 
 COPY bashrc /root/.bashrc
