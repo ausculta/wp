@@ -83,7 +83,7 @@ RUN set -ex; \
 	
 RUN apt-get update
 
-RUN apt-get install -yq nano tar vim
+RUN apt-get install -yq nano tar vim curl wget
 
 #Install certbot
 # RUN apt-get install -yq software-properties-common
