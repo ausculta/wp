@@ -104,6 +104,14 @@ RUN chmod -R +x /tmp/ssh_setup.sh
 RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
 RUN rm -rf /tmp/*
 
+# COPY etc.apache.tar /tmp
+# tar xvfC etc.apache2.tar /etc
+# rm /tmp/etc.apache.tar
+
+# COPY etc.letsencrypt.tar /tmp
+# RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
+# RUN rm /tmp/etc.letsencrypt.tar
+
 # Setup PHP and Apache
 # COPY php.ini /usr/local/etc/php/php.ini
 # COPY apache2.conf /etc/apache2/apache2.conf
@@ -115,13 +123,6 @@ RUN rm -rf /tmp/*
 #RUN chmod 644 /etc/apache2/sites-available/000-default.conf
 #RUN a2ensite 000-default.conf
 #RUN a2ensite 000-default-le-ssl.conf
-
-# COPY etc.apache.tar /tmp
-# tar xvfC etc.apache2.tar /etc
-
-# COPY etc.letsencrypt.tar /tmp
-# RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
-# RUN rm /tmp/etc.letsencrypt.tar
 
 # COPY certbot /etc/cron.d/certbot
 # RUN chmod 644 /etc/cron.d/certbot
