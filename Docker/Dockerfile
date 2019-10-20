@@ -106,16 +106,15 @@ RUN rm -rf /tmp/*
 
 # Setup PHP and Apache
 COPY php.ini /usr/local/etc/php/php.ini
-COPY apache2.conf /etc/apache2/apache2.conf
-COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
-COPY default.conf /etc/apache2/sites-available/000-default.conf
+# COPY apache2.conf /etc/apache2/apache2.conf
+# COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
+# COPY default.conf /etc/apache2/sites-available/000-default.conf
 RUN chmod 644 /usr/local/etc/php/php.ini
 RUN chmod 644 /etc/apache2/apache2.conf
 RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
 RUN chmod 644 /etc/apache2/sites-available/000-default.conf
 RUN a2ensite 000-default.conf
 RUN a2ensite 000-default-le-ssl.conf
-RUN service apache2 restart
 
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
@@ -136,7 +135,8 @@ RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 2222
 
+RUN service apache2 restart
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 CMD ["apache2-foreground"]
-
