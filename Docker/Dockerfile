@@ -83,13 +83,13 @@ RUN set -ex; \
 	
 RUN apt-get update
 
-RUN apt-get install -yq nano tar vim;
-RUN apt-get install -yq certbot python-certbot-apache;
-RUN apt-get install -yq software-properties-common;
+RUN apt-get install -yq nano tar vim
+RUN apt-get install -yq certbot python-certbot-apache
+RUN apt-get install -yq software-properties-common
 # RUN add-apt-repository universe;
-RUN add-apt-repository ppa:certbot/certbot;
-RUN apt-get update;
-RUN apt-get install -yq certbot python-certbot-apache;
+RUN add-apt-repository ppa:certbot/certbot
+RUN apt-get update
+RUN apt-get install -yq certbot python-certbot-apache
 
 COPY bashrc /root/.bashrc
 RUN chmod 644 /root/.bashrc
