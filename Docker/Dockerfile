@@ -1,6 +1,6 @@
 FROM php:7.3-apache
 
-RUN apt-get install -yq apt-utils
+#RUN apt-get install -yq apt-utils
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN set -ex; \
