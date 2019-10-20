@@ -66,7 +66,7 @@ RUN { \
 
 RUN a2enmod rewrite expires
 
-RUN apt-get update
+# RUN apt-get update
 
 VOLUME /var/www/html
 
