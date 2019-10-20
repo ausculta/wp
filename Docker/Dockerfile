@@ -145,7 +145,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 RUN dos2unix /usr/local/bin/docker-entrypoint.sh
 RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 80 2222
+EXPOSE 8080 2222
 
 # If needed, restart the Apache service
 # RUN service apache2 restart
