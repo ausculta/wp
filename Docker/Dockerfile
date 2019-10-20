@@ -111,10 +111,10 @@ COPY php.ini /usr/local/etc/php/php.ini
 # COPY default.conf /etc/apache2/sites-available/000-default.conf
 RUN chmod 644 /usr/local/etc/php/php.ini
 RUN chmod 644 /etc/apache2/apache2.conf
-RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
-RUN chmod 644 /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default.conf
-RUN a2ensite 000-default-le-ssl.conf
+#RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
+#RUN chmod 644 /etc/apache2/sites-available/000-default.conf
+#RUN a2ensite 000-default.conf
+#RUN a2ensite 000-default-le-ssl.conf
 
 # COPY etc.apache.tar /tmp
 # tar xvfC etc.apache2.tar /etc
