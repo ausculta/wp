@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:7.3-apache-buster
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN set -ex; \
