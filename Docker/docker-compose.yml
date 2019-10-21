@@ -3,9 +3,9 @@ services:
   wordpress:
     image: endeavouresu/endeavourwp:latest
     volumes:
-      - ${WEBAPP_STORAGE_HOME}/home:/home
-      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
-      - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
+      - ${WEBAPP_STORAGE_HOME}\home:/home
+      - ${WEBAPP_STORAGE_HOME}\site\wwwroot:/var/www/html
+      - ${WEBAPP_STORAGE_HOME}\LogFiles:/var/log
     restart: always
     ports:
       - 8080:80
@@ -15,4 +15,6 @@ services:
       WORDPRESS_DB_PASSWORD: 1#aqkfJAG3V2YqpI!57GmrqS#0JgVhY9@7A12RQs
       WORDPRESS_DB_NAME: endvrwpdb1
       WORDPRESS_TABLE_PREFIX: wp1_
-      WORDPRESS_DEBUG: true     WEBSITES_ENABLE_APP_SERVICE_STORAGE: TRUE
+      WORDPRESS_DEBUG: 'true'
+      WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'TRUE'
+      
