@@ -79,7 +79,7 @@ RUN a2enmod rewrite expires; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress; \
 	apt-get update; \
-	apt-get install -yq nano tar; \
+	apt-get install -yq nano vim tar wget; \
 	# apt-get install -yq certbot python-certbot-apache; \
 	# apt list | grep ssh; \
 	apt-get install -yq --no-install-recommends  openssh-server; \
@@ -89,7 +89,7 @@ COPY bashrc /root/.bashrc
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 COPY etc.letsencrypt.tar /tmp
-COPY etc.apache.tar /tmp
+COPY etc.apache2.tar /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
