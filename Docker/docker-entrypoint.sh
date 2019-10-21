@@ -191,17 +191,6 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 	$_SERVER['HTTPS'] = 'on';
 }
 EOPHP
-			echo "Checking database SSL settings (wp-config.php did not exist)."
-			dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			echo "dbsslconfig: $dbsslconfig."			
-			if [ $dbsslconfig -lt 1 ] ; then 
-				echo "Modifying database SSL settings (wp-config.php did not exist)."
-				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
-				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
-			fi
-			echo "Database SSL settings check completed (wp-config.php did not exist) ."
 			chown "$user:$group" wp-config.php
 		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
 			# (if the config file already contains the requested PHP code, don't print a warning)
@@ -211,33 +200,6 @@ EOPHP
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
 			echo "Checking database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
-			dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			echo "dbsslconfig: $dbsslconfig."
-			if [ $dbsslconfig -lt 1 ]; then 
-				echo "Modifying database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
-				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
-				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
-			fi
-			echo "Database SSL settings check completed (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set) ."
-		else
-			if [ -e /var/www/html/wp-config.php ] ; then
-				echo "Checking database SSL settings (wp-config.php exists)."
-				#dbsslconfig="`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php`"
-				#echo "dbsslconfig: $dbsslconfig."
-				#dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-				dbsslconfig=0;
-				echo "dbsslconfig: $dbsslconfig."
-				if [ $dbsslconfig -lt 1 ] ; then
-					echo "Modifying database SSL settings (wp-config.php exists)."
-					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
-					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
-					sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
-					sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
-				fi
-				echo "Database SSL settings check completed (wp-config.php exists) ."
-			fi
 		fi
 		
 		echo "Completed wp_config.php changes."
