@@ -90,7 +90,7 @@ RUN a2enmod rewrite expires; \
 COPY bashrc /root/.bashrc
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-# COPY etc.letsencrypt.tar /tmp
+COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
 
 RUN chmod 644 /root/.bashrc; \
