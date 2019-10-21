@@ -58,6 +58,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		group="$(id -g)"
 	fi
 
+	echo "Checking and installing Wordpress."
+	
 	if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 		# if the directory exists and WordPress doesn't appear to be installed AND the permissions of it are root:root, let's chown it (likely a Docker-created directory)
 		if [ "$(id -u)" = '0' ] && [ "$(stat -c '%u:%g' .)" = '0:0' ]; then
@@ -156,6 +158,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		: "${WORDPRESS_DB_NAME:=${MYSQL_ENV_MYSQL_DATABASE:-}}"
 	fi
 
+	echo "Starting wp_config.php changes."
 	# only touch "wp-config.php" if we have environment-supplied configuration values
 	if [ "$haveConfig" ]; then
 		: "${WORDPRESS_DB_HOST:=mysql}"
@@ -188,14 +191,16 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 	$_SERVER['HTTPS'] = 'on';
 }
 EOPHP
-			echo "Checking database SSL settings."
+			echo "Checking database SSL settings (wp-config.php did not exist)."
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] ; then 
+				echo "Modifying database SSL settings (wp-config.php did not exist)."
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
 				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 			fi
+			echo "Database SSL settings check completed (wp-config.php did not exist) ."
 			chown "$user:$group" wp-config.php
 		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
 			# (if the config file already contains the requested PHP code, don't print a warning)
@@ -204,26 +209,32 @@ EOPHP
 			echo >&2 '  The contents of this variable will _not_ be inserted into the existing "wp-config.php" file.'
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
-			echo "Checking database SSL settings."
+			echo "Checking database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ]; then 
+				echo "Modifying database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
 				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 			fi
+			echo "Database SSL settings check completed (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set) ."
 		else
 			if [ -e /var/www/html/wp-config.php ] ; then
-				echo "Checking database SSL settings."
+				echo "Checking database SSL settings (wp-config.php exists)."
 				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 				if [ $sslflag -lt 1 ] ; then
+					echo "Modifying database SSL settings (wp-config.php exists)."
 					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
 					sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
 					sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 				fi
+				echo "Database SSL settings check completed (wp-config.php exists) ."
 			fi
 		fi
+		
+		echo "Completed wp_config.php changes."
 		
 		# see http://stackoverflow.com/a/2705678/433558
 		sed_escape_lhs() {
@@ -323,11 +334,15 @@ EOPHP
 			echo >&2
 		fi
 	fi
+	
+	echo "Clearing environment variables."
 
 	# now that we're definitely done writing configuration, let's clear out the relevant envrionment variables (so that stray "phpinfo()" calls don't leak secrets from our code)
 	for e in "${envs[@]}"; do
 		unset "$e"
 	done
 fi
+
+echo "Done, ready to exit docker-entrypoint.sh."
 
 exec "$@"
