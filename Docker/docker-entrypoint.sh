@@ -23,6 +23,19 @@ file_env() {
 	unset "$fileVar"
 }
 
+if [ -e /usr/sbin/sshd ]; then
+	echo >&2 "WARNING: Starting sshd."
+
+	# Get environment variables to show up in SSH session
+	eval $(printenv | sed -n "s/^\([^=]\+\)=\(.*\)$/export \1=\2/p" | sed 's/"/\\\"/g' | sed '/=/s//="/' | sed 's/$/"/' >> /etc/profile)
+	SSH_PORT=2222
+	sed -i "s/SSH_PORT/$SSH_PORT/g" /etc/ssh/sshd_config
+
+	/usr/sbin/sshd 
+else
+	echo >&2 "WARNING: Cannot start sshd, it does not exist."
+fi
+
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	if [ "$(id -u)" = '0' ]; then
 		case "$1" in
@@ -195,10 +208,6 @@ EOPHP
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
 				sed -i "$ i define('DB_SSL', true);" wp-config.php
-				# echo "define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" >> wp-config.php
-				# echo "define('MYSQL_SSL_CA_PATH','/');" >> wp-config.php
-				# echo "define('MYSQL_SSL_CA','/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" >> wp-config.php
-				# echo "define('DB_SSL', true);" >> wp-config.php
 			fi
 		else
 			if [ -e wp-config.php ] ; then
@@ -315,19 +324,6 @@ EOPHP
 	for e in "${envs[@]}"; do
 		unset "$e"
 	done
-fi
-
-if [ -e /usr/sbin/sshd ]; then
-	echo >&2 "WARNING: Starting sshd."
-
-	# Get environment variables to show up in SSH session
-	eval $(printenv | sed -n "s/^\([^=]\+\)=\(.*\)$/export \1=\2/p" | sed 's/"/\\\"/g' | sed '/=/s//="/' | sed 's/$/"/' >> /etc/profile)
-	SSH_PORT=2222
-	sed -i "s/SSH_PORT/$SSH_PORT/g" /etc/ssh/sshd_config
-
-	/usr/sbin/sshd 
-else
-	echo >&2 "WARNING: Cannot start sshd, it does not exist."
 fi
 
 exec "$@"
