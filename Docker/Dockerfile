@@ -117,8 +117,7 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	a2ensite 000-default.conf; \
 	a2ensite 000-default-le-ssl.conf; \
 	chmod 644 /etc/cron.d/certbot; \
-	chmod 0755 /usr/local/bin/docker-entrypoint.sh; \
-	service apache2 reload
+	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
 EXPOSE 80 2222
 
