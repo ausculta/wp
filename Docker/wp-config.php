@@ -91,9 +91,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
 }
 
-/** Sets up WordPress vars and included files. */
+define('WP_HOME', "https://new.endeavouresu.uk/");
+define('WP_SITEURL', "https://new.endeavouresu.uk/");
+
+// Force SSL redirect
+define('FORCE_SSL', true); 
+define('FORCE_SSL_ADMIN', true); 
+if ( isset($_SERVER['HTTP_X_ARR_SSL']) ) 
+        $_SERVER['HTTPS']='on';
+
+// Force SSL for MySQL connections
 define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
 define('MYSQL_SSL_CA_PATH', '/');
 define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');
 define('DB_SSL', true);
+
+/** Sets up WordPress vars and included files. */
 require_once( ABSPATH . 'wp-settings.php' );
