@@ -63,71 +63,61 @@ RUN { \
 		echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
-RUN a2enmod rewrite expires
 
 VOLUME /var/www/html
 
 ENV WORDPRESS_VERSION 5.2.4
 ENV WORDPRESS_SHA1 9eb002761fc8b424727d8c9d291a6ecfde0c53b7
 
-RUN set -ex; \
+RUN a2enmod rewrite expires; \
+	mkdir -p /tmp; \
+	set -ex; \
 	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
 	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
-# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
+	# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
 	rm wordpress.tar.gz; \
-	chown -R www-data:www-data /usr/src/wordpress
+	chown -R www-data:www-data /usr/src/wordpress; \
+	apt-get update; \
+	apt-get install -yq nano tar; \
+	# apt-get install -yq certbot python-certbot-apache; \
+	# apt list | grep ssh; \
+	apt-get install -yq --no-install-recommends  openssh-server; \
+	echo "root:Docker!" | chpasswd
 	
-RUN apt-get update
-
-RUN apt-get install -yq nano tar
-RUN apt-get install -yq certbot python-certbot-apache
-
-# RUN apt list | grep ssh
-
 COPY bashrc /root/.bashrc
-RUN chmod 644 /root/.bashrc
-
-RUN mkdir -p /tmp
-RUN apt-get install -yq --no-install-recommends  openssh-server
-RUN echo "root:Docker!" | chpasswd
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-RUN chmod -R +x /tmp/ssh_setup.sh
-RUN (sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null)
-RUN rm -rf /tmp/*
+COPY etc.letsencrypt.tar /tmp
+COPY etc.apache.tar /tmp
 
-# Setup PHP and Apache
+RUN chmod 644 /root/.bashrc; \
+	chmod -R +x /tmp/ssh_setup.sh; \
+	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
+	tar xvfC /tmp/etc.apache2.tar /etc; \
+	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
+	rm -rf /tmp/*
+
+# Setup PHP and Apache, place latest config files
+COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
+COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2.conf /etc/apache2/apache2.conf
 COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
 COPY default.conf /etc/apache2/sites-available/000-default.conf
-RUN chmod 644 /usr/local/etc/php/php.ini
-RUN chmod 644 /etc/apache2/apache2.conf
-RUN chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf
-RUN chmod 644 /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default.conf
-RUN a2ensite 000-default-le-ssl.conf
-
-# COPY etc.apache.tar /tmp
-# tar xvfC etc.apache2.tar /etc
-
-COPY etc.letsencrypt.tar /tmp
-RUN tar xvfC /tmp/etc.letsencrypt.tar /etc
-RUN rm /tmp/etc.letsencrypt.tar
-
 COPY certbot /etc/cron.d/certbot
-RUN chmod 644 /etc/cron.d/certbot
-
-COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
-COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
-
 COPY docker-entrypoint.sh /usr/local/bin/
 
-RUN chmod 0755 /usr/local/bin/docker-entrypoint.sh
+RUN chmod 644 /usr/local/etc/php/php.ini; \
+	chmod 644 /etc/apache2/apache2.conf; \
+	chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf; \
+	chmod 644 /etc/apache2/sites-available/000-default.conf; \
+	a2ensite 000-default.conf; \
+	a2ensite 000-default-le-ssl.conf; \
+	chmod 644 /etc/cron.d/certbot; \
+	chmod 0755 /usr/local/bin/docker-entrypoint.sh
 
 EXPOSE 80 2222
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-CMD ["apache2-foreground"]
+#CMD ["apache2-foreground"]
