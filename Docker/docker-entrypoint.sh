@@ -202,8 +202,7 @@ EOPHP
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			if [ $sslflag -lt 1 ]
-			then
+			if [ $sslflag -lt 1 ]; then 
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php

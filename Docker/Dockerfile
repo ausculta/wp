@@ -80,7 +80,7 @@ RUN a2enmod rewrite expires; \
 	chown -R www-data:www-data /usr/src/wordpress; \
 	apt-get update; \
 	apt-get install -yq nano vim tar wget; \
-	# apt-get install -yq certbot python-certbot-apache; \
+	apt-get install -yq certbot python-certbot-apache; \
 	# apt list | grep ssh; \
 	apt-get install -yq --no-install-recommends  openssh-server; \
 	echo "root:Docker!" | chpasswd
@@ -88,7 +88,7 @@ RUN a2enmod rewrite expires; \
 COPY bashrc /root/.bashrc
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-COPY etc.letsencrypt.tar /tmp
+# COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
 
 RUN chmod 644 /root/.bashrc; \
