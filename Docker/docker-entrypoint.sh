@@ -89,6 +89,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		if [ ! -e BaltimoreCyberTrustRoot.crt.pem ]; then
 			echo "Downloading BaltimoreCyberTrustroot.crt.pem"
 			curl -o BaltimoreCyberTrustRoot.crt.pem -fsL "https://www.digicert.com/CACerts/BaltimoreCyberTrustRoot.crt.pem"
+		else
+			echo "BaltimoreCyberTrustRoot.crt.pem already exists."
 		fi
 		
 		if [ ! -e .htaccess ]; then
@@ -186,12 +188,13 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 	$_SERVER['HTTPS'] = 'on';
 }
 EOPHP
+			echo "Checking database SSL settings."
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ] ; then 
-				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
-				sed -i "$ i define('DB_SSL', true);" wp-config.php
+				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
+				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 			fi
 			chown "$user:$group" wp-config.php
 		elif [ -e wp-config.php ] && [ -n "$WORDPRESS_CONFIG_EXTRA" ] && [[ "$(< wp-config.php)" != *"$WORDPRESS_CONFIG_EXTRA"* ]]; then
@@ -201,21 +204,23 @@ EOPHP
 			echo >&2 '  The contents of this variable will _not_ be inserted into the existing "wp-config.php" file.'
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
+			echo "Checking database SSL settings."
 			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 			if [ $sslflag -lt 1 ]; then 
-				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
-				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
-				sed -i "$ i define('DB_SSL', true);" wp-config.php
+				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
+				sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
+				sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 			fi
 		else
-			if [ -e wp-config.php ] ; then
+			if [ -e /var/www/html/wp-config.php ] ; then
+				echo "Checking database SSL settings."
 				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
 				if [ $sslflag -lt 1 ] ; then
-					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" wp-config.php
-					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" wp-config.php
-					sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" wp-config.php
-					sed -i "$ i define('DB_SSL', true);" wp-config.php
+					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
+					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
+					sed -i "$ i define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');" /var/www/html/wp-config.php
+					sed -i "$ i define('DB_SSL', true);" /var/www/html/wp-config.php
 				fi
 			fi
 		fi
