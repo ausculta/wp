@@ -192,9 +192,9 @@ if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROT
 }
 EOPHP
 			echo "Checking database SSL settings (wp-config.php did not exist)."
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			echo "sslflag: $sslflag."			
-			if [ $sslflag -lt 1 ] ; then 
+			dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
+			echo "dbsslconfig: $dbsslconfig."			
+			if [ $dbsslconfig -lt 1 ] ; then 
 				echo "Modifying database SSL settings (wp-config.php did not exist)."
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
@@ -211,9 +211,9 @@ EOPHP
 			echo >&2 '  (see https://github.com/docker-library/wordpress/issues/333 for more details)'
 			echo >&2
 			echo "Checking database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
-			sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-			echo "sslflag: $sslflag."
-			if [ $sslflag -lt 1 ]; then 
+			dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
+			echo "dbsslconfig: $dbsslconfig."
+			if [ $dbsslconfig -lt 1 ]; then 
 				echo "Modifying database SSL settings (wp-config.php exists and WORDPRESS_CONFIG_EXTRA is set)."
 				sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 				sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
@@ -224,9 +224,11 @@ EOPHP
 		else
 			if [ -e /var/www/html/wp-config.php ] ; then
 				echo "Checking database SSL settings (wp-config.php exists)."
-				sslflag=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
-				echo "sslflag: $sslflag."
-				if [ $sslflag -lt 1 ] ; then
+				dbsslconfig="`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`"
+				echo "dbsslconfig: $dbsslconfig."
+				dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
+				echo "dbsslconfig: $dbsslconfig."
+				if [ $dbsslconfig -lt 1 ] ; then
 					echo "Modifying database SSL settings (wp-config.php exists)."
 					sed -i "$ i define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);" /var/www/html/wp-config.php
 					sed -i "$ i define('MYSQL_SSL_CA_PATH', '/');" /var/www/html/wp-config.php
