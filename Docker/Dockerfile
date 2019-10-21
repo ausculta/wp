@@ -1,6 +1,8 @@
 FROM php:7.3-apache-buster
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
+RUN apt list
+
 RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -79,7 +81,7 @@ RUN a2enmod rewrite expires; \
 	rm wordpress.tar.gz; \
 	chown -R www-data:www-data /usr/src/wordpress; \
 	apt-get update; \
-	apt-get install -yq nano vim tar wget; \
+	apt-get install -yq nano vim tar wget grep sed; \
 	apt-get install -yq certbot python-certbot-apache; \
 	# apt list | grep ssh; \
 	apt-get install -yq --no-install-recommends  openssh-server; \
@@ -115,9 +117,12 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	a2ensite 000-default.conf; \
 	a2ensite 000-default-le-ssl.conf; \
 	chmod 644 /etc/cron.d/certbot; \
-	chmod 0755 /usr/local/bin/docker-entrypoint.sh
+	chmod 0755 /usr/local/bin/docker-entrypoint.sh; \
+	service apache2 reload
 
 EXPOSE 80 2222
+
+RUN apt list
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]

@@ -24,7 +24,7 @@ file_env() {
 }
 
 if [ -e /usr/sbin/sshd ]; then
-	echo >&2 "WARNING: Starting sshd."
+	echo >&2 "Starting sshd."
 
 	# Get environment variables to show up in SSH session
 	eval $(printenv | sed -n "s/^\([^=]\+\)=\(.*\)$/export \1=\2/p" | sed 's/"/\\\"/g' | sed '/=/s//="/' | sed 's/$/"/' >> /etc/profile)
@@ -33,7 +33,7 @@ if [ -e /usr/sbin/sshd ]; then
 
 	/usr/sbin/sshd 
 else
-	echo >&2 "WARNING: Cannot start sshd, it does not exist."
+	echo >&2 "Cannot start sshd, it does not exist."
 fi
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
