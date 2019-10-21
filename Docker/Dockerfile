@@ -120,4 +120,4 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 EXPOSE 80 2222
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-#CMD ["apache2-foreground"]
+CMD ["apache2-foreground"]

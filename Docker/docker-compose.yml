@@ -8,7 +8,7 @@ services:
       - ${WEBAPP_STORAGE_HOME}\LogFiles:/var/log
     restart: always
     ports:
-      - 8080:80
+      - 80:80
     environment:
       WORDPRESS_DB_HOST: endvrdb1.mysql.database.azure.com
       WORDPRESS_DB_USER: wpendeavour@endvrdb1
@@ -17,4 +17,3 @@ services:
       WORDPRESS_TABLE_PREFIX: wp1_
       WORDPRESS_DEBUG: 'true'
       WEBSITES_ENABLE_APP_SERVICE_STORAGE: 'TRUE'
-      
