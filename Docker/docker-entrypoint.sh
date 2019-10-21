@@ -224,9 +224,10 @@ EOPHP
 		else
 			if [ -e /var/www/html/wp-config.php ] ; then
 				echo "Checking database SSL settings (wp-config.php exists)."
-				dbsslconfig="`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`"
+				dbsslconfig="`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php`"
 				echo "dbsslconfig: $dbsslconfig."
-				dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
+				#dbsslconfig=`grep 'MYSQLI_CLIENT_SSL' /var/www/html/wp-config.php | wc -l`
+				dbsslconfig=0;
 				echo "dbsslconfig: $dbsslconfig."
 				if [ $dbsslconfig -lt 1 ] ; then
 					echo "Modifying database SSL settings (wp-config.php exists)."
