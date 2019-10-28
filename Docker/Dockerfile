@@ -1,4 +1,4 @@
-FROM php:7.3-fpm-buster
+FROM php:7.3-apache-buster
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
 RUN apt list
@@ -120,10 +120,9 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
-EXPOSE 80 2222 9000
+EXPOSE 80 2222
 
 RUN apt list
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-# CMD ["apache2-foreground"]
-CMD ["php-fpm"]
+CMD ["apache2-foreground"]
