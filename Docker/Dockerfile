@@ -120,7 +120,7 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
-EXPOSE 80 2222
+EXPOSE 80 2222 9000
 
 RUN apt list
 
