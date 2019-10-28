@@ -125,4 +125,5 @@ EXPOSE 80 2222
 RUN apt list
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-CMD ["apache2-foreground"]
+# CMD ["apache2-foreground"]
+CMD ["php-fpm"]
