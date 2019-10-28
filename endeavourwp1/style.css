@@ -1,0 +1,43 @@
+/*
+Theme Name: Endavour ESU
+Theme URI: http://endeavouresu.uk/wp
+Description: Endeavour Explorer Scout Unit Wordpress template
+Author: Ausculta Ltd
+Author URI: http://ausculta.net/
+Version: 1.0
+Tags: responsive, white, bootstrap
+
+License: Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
+License URI: http://creativecommons.org/licenses/by-sa/3.0/
+*/
+
+
+/* Globals */
+
+body {
+    font-family: 'Arial';
+    font-size: 14px;
+    color: #555;
+}
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+    margin-top: 0;
+    font-family: 'Arial';
+    font-weight: normal;
+    color: #333;
+}
+
+.menu-item {
+    color: #000
+}
