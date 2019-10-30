@@ -15,8 +15,7 @@ License URI: http://creativecommons.org/licenses/by-sa/3.0/
 /* Globals */
 
 body {
-    font-family: 'Arial';
-    font-size: 14px;
+    font-family: "Nunito Sans", "Times New Roman", Times, serif;
     color: #555;
 }
 
@@ -33,11 +32,53 @@ h5,
 h6,
 .h6 {
     margin-top: 0;
-    font-family: 'Arial';
+    font-family: "Nunito Sans", "Times New Roman", Times, serif;
     font-weight: normal;
     color: #333;
 }
 
-.menu-item {
-    color: #000
+a,
+a:link,
+a:active,
+a:visited {
+    color: #7413dc;
+}
+
+
+/* Nav links */
+
+.menu-item a {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    font-weight: 500;
+    font-size: 1.2em;
+    color: #111111;
+}
+
+.menu-item a:hover,
+.menu-item a:focus {
+    color: #111111;
+    text-decoration: none;
+}
+
+
+/* Add a caret under the active item */
+
+.menu-item.current-menu-item a {
+    color: #111111;
+}
+
+.menu-item.current-menu-item a:after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 0;
+    margin-left: -5px;
+    vertical-align: middle;
+    content: " ";
+    border-right: 5px solid transparent;
+    border-bottom: 2px solid;
+    border-left: 2px solid transparent;
 }

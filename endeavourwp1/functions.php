@@ -11,6 +11,7 @@ function bootstrapwp_enqueuefiles() {
 
 function bootstrapwp_wpsetup() {
     add_theme_support( 'title-tag' );
+	require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
 }
 
 function bootstrapwp_registermenus() {
@@ -21,30 +22,38 @@ function bootstrapwp_registermenus() {
     );
 }
 
-function register_navwalker(){
-	require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
+/*
+ * Redirect user after successful login.
+ *
+ * @param string $redirect_to URL to redirect to.
+ * @param string $request URL the user is coming from.
+ * @param object $user Logged user's data.
+ * @return string
+ */
+function bootstrapwp_loginredirect( $redirect_to, $request, $user ) {
+    //is there a user to check?
+    if ( isset( $user->roles ) && is_array( $user->roles ) ) {
+        //check for admins
+        if ( in_array( 'administrator', $user->roles ) ) {
+            // redirect them to the default place
+            return $redirect_to;
+        } else {
+            // return home_url();
+            return site_url();
+        }
+    } else {
+        // return $redirect_to;
+        return site_url();
+    }
 }
-
-function bootstrapwp_menuloginlogout( $items, $args ) {
-	if ( $args->theme_location != 'menumain' ) {
-		return $items;
-	}
-
-	if ( is_user_logged_in() ) {
-		$items .= '' . __( 'Log Out' ) . '';
-	} else {
-		$items .= '' . __( 'Login In' ) . '';
-	}
-
-	return $items;
+function bootstrapwp_logoutredirect( $redirect_to, $request, $user ) {
+    return site_url();
 }
-
-function bootstrapwp_registernavwalker(){
-	require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
-}
+ 
+add_filter( 'login_redirect', 'bootstrapwp_loginredirect', 10, 3 );
+add_filter( 'logout_redirect', 'bootstrapwp_logoutredirect', 10, 3 );
 add_action( 'wp_enqueue_scripts', 'bootstrapwp_enqueuefiles' );
 add_action( 'after_setup_theme', 'bootstrapwp_wpsetup' );
-add_action( 'after_setup_theme', 'bootstrapwp_registernavwalker' );
 add_action( 'init', 'bootstrapwp_registermenus' );
 // add_filter( 'wp_nav_menu_items', 'bootstrapwp_menuloginlogout', 199, 2 );
 
