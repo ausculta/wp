@@ -77,9 +77,13 @@ $table_prefix = 'wp1_';
  *
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
-define( 'WP_DEBUG', true);
-define( 'WP_DEBUG_LOG', true );
-define( 'WP_DEBUG_DISPLAY', true );
+define( 'WP_DEBUG', false);
+define( 'WP_DEBUG_LOG', false );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'SCRIPT_DEBUG', false );
+define( 'CONCATENATE_SCRIPTS', true );
+define( 'WP_MEMORY_LIMIT', '96M' );
+define( 'WP_MAX_MEMORY_LIMIT', '256M' );
 
 // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
 // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
@@ -95,6 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define('WP_HOME', "https://new.endeavouresu.uk/");
 define('WP_SITEURL', "https://new.endeavouresu.uk/");
+define( 'COOKIE_DOMAIN', 'new.endeavouresu.uk' );
 
 // Force SSL redirect
 define('FORCE_SSL', true); 

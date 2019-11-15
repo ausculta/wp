@@ -1,6 +1,7 @@
 <?php get_header(); ?>
-<div class="row">
-  <div class='col-12'>
+
+<div class="row m-0 p-0">
+  <div class='col-12 m-0 p-0'>
     <div id="frontpage" class="carousel slide" data-ride="carousel" style="overflow: hidden; align:center;">
       <ol class="carousel-indicators">
         <li data-target="#frontpage" data-slide-to="0" class="active"></li>
@@ -99,11 +100,11 @@
         </div>
       </div>
       <!-- Carousel nav -->
-      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <a class="carousel-control-prev" href="#frontpage" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
       </a>
-      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <a class="carousel-control-next" href="#frontpage" role="button" data-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>

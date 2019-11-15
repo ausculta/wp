@@ -39,14 +39,13 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 		 */
 		public function start_lvl( &$output, $depth = 0, $args = array() ) {
 			if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
-			$t = '';
-			$n = '';
+				$t = '';
+				$n = '';
 			} else {
 				$t = "\t";
 				$n = "\n";
 			}
 			$indent = str_repeat( $t, $depth );
-
 			// Default class to add to the file.
 			$classes = array( 'dropdown-menu' );
 			/**
@@ -75,8 +74,7 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 				// build a string to use as aria-labelledby.
 				$labelledby = 'aria-labelledby="' . esc_attr( end( $matches[2] ) ) . '"';
 			}
-			// $output .= "{$n}{$indent}<ul$class_names $labelledby role=\"menu\">{$n}";
-			$output .= "{$n}{$indent}<ul$class_names $labelledby>{$n}";
+			$output .= "{$n}{$indent}<ul$class_names $labelledby role=\"menu\">{$n}";
 		}
 
 		/**
@@ -103,8 +101,7 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 			}
 			$indent = ( $depth ) ? str_repeat( $t, $depth ) : '';
 
-			// $classes = empty( $item->classes ) ? array() : (array) $item->classes;
-			$classes = array();
+			$classes = empty( $item->classes ) ? array() : (array) $item->classes;
 
 			// Initialize some holder variables to store specially handled item
 			// wrappers and icons.
@@ -133,22 +130,6 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 			 */
 			$args = apply_filters( 'nav_menu_item_args', $args, $item, $depth );
 
-			// Add some additional default classes to the item.
-			// $classes[] = 'menu-item-' . $item->ID;
-			if ( isset( $args->has_children ) && $args->has_children && 0 === $depth && $args->depth !== 1 ) {
-				$classes[] = 'nav-item';
-			} else {
-				if ($args->has_children) {
-					$classes[] = 'dropdown-item nav-item';
-				} else {
-					if ($depth > 0) {
-						$classes[] = 'dropdown-item nav-item';
-					} else {
-						$classes[] = 'nav-item';
-					}
-				}
-			}
-
 			// Add .dropdown or .active classes where they are needed.
 			if ( isset( $args->has_children ) && $args->has_children ) {
 				$classes[] = 'dropdown';
@@ -156,6 +137,10 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 			if ( in_array( 'current-menu-item', $classes, true ) || in_array( 'current-menu-parent', $classes, true ) ) {
 				$classes[] = 'active';
 			}
+
+			// Add some additional default classes to the item.
+			$classes[] = 'menu-item-' . $item->ID;
+			$classes[] = 'nav-item';
 
 			// Allow filtering the classes.
 			$classes = apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth );
@@ -178,8 +163,7 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 			$id = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args, $depth );
 			$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
 
-			// $output .= $indent . '<li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement"' . $id . $class_names . '>';
-			$output .= $indent . '<li ' . $id . $class_names . '>';
+			$output .= $indent . '<li itemscope="itemscope" itemtype="https://www.schema.org/SiteNavigationElement"' . $id . $class_names . '>';
 
 			// initialize array for holding the $atts for the link item.
 			$atts = array();
@@ -197,18 +181,13 @@ if ( ! class_exists( 'WP_Bootstrap_Navwalker' ) ) {
 			// If item has_children add atts to <a>.
 			// Original:
 			// if ( isset( $args->has_children ) && $args->has_children && 0 === $depth && $args->depth > 1 ) {
+			if ( isset( $args->has_children ) && $args->has_children && 1 !== $args->depth) {
 			// if ( isset( $args->has_children ) && $args->has_children && $args->depth > 1 ) {
-			if ( isset( $args->has_children ) && $args->has_children && $args->depth !== 1 ) {
 				$atts['href']          = '#';
 				$atts['data-toggle']   = 'dropdown';
 				$atts['aria-haspopup'] = 'true';
 				$atts['aria-expanded'] = 'false';
-				// $atts['class']         = 'dropdown-toggle nav-link';
-				if ($depth === 0) {
-					$atts['class']        = 'dropdown-toggle nav-link';
-				} else {
-					$atts['class']        = 'dropdown-toggle';
-				}
+				$atts['class']         = 'dropdown-toggle nav-link';
 				$atts['id']            = 'menu-item-dropdown-' . $item->ID;
 			} else {
 				$atts['href'] = ! empty( $item->url ) ? $item->url : '#';

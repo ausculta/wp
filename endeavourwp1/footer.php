@@ -12,5 +12,34 @@
       </div> <!-- /col -->
     </div> <!-- /row -->
   </div><!-- /container -->
+  <script type='text/javascript'>
+    jQuery(document).ready(function () {
+      jQuery('.navbar .dropdown-item').on('click', function (e) {
+          var $el = jQuery(this).children('.dropdown-toggle');
+          var $parent = $el.offsetParent(".dropdown-menu");
+          jQuery(this).parent("li").toggleClass('open');
+
+          if (!$parent.parent().hasClass('navbar-nav')) {
+              if ($parent.hasClass('show')) {
+                  $parent.removeClass('show');
+                  $el.next().removeClass('show');
+                  $el.next().css({"top": -999, "left": -999});
+              } else {
+                  $parent.parent().find('.show').removeClass('show');
+                  $parent.addClass('show');
+                  $el.next().addClass('show');
+                  // $el.next().css({"top": $el[0].offsetTop, "left": $parent.outerWidth() - 4});
+                  $el.next().css({"left": $parent.outerWidth() - 4});
+                }
+              // e.preventDefault();
+              e.stopPropagation();
+          }
+      });
+      jQuery('.navbar .dropdown').on('hidden.bs.dropdown', function () {
+        jQuery(this).find('li.dropdown').removeClass('show open');
+        jQuery(this).find('ul.dropdown-menu').removeClass('show open');
+      });
+    });
+  </script>
 </body>
 </html>
