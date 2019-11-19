@@ -65,7 +65,6 @@ RUN { \
 		echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
-
 VOLUME /var/www/html
 
 ENV WORDPRESS_VERSION 5.3	
@@ -103,7 +102,6 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvfC /tmp/website.tar.gz /website; \
 	ln -s /var/www/html/assets /website/assets; \
 	rm -rf /tmp/*
-
 
 # Setup PHP and Apache, place latest config files
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem

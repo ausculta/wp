@@ -59,7 +59,12 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	fi
 
 	echo "Checking and installing Wordpress."
-	
+	# if /website exists, move there to install Wordpress.
+	if [ -d /website ]; then 
+		echo "Entering /website"
+		pushd /website
+	fi
+
 	if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
 		# if the directory exists and WordPress doesn't appear to be installed AND the permissions of it are root:root, let's chown it (likely a Docker-created directory)
 		if [ "$(id -u)" = '0' ] && [ "$(stat -c '%u:%g' .)" = '0:0' ]; then
@@ -302,6 +307,12 @@ EOPHP
 			echo >&2
 		fi
 	fi
+
+	if [ -d /website ]; then 
+		echo "Leaving /website"
+		popd
+	fi
+
 	
 	echo "Clearing environment variables."
 
