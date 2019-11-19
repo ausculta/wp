@@ -66,6 +66,8 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
 VOLUME /var/www/html
+VOLUME /home
+VOLUME /var/log
 
 ENV WORDPRESS_VERSION 5.3	
 ENV WORDPRESS_SHA1 e3edcb1131e539c2b2e10fed37f8b6683c824a98
