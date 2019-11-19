@@ -91,7 +91,7 @@ COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
-COPY website.tar /tmp
+COPY website.tar.gz /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
