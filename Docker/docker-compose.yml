@@ -5,6 +5,9 @@ services:
     volumes:
       - ${WEBAPP_STORAGE_HOME}\home:/home
       - ${WEBAPP_STORAGE_HOME}\LogFiles:/var/log
+      - ${WEBAPP_STORAGE_HOME}\site\wwwroot:/var/www/shared
+      - website:/var/www/html
+      - assets:/var/www/assets
     restart: always
     ports:
       - 8080:80
