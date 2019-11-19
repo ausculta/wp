@@ -84,6 +84,7 @@ define( 'SCRIPT_DEBUG', false );
 define( 'CONCATENATE_SCRIPTS', true );
 define( 'WP_MEMORY_LIMIT', '96M' );
 define( 'WP_MAX_MEMORY_LIMIT', '256M' );
+define( 'WP_ALLOW_MULTISITE', true );
 
 // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
 // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
