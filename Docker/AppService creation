@@ -13,9 +13,9 @@ az appservice plan create --name ENDVR1-ASP-WEBSITE1 --resource-group ENDVR1-RG-
 #az appservice plan create --name ENDVR1-ASP-WEBSITE1 --resource-group ENDVR1-RG-WEBSITE1 --sku S1 --is-linux --location ukwest
 
 # Create the app service
-az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --deployment-source-url "https://github.com/endeavouresu/wordpress"
-
-az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password 58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B --docker-registry-server-user endeavouresu
+#az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --deployment-source-url "https://github.com/endeavouresu/wordpress"
+#az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password 58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B --docker-registry-server-user endeavouresu
+az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password 58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B --docker-registry-server-user endeavouresu --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=TRUE
 
 # Enable persistent storage
 az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=TRUE
@@ -64,3 +64,9 @@ openssl pkcs12 -export -in yourcertificate.cer -inkey yourkey.key -out yourcerti
 <?php phpinfo(); ?>
 
 define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
+
+
+Storage:
+az webapp config storage-account list --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1
+az webapp config storage-account add --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website" --storage-type AzureBlob --share-name Website --account-name endeavour1 --access-key "btLIpXLBn3HQ36gJgB/fK809S5GOsSK/7iRqubSEFG0y/CtRdvhhXdELemSL9Mj4QA3Cf2OGUTIeLAKX7tUkiw==" --mount-path "/var/www/html"
+az webapp config storage-account delete --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website"
