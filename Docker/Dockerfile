@@ -126,7 +126,6 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
-
 VOLUME /var/www/html /home /var/log
 
 EXPOSE 80 2222
