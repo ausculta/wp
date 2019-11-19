@@ -43,7 +43,7 @@ az webapp stop --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu
 az webapp start --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu
 
 # Provide the Registry login details (Azure Registry)
-az webapp config container set --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1 --docker-custom-image-name endeavouresu.azurecr.io/endeavourwp:latest --docker-registry-server-url https://endeavouresu.azurecr.io --docker-registry-server-user endeavouresu --docker-registry-server-password VWl55Rt&VQmB@YevEt*Ws9kafmjsDoNO9UP!3^h8
+az webapp config container set --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1 --docker-custom-image-name endeavouresu.azurecr.io/endeavourwp:latest --docker-registry-server-url https://endeavouresu.azurecr.io --docker-registry-server-user endeavouresu --docker-registry-server-password <XXXX>
 
 az acr build -r endeavouresu "https://github.com/endeavouresu/wordpress.git" --platform linux -t endeavouresu/endeavourwp
 
