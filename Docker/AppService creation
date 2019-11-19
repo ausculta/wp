@@ -9,13 +9,13 @@ az account set -s "Endeavour Website"
 az webapp delete --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1
 
 # Create the service plan if it doesn't exist
-az appservice plan create --name ENDVR1-ASP-WEBSITE1 --resource-group ENDVR1-RG-WEBSITE1 --sku S1 --is-linux --location uksouth
 #az appservice plan create --name ENDVR1-ASP-WEBSITE1 --resource-group ENDVR1-RG-WEBSITE1 --sku S1 --is-linux --location ukwest
+az appservice plan create --name ENDVR1-ASP-WEBSITE1 --resource-group ENDVR1-RG-WEBSITE1 --sku P1v2 --is-linux --location uksouth
 
 # Create the app service
 #az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --deployment-source-url "https://github.com/endeavouresu/wordpress"
 #az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password 58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B --docker-registry-server-user endeavouresu
-az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password 58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B --docker-registry-server-user endeavouresu --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=TRUE
+az webapp create --resource-group ENDVR1-RG-WEBSITE1 --plan ENDVR1-ASP-WEBSITE1 --name endeavouresu --multicontainer-config-type compose --multicontainer-config-file docker-compose.yml --docker-registry-server-password '58Y1XLhI#uluuY82QOFZ8%Gt^*8l3jcipAJICH%B' --docker-registry-server-user endeavouresu
 
 # Enable persistent storage
 az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=TRUE
@@ -26,21 +26,26 @@ az webapp log config --application-logging true --detailed-error-messages true -
 # Set log retention days
 az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings WEBSITE_HTTPLOGGING_RETENTION_DAYS=21
 
+# Set Wordpress variables
+az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings WORDPRESS_DB_HOST="endvrdb1.mysql.database.azure.com" WORDPRESS_DB_USER="wpendeavour@endvrdb1" WORDPRESS_DB_PASSWORD='1#aqkfJAG3V2YqpI!57GmrqS#0JgVhY9@7A12RQs' WORDPRESS_DB_NAME="endvrwpdb1" WORDPRESS_TABLE_PREFIX="edvr1_"
+
 # Enable CI
 az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_ENABLE_CI=TRUE
 
-az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_USERNAME="endeavouresu"
-az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_PASSWORD="VWl55Rt&VQmB@YevEt*Ws9kafmjsDoNO9UP!3^h8"
-az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_URL="https://cloud.docker.com/u/endeavouresu/repository/docker/endeavouresu/endeavourwp"
-
 # custom domain
 az webapp config hostname add --webapp-name endeavouresu --resource-group ENDVR1-RG-WEBSITE1 --hostname new.endeavouresu.uk
+
+az webapp config storage-account add --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website" --storage-type AzureBlob --share-name Website --account-name endeavour1 --access-key "btLIpXLBn3HQ36gJgB/fK809S5GOsSK/7iRqubSEFG0y/CtRdvhhXdELemSL9Mj4QA3Cf2OGUTIeLAKX7tUkiw==" --mount-path "/var/www/html"
 
 # Stop the app service
 az webapp stop --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu
 
 # Start the app service
 az webapp start --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu
+
+az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_USERNAME="endeavouresu"
+az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_PASSWORD="VWl55Rt&VQmB@YevEt*Ws9kafmjsDoNO9UP!3^h8"
+az webapp config appsettings set --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --settings DOCKER_REGISTRY_SERVER_URL="https://cloud.docker.com/u/endeavouresu/repository/docker/endeavouresu/endeavourwp"
 
 # Provide the Registry login details (Azure Registry)
 az webapp config container set --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1 --docker-custom-image-name endeavouresu.azurecr.io/endeavourwp:latest --docker-registry-server-url https://endeavouresu.azurecr.io --docker-registry-server-user endeavouresu --docker-registry-server-password <XXXX>

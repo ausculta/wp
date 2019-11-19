@@ -4,7 +4,6 @@ services:
     image: endeavouresu/endeavourwp:latest
     volumes:
       - ${WEBAPP_STORAGE_HOME}\home:/home
-      - ${WEBAPP_STORAGE_HOME}\site\wwwroot:/var/www/html
       - ${WEBAPP_STORAGE_HOME}\LogFiles:/var/log
     restart: always
     ports:
@@ -16,4 +15,4 @@ services:
       WORDPRESS_DB_NAME: endvrwpdb1
       WORDPRESS_TABLE_PREFIX: edvr1_
       WORDPRESS_DEBUG: true
-      WEBSITES_ENABLE_APP_SERVICE_STORAGE: TRUE
+      WEBSITES_ENABLE_APP_SERVICE_STORAGE: true
