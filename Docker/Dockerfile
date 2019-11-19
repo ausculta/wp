@@ -68,8 +68,8 @@ RUN { \
 
 VOLUME /var/www/html
 
-ENV WORDPRESS_VERSION 5.2.4
-ENV WORDPRESS_SHA1 9eb002761fc8b424727d8c9d291a6ecfde0c53b7
+ENV WORDPRESS_VERSION 5.3	
+ENV WORDPRESS_SHA1 e3edcb1131e539c2b2e10fed37f8b6683c824a98
 
 RUN a2enmod rewrite expires; \
 	mkdir -p /tmp; \
@@ -92,18 +92,24 @@ COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
+COPY website.tar /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
 	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
 	tar xvfC /tmp/etc.apache2.tar /etc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
+	mkdir /website; \
+	tar xvfC /tmp/website.tar /website; \
+	ln -s /var/www/html/assets /website/assets; \
 	rm -rf /tmp/*
 
 # Setup PHP and Apache, place latest config files
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
+COPY BaltimoreCyberTrustRoot.crt.pem /website/BaltimoreCyberTrustRoot.crt.pem
 COPY htaccess /var/www/html/.htaccess
+COPY htaccess /website/,htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2.conf /etc/apache2/apache2.conf
 COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf

@@ -74,7 +74,7 @@
             // 'container'         => 'div',
             // 'container_class'   => 'collapse navbar-collapse bg-transparent',
             // 'container_id'      => 'bs_menumain-navbar',
-            'menu_class'        => 'navbar-nav',
+            'menu_class'        => 'navbar-nav m-0 p-0',
             'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
             'walker'            => new WP_Bootstrap_Navwalker(),
           );
