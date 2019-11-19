@@ -63,7 +63,7 @@ define( 'NONCE_SALT',       '9b8ad8e914487a4e4340e969db5d22fa6417f187');
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix = 'wp1_';
+$table_prefix = 'end1_';
 
 /**
  * For developers: WordPress debugging mode.
@@ -99,7 +99,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define('WP_HOME', "https://new.endeavouresu.uk/");
 define('WP_SITEURL', "https://new.endeavouresu.uk/");
-define( 'COOKIE_DOMAIN', 'new.endeavouresu.uk' );
+define( 'COOKIE_DOMAIN', 'endeavouresu.uk' );
 
 // Force SSL redirect
 define('FORCE_SSL', true); 
@@ -110,7 +110,7 @@ if ( isset($_SERVER['HTTP_X_ARR_SSL']) )
 // Force SSL for MySQL connections
 define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL);
 define('MYSQL_SSL_CA_PATH', '/');
-define('MYSQL_SSL_CA', '/var/www/html/BaltimoreCyberTrustRoot.crt.pem');
+define('MYSQL_SSL_CA', '/website/BaltimoreCyberTrustRoot.crt.pem');
 define('DB_SSL', true);
 
 /** Sets up WordPress vars and included files. */
