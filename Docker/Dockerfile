@@ -92,7 +92,7 @@ COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
-COPY website.tar /tmp
+COPY website.tar.gz /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
@@ -100,7 +100,7 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvfC /tmp/etc.apache2.tar /etc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
 	mkdir /website; \
-	tar xvfC /tmp/website.tar /website; \
+	tar xvfC /tmp/website.tar.gz /website; \
 	ln -s /var/www/html/assets /website/assets; \
 	rm -rf /tmp/*
 
