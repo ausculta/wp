@@ -100,16 +100,17 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvfC /tmp/etc.apache2.tar /etc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
 	mkdir /website; \
-	tar xvfC /tmp/website.tar.gz /website; \
 	ln -s /var/www/html/assets /website/assets; \
 	rm -rf /tmp/*
+
+#	tar xvfC /tmp/website.tar.gz /website; \
 
 # Setup PHP and Apache, place latest config files
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /website/BaltimoreCyberTrustRoot.crt.pem
 COPY htaccess /var/www/html/.htaccess
-COPY htaccess /website/,htaccess
+COPY htaccess /website/.htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY apache2.conf /etc/apache2/apache2.conf
 COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
