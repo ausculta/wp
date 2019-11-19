@@ -47,7 +47,7 @@ az webapp config container set --name endeavouresu --resource-group ENDVR1-RG-WE
 
 az acr build -r endeavouresu "https://github.com/endeavouresu/wordpress.git" --platform linux -t endeavouresu/endeavourwp
 
-az acr task create -n endeavouresu -r endeavouresu -t endeavouresu:{{.Run.ID}} -c https://github.com/endeavouresu/wordpress.git -f Dockerfile --git-access-token 3c6c914a088c905dabdce8accd40e4e7c4e34be1
+az acr task create -n endeavouresu -r endeavouresu -t endeavouresu:{{.Run.ID}} -c https://github.com/endeavouresu/wordpress.git -f Dockerfile --git-access-token <XXXX>
 
 
 503a5e61-fb65-402b-9c86-ad67db9540af
