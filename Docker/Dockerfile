@@ -65,9 +65,7 @@ RUN { \
 		echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
-VOLUME /var/www/html
-VOLUME /home
-VOLUME /var/log
+# VOLUME /var/www/html /home /var/log
 
 ENV WORDPRESS_VERSION 5.3	
 ENV WORDPRESS_SHA1 e3edcb1131e539c2b2e10fed37f8b6683c824a98
@@ -127,6 +125,9 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 	a2ensite 000-default-le-ssl.conf; \
 	chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
+
+
+VOLUME /var/www/html /home /var/log
 
 EXPOSE 80 2222
 
