@@ -99,7 +99,9 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvfC /tmp/etc.apache2.tar /etc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
 	mkdir /var/www/website; \
-	tar xvfC /tmp/website.tar /var/www/website; \
+	mkdir /var/www/assets; \
+	tar xvfC /tmp/website.tar.gz /var/www/website; \
+	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
 
 # 	ln -s /var/www/html/assets /var/www/website/assets; \
