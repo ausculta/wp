@@ -101,7 +101,7 @@ RUN chmod 644 /root/.bashrc; \
 	mkdir /var/www/website; \
 	mkdir /var/www/assets; \
 	mkdir /var/www/shared; \
-	tar xvfC /tmp/website.tar.gz /var/www/website; \
+	tar xvfC /tmp/website.tar.gz /var/www; \
 	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
 
