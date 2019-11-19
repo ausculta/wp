@@ -73,5 +73,4 @@ define('MYSQL_CLIENT_FLAGS', MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT);
 
 Storage:
 az webapp config storage-account list --name endeavouresu --resource-group ENDVR1-RG-WEBSITE1
-az webapp config storage-account add --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website" --storage-type AzureBlob --share-name Website --account-name endeavour1 --access-key "btLIpXLBn3HQ36gJgB/fK809S5GOsSK/7iRqubSEFG0y/CtRdvhhXdELemSL9Mj4QA3Cf2OGUTIeLAKX7tUkiw==" --mount-path "/var/www/html"
-az webapp config storage-account delete --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website"
+az webapp config storage-account add --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id website --storage-type AzureBlob --share-name website --account-name endeavour1 --access-key '<XXXX>' --mount-path "/var/www/html"az webapp config storage-account delete --resource-group ENDVR1-RG-WEBSITE1 --name endeavouresu --custom-id "Website"

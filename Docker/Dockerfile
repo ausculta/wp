@@ -91,23 +91,24 @@ COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
 COPY etc.letsencrypt.tar /tmp
 COPY etc.apache2.tar /tmp
-# COPY website.tar.gz /tmp
+COPY website.tar /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
 	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
 	tar xvfC /tmp/etc.apache2.tar /etc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
-	mkdir /website; \
-	tar xvfC /tmp/website.tar.gz /website; \
-	ln -s /var/www/html/assets /website/assets; \
+	mkdir /var/www/website; \
+	tar xvfC /tmp/website.tar /var/www/website; \
 	rm -rf /tmp/*
+
+# 	ln -s /var/www/html/assets /var/www/website/assets; \
 
 # Setup PHP and Apache, place latest config files
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
-# COPY BaltimoreCyberTrustRoot.crt.pem /var/www/html/BaltimoreCyberTrustRoot.crt.pem
+COPY BaltimoreCyberTrustRoot.crt.pem /var/www/website/BaltimoreCyberTrustRoot.crt.pem
 COPY BaltimoreCyberTrustRoot.crt.pem /website/BaltimoreCyberTrustRoot.crt.pem
-# COPY htaccess /var/www/html/.htaccess
+COPY htaccess /var/www/website/.htaccess
 COPY htaccess /usr/src/wordpress/htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY wp-config.php /usr/src/wordpress/wp-config.php
