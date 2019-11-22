@@ -12,6 +12,9 @@ function bootstrapwp_enqueuefiles() {
 }
 
 function bootstrapwp_wpsetup() {
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
     add_theme_support( 'title-tag' );
 	require_once get_template_directory() . '/class-wp-bootstrap-navwalker.php';
 	// require_once $tempdiruri . '/class-wp-bootstrap-navwalker.php';
@@ -61,15 +64,24 @@ function bootstrapwp_removeadminbar() {
     }
 }
 
+// Note this function adds the ability for subscribers to read private posts.
+// It is only required once and the option is stored in the database.
+function bootstrapwp__addcapreadposts() {
+    global $wp_roles;
+    $role = get_role('subscriber');
+    $role->add_cap('read_private_posts');
+}
+
 /* Disable WordPress Admin Bar for all users but admins. */
 // show_admin_bar(false);
 
+add_action ('admin_init','bootstrapwp__addcapreadposts');
 add_filter( 'login_redirect', 'bootstrapwp_loginredirect', 10, 3 );
 add_filter( 'logout_redirect', 'bootstrapwp_logoutredirect', 10, 3 );
 add_action( 'wp_enqueue_scripts', 'bootstrapwp_enqueuefiles' );
-add_action('after_setup_theme', 'bootstrapwp_removeadminbar');
 add_action( 'after_setup_theme', 'bootstrapwp_wpsetup' );
 add_action( 'init', 'bootstrapwp_registermenus' );
+// add_action('after_setup_theme', 'bootstrapwp_removeadminbar');
 // add_filter( 'wp_nav_menu_items', 'bootstrapwp_menuloginlogout', 199, 2 );
 
 // if (function_exists('register_sidebar'))
