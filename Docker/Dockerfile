@@ -108,10 +108,10 @@ RUN chmod 644 /root/.bashrc; \
 	chmod 755 /var/www/html; \
 	ln -s /var/www/website /website; \
 	chown www-data.www-data /var/www/assets; \
-	tar xvfC /tmp/website.tar.gz /var/www; \
 	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
 
+#	tar xvfC /tmp/website.tar.gz /var/www; \
 # 	ln -s /var/www/html/assets /var/www/website/assets; \
 
 # Setup PHP and Apache, place latest config files
