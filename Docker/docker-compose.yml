@@ -3,10 +3,10 @@ services:
   wordpress:
     image: endeavouresu/endeavourwp:latest
     volumes:
-      - ${WEBAPP_STORAGE_HOME}\home:/home
-      - ${WEBAPP_STORAGE_HOME}\LogFiles:/var/log
-      - ${WEBAPP_STORAGE_HOME}\site\wwwroot:/var/www/shared
-      - website:/var/www/html
+      - ${WEBAPP_STORAGE_HOME}/home:/home
+      - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
+      - website:/var/www/shared
       - assets:/var/www/assets
     restart: always
     ports:

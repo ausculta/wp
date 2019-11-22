@@ -60,9 +60,9 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 
 	echo "Checking and installing Wordpress."
 	# if /website exists, move there to install Wordpress.
-	if [ -d /website ]; then 
-		echo "Entering /website"
-		pushd /website
+	if [ -d /var/www/website ]; then 
+		echo "Entering /var/www/website"
+		pushd /var/www/website
 	fi
 
 	if [ ! -e index.php ] && [ ! -e wp-includes/version.php ]; then
@@ -265,8 +265,8 @@ EOPHP
 		fi
 	fi
 
-	if [ -d /website ]; then 
-		echo "Leaving /website"
+	if [ -d /var/www/website ]; then 
+		echo "Leaving /var/www/website"
 		popd
 	fi
 
