@@ -7,7 +7,7 @@ services:
       - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
       - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
       - website:/var/www/shared
-      - assets:/var/www/assets
+      - assets:/var/www/website/assets
     restart: always
     ports:
       - 8080:80
