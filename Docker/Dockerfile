@@ -103,10 +103,11 @@ RUN mount; \
 	mkdir /var/www/website/assets; \
 	chmod 755 /var/www/website; \
 	chmod 755 /var/www/website/assets; \
-	tar xvfC /var/www/html/website.tar.gz /var/www/website; \
+	tar xvfC /var/www/html/website.tar.gz /var/www; \
 	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
 
+#	tar xvfC /var/www/html/website.tar.gz /var/www/website; \
 #	mkdir /var/www/assets; \
 #	chown www-data.www-data /var/www/assets; \
 #	chmod 755 /var/www/assets; \
