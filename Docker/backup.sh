@@ -1,7 +1,7 @@
 #! /bin/bash
-tar cpzv --exclude=website/assets -f website.tar.gz website
+tar cpzv --exclude=/var/www/website/assets -f /var/www/website.tar.gz /var/www/website
 
-mv shared/website.tar.gz.1 shared/website.tar.gz.2
-mv shared/website.tar.gz shared/website.tar.gz.1
-mv website.tar.gz shared/website.tar.gz
+mv /var/www/html/website.tar.gz.1 /var/www/html/website.tar.gz.2
+mv /var/www/html/website.tar.gz /var/www/html/website.tar.gz.1
+mv website.tar.gz /var/www/html/website.tar.gz
 
