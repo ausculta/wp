@@ -89,21 +89,20 @@ RUN a2enmod rewrite expires; \
 COPY bashrc /root/.bashrc
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-# COPY etc.letsencrypt.tar /tmp
-# COPY etc.apache2.tar /tmp
-# COPY website.tar.gz /tmp
+COPY etc.letsencrypt.tar /tmp
+COPY etc.apache2.tar /tmp
+COPY website.tar.gz /tmp
 
-RUN mount; \
-	chmod 644 /root/.bashrc; \
+RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
 	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
-	tar xvfC /var/www/html/etc.apache2.tar /etc; \
-	tar xvfC /var/www/html/etc.letsencrypt.tar /etc; \
+	tar xvfC /tmp/etc.apache2.tar /etc; \
+	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
 	mkdir /var/www/website; \
 	mkdir /var/www/website/assets; \
 	chmod 755 /var/www/website; \
 	chmod 755 /var/www/website/assets; \
-	tar xvfC /var/www/html/website.tar.gz /var/www; \
+	tar xvfC /tmp/website.tar.gz /var/www; \
 	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
 
