@@ -100,7 +100,6 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvfC /tmp/etc.letsencrypt.tar /etc; \
 	mkdir /var/www/website; \
 	mkdir /var/www/website/assets; \
-	mkdir /var/www/website/assets2; \
 	chmod 755 /var/www/website; \
 	chmod 755 /var/www/website/assets; \
 	tar xvfC /tmp/website.tar.gz /var/www; \
