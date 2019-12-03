@@ -10,7 +10,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
+  <meta name="description" content="Endeavour Explorer Scout Unit">
   <meta name="author" content="Ausculta Ltd">
   <!-- <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $tempdiruri . '/images/favicon-32x32.png' ?>"> -->
   <!-- <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $tempdiruri . '/images/favicon-96x96.png' ?>"> -->
@@ -52,7 +52,7 @@
     </div> <!-- /navbar -->
     <div class='row m-0 p-0'> <!-- Logo bar -->
       <div class='col-2 align-self-start m-0 p-0'>
-        <a href="https://www.scouts.org.uk/" border=0><img style="padding: 0; float:none; text-align: center;" src="/assets/media/endeavourlinear-175x80.png" alt="Scouts - Be Prepared" /></a>
+        <img style="padding: 0; float:none; text-align: center;" src="/assets/media/endeavourlinear-175x80.png" alt="Scouts - Be Prepared" />
       </div> <!-- /col -->
       <div class='col-10 align-self-center m-0 p-0'>
         <h2 style="text-align: center;" border=0>Endeavour Explorer Scout Unit</h2>
