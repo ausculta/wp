@@ -98,8 +98,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', dirname( __FILE__ ) . '/' );
 }
 
-define('WP_HOME', "https://new.endeavouresu.uk/");
-define('WP_SITEURL', "https://new.endeavouresu.uk/");
+define('WP_HOME', "https://endeavouresu.uk/");
+define('WP_SITEURL', "https://endeavouresu.uk/");
 define( 'COOKIE_DOMAIN', 'endeavouresu.uk' );
 
 // Force SSL redirect

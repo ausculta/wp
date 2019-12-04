@@ -52,7 +52,7 @@
     </div> <!-- /navbar -->
     <div class='row m-0 p-0 align-items-center'> <!-- Logo bar -->
       <div class='col-2 align-self-start m-0 p-0'>
-        <img  class="d-block w-100 m-0 p-0" src="/assets/media/endeavourlinear-175x80.png" alt="Scouts - Be Prepared" />
+        <img  class="d-block m-0 p-0" src="/assets/logo.png" alt="Scouts - Be Prepared" />
       </div> <!-- /col -->
       <div class='col-10 align-self-center m-0 p-0'>
         <h3 class="text-center m-0 p-0">Endeavour Explorer Scout Unit</h3>
