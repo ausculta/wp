@@ -124,21 +124,21 @@ COPY htaccess /var/www/website/.htaccess
 COPY htaccess /usr/src/wordpress/htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY wp-config.php /usr/src/wordpress/wp-config.php
-COPY apache2.conf /etc/apache2/apache2.conf
-COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
-COPY default.conf /etc/apache2/sites-available/000-default.conf
-COPY certbot /etc/cron.d/certbot
+# COPY apache2.conf /etc/apache2/apache2.conf
+# COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
+# COPY default.conf /etc/apache2/sites-available/000-default.conf
+# COPY certbot /etc/cron.d/certbot
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup.sh /var/www/backup.sh
 
 RUN chmod 644 /usr/local/etc/php/php.ini; \
-	chmod 644 /etc/apache2/apache2.conf; \
-	chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf; \
-	chmod 644 /etc/apache2/sites-available/000-default.conf; \
+	# chmod 644 /etc/apache2/apache2.conf; \
+	# chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf; \
+	# chmod 644 /etc/apache2/sites-available/000-default.conf; \
 	chmod 700 /var/www/backup.sh; \
-	a2ensite 000-default.conf; \
-	a2ensite 000-default-le-ssl.conf; \
-	chmod 644 /etc/cron.d/certbot; \
+	# a2ensite 000-default.conf; \
+	# a2ensite 000-default-le-ssl.conf; \
+	# chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
 #VOLUME /var/www/html /home /var/log
