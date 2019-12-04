@@ -25,9 +25,9 @@
   <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-  <div class="container w-100">
+  <div class="container-fluid">
     <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler btn-sm" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <nav class="collapse navbar-collapse bg-transparent justify-content-end" id="menuheader-navbar" role="navigation" aria-label="Main Menu">
@@ -50,17 +50,17 @@
         ?>
       </nav>
     </div> <!-- /navbar -->
-    <div class='row m-0 p-0'> <!-- Logo bar -->
+    <div class='row m-0 p-0 align-items-center'> <!-- Logo bar -->
       <div class='col-2 align-self-start m-0 p-0'>
-        <img style="padding: 0; float:none; text-align: center;" src="/assets/media/endeavourlinear-175x80.png" alt="Scouts - Be Prepared" />
+        <img  class="d-block w-100 m-0 p-0" src="/assets/media/endeavourlinear-175x80.png" alt="Scouts - Be Prepared" />
       </div> <!-- /col -->
       <div class='col-10 align-self-center m-0 p-0'>
-        <h2 style="text-align: center;" border=0>Endeavour Explorer Scout Unit</h2>
+        <h3 class="text-center m-0 p-0">Endeavour Explorer Scout Unit</h3>
         <p class="text-right">By Land... By Sea... By Air...</p>
       </div> <!-- /col -->
     </div> <!-- /row -->
     <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0" >
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menumain-navbar" aria-controls="menumain-navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menumain-navbar" aria-controls="menumain-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <nav class="collapse navbar-collapse bg-transparent" id="menumain-navbar" role="navigation" aria-label="Main Menu">

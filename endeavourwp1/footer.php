@@ -12,6 +12,7 @@
       </div> <!-- /col -->
     </div> <!-- /row -->
   </div><!-- /container -->
+  <script src="https://kit.fontawesome.com/b3babe9ce8.js" crossorigin="anonymous"></script>
   <script type='text/javascript'>
     jQuery(document).ready(function () {
       jQuery('.navbar .dropdown-item').on('click', function (e) {
