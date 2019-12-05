@@ -114,6 +114,7 @@ COPY htaccess /var/www/website/.htaccess
 COPY htaccess /usr/src/wordpress/htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY wp-config.php /usr/src/wordpress/wp-config.php
+COPY wp-config.php /var/www/website/wp-config.php
 COPY apache2.conf /etc/apache2/apache2.conf
 COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
 COPY default.conf /etc/apache2/sites-available/000-default.conf
