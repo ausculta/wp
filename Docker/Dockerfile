@@ -89,32 +89,22 @@ RUN a2enmod rewrite expires; \
 COPY bashrc /root/.bashrc
 COPY sshd_config /etc/ssh/
 COPY ssh_setup.sh /tmp
-COPY etc.letsencrypt.tar /tmp
-COPY etc.apache2.tar /tmp
+COPY letsencrypt.endeavouresu.tar.gz /tmp
+# COPY etc.apache2.endeavouresu.tar.gz /tmp
 COPY website.tar.gz /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
 	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
 	# tar xvfC /tmp/etc.apache2.tar /etc; \
-	# tar xvfC /tmp/etc.letsencrypt.tar /etc; \
+	tar xvzfC /tmp/letsencrypt.endeavouresu.tar.gz /etc; \
 	mkdir /var/www/website; \
 	mkdir /var/www/website/assets; \
 	chmod 755 /var/www/website; \
 	chmod 755 /var/www/website/assets; \
-	# tar xvfC /tmp/website.tar.gz /; \
+	tar xvfC /tmp/website.tar.gz /; \
 	chown -R www-data.www-data /var/www/website; \
 	rm -rf /tmp/*
-
-#	tar xvfC /var/www/html/website.tar.gz /var/www/website; \
-#	mkdir /var/www/assets; \
-#	chown www-data.www-data /var/www/assets; \
-#	chmod 755 /var/www/assets; \
-#	mkdir /var/www/shared; \
-#	chmod 755 /var/www/shared; \
-#	chmod 755 /var/www/html; \
-#	ln -s /var/www/website /website; \
-# 	ln -s /var/www/html/assets /var/www/website/assets; \
 
 # Setup PHP and Apache, place latest config files
 COPY BaltimoreCyberTrustRoot.crt.pem /usr/src/wordpress/BaltimoreCyberTrustRoot.crt.pem
@@ -124,21 +114,21 @@ COPY htaccess /var/www/website/.htaccess
 COPY htaccess /usr/src/wordpress/htaccess
 COPY php.ini /usr/local/etc/php/php.ini
 COPY wp-config.php /usr/src/wordpress/wp-config.php
-# COPY apache2.conf /etc/apache2/apache2.conf
-# COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
-# COPY default.conf /etc/apache2/sites-available/000-default.conf
-# COPY certbot /etc/cron.d/certbot
+COPY apache2.conf /etc/apache2/apache2.conf
+COPY default-le-ssl.conf /etc/apache2/sites-available/000-default-le-ssl.conf
+COPY default.conf /etc/apache2/sites-available/000-default.conf
+COPY certbot /etc/cron.d/certbot
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY backup.sh /var/www/backup.sh
 
 RUN chmod 644 /usr/local/etc/php/php.ini; \
-	# chmod 644 /etc/apache2/apache2.conf; \
-	# chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf; \
-	# chmod 644 /etc/apache2/sites-available/000-default.conf; \
+	chmod 644 /etc/apache2/apache2.conf; \
+	chmod 644 /etc/apache2/sites-available/000-default-le-ssl.conf; \
+	chmod 644 /etc/apache2/sites-available/000-default.conf; \
 	chmod 700 /var/www/backup.sh; \
-	# a2ensite 000-default.conf; \
-	# a2ensite 000-default-le-ssl.conf; \
-	# chmod 644 /etc/cron.d/certbot; \
+	a2ensite 000-default.conf; \
+	a2ensite 000-default-le-ssl.conf; \
+	chmod 644 /etc/cron.d/certbot; \
 	chmod 0755 /usr/local/bin/docker-entrypoint.sh;
 
 #VOLUME /var/www/html /home /var/log
