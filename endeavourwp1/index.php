@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<div class="col-10 blog-main">
+<div class="col-12 blog-main">
 	<?php if ( have_posts() ) { 
 		while ( have_posts() ) : the_post(); ?>
  			<div class="blog-post">
@@ -10,14 +10,4 @@
  			</div><!-- /.blog-post -->
  		<?php endwhile;
 	}  ?>
-	<nav>
-		<ul class="pager">
-		<li><?php next_posts_link('Previous'); ?></li>
-		<li><?php previous_posts_link('Next'); ?></li>
-		</ul>
-	</nav>
 </div> <!-- /.blog-main -->
-
-<?php get_sidebar(); ?>
-
-<?php get_footer(); ?>
