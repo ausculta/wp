@@ -11,3 +11,5 @@
  		<?php endwhile;
 	}  ?>
 </div> <!-- /.blog-main -->
+
+<?php get_footer(); ?>
