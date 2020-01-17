@@ -120,4 +120,49 @@ add_action( 'init', 'bootstrapwp_registermenus' );
 // }
 // add_action( 'widgets_init', 'bootstrapwp_widgetsinit' );
 
+// function bootstrapwp_checklastpost() {
+//     global $wp_query;
+//     if ($wp_query->current_post + 1 < $wp_query->post_count) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+//   }
+
+// function bootstrapwp_checkfirstpost() {
+//     global $wp_query;
+//     if ($wp_query->current_post > 1) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+//   }
+
+function bootstrapwp_initwidgets() {
+    register_sidebar( array(
+        'name'          => 'Footer - Copyright Text',
+        'id'            => 'footer-copyright-text',
+        'before_widget' => '<div class="footer_copyright_text">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4>',
+        'after_title'   => '</h4>',
+    ) );
+    register_sidebar( array(
+        'name'          => 'Sidebar - Inset',
+        'id'            => 'sidebar-1',
+        'before_widget' => '<div class="sidebar-module sidebar-module-inset">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4>',
+        'after_title'   => '</h4>',
+    ) ); 
+    register_sidebar( array(
+        'name'          => 'Sidebar - Default',
+        'id'            => 'sidebar-2',
+        'before_widget' => '<div class="sidebar-module">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4>',
+        'after_title'   => '</h4>',
+    ) );
+}
+add_action( 'widgets_init', 'bootstrapwp_initwidgets' );
 ?>

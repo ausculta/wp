@@ -85,6 +85,53 @@ a:visited {
     text-decoration: none;
 }
 
+
+/* Sidebar modules for boxing content */
+
+.sidebar-module {
+    padding: 15px;
+    margin: 0 -15px 15px;
+}
+
+.sidebar-module-inset {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.sidebar-module-inset p:last-child,
+.sidebar-module-inset ul:last-child,
+.sidebar-module-inset ol:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Pagination */
+
+.pager {
+    text-align: left;
+}
+
+.pager>li>a {
+    width: 140px;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 30px;
+}
+
+
+/* Blog posts */
+
+.blog-post-title {
+    margin-bottom: 5px;
+    font-size: 40px;
+}
+
+.blog-post-meta {
+    margin-bottom: 20px;
+    color: #999;
+}
+
 @media (min-width: 767px) {
     .navbar .dropdown-toggle:not(.nav-link)::after {
         display: inline-block;
