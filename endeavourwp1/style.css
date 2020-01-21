@@ -39,11 +39,14 @@ h6,
     ;
 }
 
+
+/* 
 a,
 a:visited {
     color: Black;
     ;
 }
+*/
 
 a:active {
     color: #7413dc;
