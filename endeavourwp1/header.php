@@ -26,35 +26,35 @@
 </head>
 <body <?php body_class(); ?>>
   <div class="container-fluid">
-    <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0">
-      <button class="navbar-toggler btn-sm" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <nav class="collapse navbar-collapse bg-transparent justify-content-end" id="menuheader-navbar" role="navigation" aria-label="Main Menu">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <!-- <a class="navbar-brand" href="#"><img src="/assets/media/old-fleur-de-lys.png" width="30" height="30" alt="">&nbsp;<? php $ blogname; ? ></a> -->
-        <?php
-          $menu_args = array(
-            'theme_location'    => 'menuheader',
-            'depth'             => 2, // 1 = no dropdowns, 2 = with dropdowns
-            'container'         => false,
-            'menu_class'        => 'nav navbar-nav',
-            'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
-            'walker'            => new WP_Bootstrap_Navwalker(),
-            'menu'              => 'menuheader_visitors',
-          );
-          if ($logedin) { 
-            $menu_args['menu'] = 'menuheader_users';
-          } 
-          wp_nav_menu( $menu_args );
-        ?>
-      </nav>
-    </div> <!-- /navbar -->
     <div class='row m-0 p-0 align-items-center'> <!-- Logo bar -->
       <div class='col-2 align-self-start m-0 p-0'>
         <img  class="d-block m-0 p-0" src="/assets/logo.png" alt="Scouts - Be Prepared" />
       </div> <!-- /col -->
-      <div class='col-10 align-self-center m-0 p-0'>
+      <div class='col-10 align-self-center m-0 p-0'>     
+        <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0">
+          <button class="navbar-toggler btn-sm" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <nav class="collapse navbar-collapse bg-transparent justify-content-end" id="menuheader-navbar" role="navigation" aria-label="Main Menu">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <!-- <a class="navbar-brand" href="#"><img src="/assets/media/old-fleur-de-lys.png" width="30" height="30" alt="">&nbsp;<? php $ blogname; ? ></a> -->
+            <?php
+              $menu_args = array(
+                'theme_location'    => 'menuheader',
+                'depth'             => 2, // 1 = no dropdowns, 2 = with dropdowns
+                'container'         => false,
+                'menu_class'        => 'nav navbar-nav',
+                'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
+                'walker'            => new WP_Bootstrap_Navwalker(),
+                'menu'              => 'menuheader_visitors',
+              );
+              if ($logedin) { 
+                $menu_args['menu'] = 'menuheader_users';
+              } 
+              wp_nav_menu( $menu_args );
+            ?>
+          </nav>
+        </div> <!-- /navbar -->
         <h3 class="text-center m-0 p-0">Endeavour Explorer Scout Unit</h3>
         <p class="text-right">By Land... By Sea... By Air...</p>
       </div> <!-- /col -->
