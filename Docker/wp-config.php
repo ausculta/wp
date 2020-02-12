@@ -116,5 +116,15 @@ define('MYSQL_SSL_CA_PATH', '/');
 define('MYSQL_SSL_CA', '/website/BaltimoreCyberTrustRoot.crt.pem');
 define('DB_SSL', true);
 
+// Email setup
+define( 'SMTP_HOST', 'smtp.office365.com' ); 
+define( 'SMTP_AUTH', true );
+define( 'SMTP_PORT', '465' );
+define( 'SMTP_SECURE', 'ssl' );
+define( 'SMTP_USERNAME', 'website@endeavouresu.uk' );  // Username for SMTP authentication
+define( 'SMTP_PASSWORD', 'YO^5cNA6Jc$x36pC2hPMpNK4y705LI7Ud!$n4d9z' );          // Password for SMTP authentication
+define( 'SMTP_FROM',     'website@endeavouresu.uk' );  // SMTP From address
+define( 'SMTP_FROMNAME', 'Endeavour ESU' );         // SMTP From name
+
 /** Sets up WordPress vars and included files. */
 require_once( ABSPATH . 'wp-settings.php' );
