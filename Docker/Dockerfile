@@ -67,14 +67,16 @@ RUN { \
 
 # VOLUME /var/www/html /home /var/log
 
-ENV WORDPRESS_VERSION 5.4	
-ENV WORDPRESS_SHA1 e3edcb1131e539c2b2e10fed37f8b6683c824a98
+# Variables for 5.4-en_GB although we're now downloading latest-en_GB that doesn't have a stable SHA1 sum.
+ENV WORDPRESS_VERSION 5.4-en_GB	
+ENV WORDPRESS_SHA1 7a00c4faf89442f660d6167be5820c7cf2d654d6
 
 RUN a2enmod rewrite expires; \
 	mkdir -p /tmp; \
 	set -ex; \
-	curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
-	echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
+	# curl -o wordpress.tar.gz -fSL "https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz"; \
+	curl -o wordpress.tar.gz -fSL "https://en-gb.wordpress.org/latest-en_GB.tar.gz"; \
+	# echo "$WORDPRESS_SHA1 *wordpress.tar.gz" | sha1sum -c -; \
 	# upstream tarballs include ./wordpress/ so this gives us /usr/src/wordpress
 	tar -xzf wordpress.tar.gz -C /usr/src/; \
 	rm wordpress.tar.gz; \
