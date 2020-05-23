@@ -99,7 +99,7 @@ RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
 	(sleep 1;/tmp/ssh_setup.sh 2>&1 > /dev/null); \
 	# tar xvfC /tmp/etc.apache2.tar /etc; \
-	tar xvzfC /tmp/letsencrypt.endeavouresu.tar.gz /etc; \
+	tar xvzfC /tmp/letsencrypt.endeavouresu.tar.gz /; \
 	mkdir /var/www/website; \
 	mkdir /var/www/website/assets; \
 	chmod 755 /var/www/website; \
