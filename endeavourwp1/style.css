@@ -84,7 +84,7 @@ a:visited {
 
 .navbar .dropdown-item:focus,
 .navbar .dropdown-item:hover {
-    color: #16181b;
+    color: Black;
     text-decoration: none;
 }
 
@@ -92,12 +92,13 @@ a:visited {
 /* Sidebar modules for boxing content */
 
 .sidebar-module {
-    padding: 15px;
-    margin: 0 -15px 15px;
+    padding: 0px;
+    margin: 0px 0px 0px 0px;
+	font-size: 0.85em;
 }
 
 .sidebar-module-inset {
-    padding: 15px;
+    padding: 0px;
     background-color: #f5f5f5;
     border-radius: 4px;
 }

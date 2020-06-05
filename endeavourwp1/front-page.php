@@ -1,7 +1,7 @@
 <?php get_header(); ?>
 
 <div class="row m-0 p-0">
-  <div class='col-12 m-0 p-0'>
+  <div class='col-10 m-0 p-0'>
     <div id="frontpage" class="carousel slide" data-ride="carousel" style="overflow: hidden; align:center;">
       <ol class="carousel-indicators">
         <li data-target="#frontpage" data-slide-to="0" class="active"></li>
@@ -110,5 +110,6 @@
       </a>
     </div> <!-- /carousel -->
   </div> <!-- /col -->
+  <?php get_sidebar(); ?>
 </div> <!-- /row -->
 <?php get_footer(); ?>

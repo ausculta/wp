@@ -26,18 +26,16 @@
 </head>
 <body <?php body_class(); ?>>
   <div class="container-fluid">
-    <div class='row m-0 p-0 align-items-center'> <!-- Logo bar -->
+    <div class='row m-0 p-0 align-items-left'> <!-- Logo bar -->
       <div class='col-2 align-self-start m-0 p-0'>
-        <img  class="d-block m-0 p-0" src="/assets/logo.png" alt="Scouts - Be Prepared" />
+        <a href="<?php echo $siteurl; ?>"><img  class="d-block m-0 p-0" src="/assets/logo.png" alt="Scouts - Be Prepared" /></a>
       </div> <!-- /col -->
       <div class='col-10 align-self-center m-0 p-0'>     
         <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0">
-          <button class="navbar-toggler btn-sm" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler btn-sm" type="button" style="font-size:0.75rem; color:#707070" data-toggle="collapse" data-target="#menuheader-navbar" aria-controls="menuheader-navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <nav class="collapse navbar-collapse bg-transparent justify-content-end" id="menuheader-navbar" role="navigation" aria-label="Main Menu">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <!-- <a class="navbar-brand" href="#"><img src="/assets/media/old-fleur-de-lys.png" width="30" height="30" alt="">&nbsp;<? php $ blogname; ? ></a> -->
             <?php
               $menu_args = array(
                 'theme_location'    => 'menuheader',
@@ -53,19 +51,15 @@
               } 
               wp_nav_menu( $menu_args );
             ?>
-          </nav>
+			</nav>
         </div> <!-- /navbar -->
         <h3 class="text-center m-0 p-0">Endeavour Explorer Scout Unit</h3>
-        <p class="text-right">By Land... By Sea... By Air...</p>
-      </div> <!-- /col -->
-    </div> <!-- /row -->
+        <p class="text-right m-0 p-0">By Land... By Sea... By Air...</p>
     <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0" >
       <button class="navbar-toggler" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menumain-navbar" aria-controls="menumain-navbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <nav class="collapse navbar-collapse bg-transparent" id="menumain-navbar" role="navigation" aria-label="Main Menu">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <a class="navbar-brand" href="<?php echo $siteurl; ?>"><img src="<?php echo $tempdiruri . '/images/favicon-16x16.png'; ?>" alt="Fleur de Lys">&nbsp;<?php bloginfo('name'); ?></a>
+      <nav class="collapse navbar-collapse bg-transparent justify-content-start" id="menumain-navbar" role="navigation" aria-label="Main Menu">
         <?php
           $menu_args = array(
             'theme_location'    => 'menumain',
@@ -83,13 +77,9 @@
           } else {
             $menu_args['menu'] = 'menu_visitors';
           }
-
           wp_nav_menu( $menu_args );
         ?>
       </nav>
     </div> <!-- /navbar -->
-    <div class='row m-0 p-0'> <!-- quote area -->
-      <div class='col-12 align-self-center m-0 p-0' id="quotearea">
       </div> <!-- /col -->
-    </div> <!-- /row quote area -->
- 
+    </div> <!-- /row -->

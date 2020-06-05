@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 <div class="row m-0 p-0">
-	<div class="col-9 m-0 p-0 blog-main">
+	<div class="col-10 m-0 p-0 blog-main">
 		<?php if ( have_posts() ) {
 			// if ( bootstrapwp_checkfirstpost() != true ) { 
 				next_posts_link('Earlier posts');

@@ -37,20 +37,6 @@ function bootstrapwp_registermenus() {
  * @return string
  */
 function bootstrapwp_loginredirect( $redirect_to, $request, $user ) {
-    //is there a user to check?
-    // if ( isset( $user->roles ) && is_array( $user->roles ) ) {
-    //     //check for admins
-    //     if ( in_array( 'administrator', $user->roles ) ) {
-    //         // redirect them to the default place
-    //         return $redirect_to;
-    //     } else {
-    //         // return home_url();
-    //         return site_url();
-    //     }
-    // } else {
-    //     // return $redirect_to;
-    //     return site_url();
-    // }
     return site_url();
 }
 
@@ -118,7 +104,6 @@ add_action( 'init', 'bootstrapwp_registermenus' );
 //         'after_title'   => '</h4>',
 //     ) );
 // }
-// add_action( 'widgets_init', 'bootstrapwp_widgetsinit' );
 
 // function bootstrapwp_checklastpost() {
 //     global $wp_query;
@@ -138,31 +123,23 @@ add_action( 'init', 'bootstrapwp_registermenus' );
 //     }
 //   }
 
-function bootstrapwp_initwidgets() {
-    register_sidebar( array(
-        'name'          => 'Footer - Copyright Text',
-        'id'            => 'footer-copyright-text',
-        'before_widget' => '<div class="footer_copyright_text">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h4>',
-        'after_title'   => '</h4>',
-    ) );
-    register_sidebar( array(
-        'name'          => 'Sidebar - Inset',
-        'id'            => 'sidebar-1',
-        'before_widget' => '<div class="sidebar-module sidebar-module-inset">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h4>',
-        'after_title'   => '</h4>',
-    ) ); 
-    register_sidebar( array(
-        'name'          => 'Sidebar - Default',
-        'id'            => 'sidebar-2',
-        'before_widget' => '<div class="sidebar-module">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h4>',
-        'after_title'   => '</h4>',
-    ) );
-}
-add_action( 'widgets_init', 'bootstrapwp_initwidgets' );
+// function bootstrapwp_initwidgets() {
+//    register_sidebar( array(
+//        'name'          => 'Footer - Copyright Text',
+//        'id'            => 'footer-copyright-text',
+//        'before_widget' => '<div class="footer_copyright_text">',
+//        'after_widget'  => '</div>',
+//        'before_title'  => '<h4>',
+//        'after_title'   => '</h4>',
+//    ) );
+    // register_sidebar( array(
+        // 'name'          => 'Sidebar - Default',
+        // 'id'            => 'sidebar-default',
+        // 'before_widget' => '<div class="sidebar-module">',
+        // 'after_widget'  => '</div>',
+        // 'before_title'  => '<div class="lead">',
+        // 'after_title'   => '</div>',
+    // ) );
+// }
+// add_action( 'widgets_init', 'bootstrapwp_initwidgets' );
 ?>
