@@ -17,7 +17,7 @@
 	</div>
 	<?php } ?>
 	<div class="alert alert-primary" role="alert">
-		<a href="https://endeavouresu.uk/glider-simulator-overview/" class="alert-heading">Simulator project</a><br />
+		<a href="https://endeavouresu.uk/gsim/" class="alert-heading">Simulator project</a><br />
 		<a href="https://endeavouresu.uk/category/bsim/" class="alert-heading">Simulator blog</a><br />
 		<a href="https://endeavouresu.uk/glider-simulator-videos/" class="alert-heading">Simulator videos</a>
 	</div>

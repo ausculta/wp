@@ -1,4 +1,5 @@
 # BEGIN WordPress
+Redirect 301 /glider-simulator-overview /gsim
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteCond %{HTTP:X-ARR-SSL} ^$
