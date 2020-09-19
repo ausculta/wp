@@ -46,8 +46,12 @@
                 'walker'            => new WP_Bootstrap_Navwalker(),
                 'menu'              => 'menuheader_visitors',
               );
-              if ($logedin) { 
-                $menu_args['menu'] = 'menuheader_users';
+              if ($logedin) {
+                if (!current_user_can('administrator') && !is_admin()) {
+                  $menu_args['menu'] = 'menuheader_users';
+                } else {
+                  $menu_args['menu'] = 'menuheader_admins';
+                }
               } 
               wp_nav_menu( $menu_args );
             ?>

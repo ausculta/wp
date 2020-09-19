@@ -23,6 +23,7 @@
 	</div>
 	<div class="alert alert-info" role="alert">
 		<?php if ($logedin) { ?>
+			<a href="https://endeavouresu.uk/all-events/">All events</a><br />
 			<a href="https://endeavouresu.uk/forms/">Forms library</a><br />
 			<a href="https://endeavouresu.uk/payments-and-banking-details/">Bank details</a><br />
 			<a href="https://endeavouresu.uk/all-photos/">All photos</a><br />
