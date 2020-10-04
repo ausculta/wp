@@ -10,7 +10,7 @@ jQuery(document).ready(function($) {
             ExpID: this.id,
         }, function(newdata) {
             newcontent = "\t\t\t\t<form name=\"frmExplorer\" id=\"frmExplorer\" method=\"POST\" action=\"\">\n";
-            newcontent = "\t\t\t\t<input type=\"hidden\" id=\"ExpID\" value=\"" + newdata.ExpID + "\">\n"
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" value=\"" + newdata.ExpID + "\">\n"
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             newcontent = newcontent + "\t\t\t\t\t<tr><td>Login:</td><td>" + newdata.Login + " (" + newdata.Status + " - " + newdata.ExpType + " - " + newdata.DateStart + " - " + newdata.DateEnd + ")</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t\t<tr><td>" + newdata.NightsAway + " Nights Away:</td><td>\t\t\t\t\t\t<table class=\"table\">\n\n" 
@@ -37,13 +37,13 @@ jQuery(document).ready(function($) {
 
             newcontent = newcontent + "\t\t\t\t<div class=\"modal fade\" id=\"modalUpdateExplorer\" tabindex=\"-1\" aria-labelledby=\"modalUpdateExplorerLabel\" aria-hidden=\"true\">\n";
             newcontent = newcontent + "\t\t\t\t<div class=\"modal-dialog modal-xl modal-dialog-centered\">\n\t\t\t\t<div class=\"modal-content\">\n\t\t\t\t<div class=\"modal-header\">\n";
-            newcontent = newcontent + "\t\t\t\t<h5 class=\"modal-title\" id=\"modalUpdateExplorerLabel\">" + newdata.Name + " (" + newdata.ExpID + ")</h5>\n";
+            newcontent = newcontent + "\t\t\t\t<h5 class=\"modal-title\" id=\"modalUpdateExplorerLabel\">" + newdata.Name + " (id: " + newdata.ExpID + ")</h5>\n";
             newcontent = newcontent + "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
             newcontent = newcontent + "\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-body\" id=\"modalUpdateExplorerBody\">\n";
             newcontent = newcontent + "\t\t\t\t<h5>Retrieving Data</h5>\n";
             newcontent = newcontent + "\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-footer\">\n";
             newcontent = newcontent + "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\">Close</button>\n";
-            newcontent = newcontent + "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" id=\"btnUpdateSave\">Save changes</button>\n";
+            newcontent = newcontent + "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" id=\"btnUpdateSave\" name=\"btnUpdateSave\">Save changes</button>\n";
             newcontent = newcontent + "\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n";
         
             document.getElementById("modalGetExplorerLabel").innerHTML = newdata.Name + " (id: " + newdata.ExpID + ")";

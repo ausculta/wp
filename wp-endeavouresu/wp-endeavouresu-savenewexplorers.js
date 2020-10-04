@@ -3,7 +3,7 @@ jQuery(document).ready(function($) {
         var i = 0;
         var nonexpform = $("#frmAllExplorers").serializeArray()
         $.post(ajaxdata_newexplorers.ajax_url, {
-           _ajax_nonce: ajaxdata_newexplorers.nonce,
+            _ajax_nonce: ajaxdata_newexplorers.nonce,
             action: "save_newexplorers",
             dbdata: nonexpform,
         }, function(newdata) {

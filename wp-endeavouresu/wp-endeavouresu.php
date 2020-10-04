@@ -133,7 +133,7 @@ function wpendeavouresu_enqueuescript( $hook ) {
     wp_enqueue_script( 'ajax-savenewexplorers', plugins_url('js/wp-endeavouresu-savenewexplorers.js', __FILE__ ), array('jquery') );
     wp_enqueue_script( 'ajax-getexplorer', plugins_url('js/wp-endeavouresu-getexplorer.js', __FILE__ ), array('jquery') );
     wp_enqueue_script( 'ajax-getexplorerdata', plugins_url('js/wp-endeavouresu-getexplorerdata.js', __FILE__ ), array('jquery') );
-    wp_enqueue_script( 'ajax-getexplorerdata', plugins_url('js/wp-endeavouresu-updateexplorerdata.js', __FILE__ ), array('jquery') );
+    wp_enqueue_script( 'ajax-updateexplorerdata', plugins_url('js/wp-endeavouresu-updateexplorerdata.js', __FILE__ ), array('jquery') );
     $nonce_getnonexpusers = wp_create_nonce( 'wpendeavouresu_getnonexpusers' );
     $nonce_savenewexplorers = wp_create_nonce( 'wpendeavouresu_savenewexplorers' );
     $nonce_getexplorer = wp_create_nonce( 'wpendeavouresu_getexplorer' );
@@ -165,8 +165,7 @@ function wpendeavouresu_getnonexpusers() {
     global  $wpdb;
 
     // Handle the ajax request
-    // check_ajax_referer('wpendeavouresu_getnonexpusers');
-    $nonce_allexplorers = wp_create_nonce('wpendeavouresu_getnonexpusers');
+    check_ajax_referer('wpendeavouresu_getnonexpusers');
 
     // Flush the DB cache and run the query
     $wpdb->flush();
@@ -222,7 +221,6 @@ function wpendeavouresu_getexplorer() {
 
     // Handle the ajax request
     check_ajax_referer('wpendeavouresu_getexplorer');
-    $nonce_getexplorer = wp_create_nonce('wpendeavouresu_getexplorer');
 
     if (! empty($_GET['ExpID'])) {
         // Flush the DB cache and run the query
@@ -319,6 +317,83 @@ function wpendeavouresu_getexplorer() {
     wp_die(); // All ajax handlers die when finished
 }
 
+function wpendeavouresu_getexplorerdata() {
+    global  $wpdb;
+
+    // Handle the ajax request
+    //check_ajax_referer('nonce_getexplorerdata');
+
+    $content = array();
+    if (! empty($_GET['ExpID'])) {
+        $expID = $_GET['ExpID'];
+        $content['ExpID'] = $expID;
+        // echo "ExpID: " . $expID;
+        
+        // Flush the database cache, just in case
+        $wpdb->flush();
+        
+        switch ($_GET['actiontype']) {
+            case "EditStatus":
+                $sql = "SELECT ExpStatusID FROM exp1_explorers WHERE ExpID = " . $expID;
+                $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
+                if (count($dbdata) > 0) {
+                    $content['ExpStatusID'] = $dbdata[0];
+                    $wpdb->flush();               
+                    $sql = "SELECT ExpStatusID, Description FROM exp1_expstatus WHERE Deleted = 0 ORDER BY Description";
+                    $dbdata = $wpdb->get_results($sql, ARRAY_N);
+                    $statusdata = array();
+                    if (count($dbdata) > 0) {
+                        foreach($dbdata as $dbrow) {
+                            $statusdata[] = array('StatusID' => esc_html($dbrow[0]), 'Description' => esc_html($dbrow[1]));
+                        }
+                    }
+                    $content['ExpStatusNo'] = count($statusdata);
+                    $content['ExpStatus'] = $statusdata;
+                }
+                break;
+            default:
+                break;
+        }
+    } else {
+        $content = "Please provide an explorer ID";
+    }
+    // Send the data back
+    wp_send_json($content);
+   
+    wp_die(); // All ajax handlers die when finished
+}
+
+
+function wpendeavouresu_updateexplorerdata() {
+    global  $wpdb;
+    
+    check_ajax_referer('wpendeavouresu_updateexplorerdata');
+    
+    // Declare the return data
+    $content = array();
+    
+    if ((! empty($_POST['dbdata'])) && (! empty($_POST['updatetype']))) {
+        // $newexp = json_decode($_POST['dbdata'], true);
+        $newdata = $_POST['dbdata'];
+
+        $wpdb->flush();
+        switch ($_POST['updatetype']) {
+            case "EditStatus":
+                $sql = "UPDATE exp1_explorers SET ExpStatusID = " . $_POST['rdoActive'] . " WHERE ExpID = " . $_POST['ExplorerID'];
+                // query returns the number of affected rows - ignored.
+                $dbresult = $wpdb->query($sql);
+                if ($dbresult > 0) $content['success'] = 1;
+                break;
+            default:
+                break;
+        }
+    }
+    $wpdb->flush();
+    wp_send_json($content);
+
+    wp_die(); // All ajax handlers die when finished
+}
+
 // Shortcode to trigger the plugin from the page
 add_shortcode('EndeavourESU_AllExplorers', 'wpendeavouresu_allexplorers');
 
@@ -334,11 +409,11 @@ add_action('wp_ajax_save_newexplorers', 'wpendeavouresu_savenewexplorers');
 // Add the handler for AJAX request to view explorer details 
 add_action('wp_ajax_get_explorer', 'wpendeavouresu_getexplorer');
 
-// Add the handler for AJAX request to view explorer details 
-add_action('wp_ajax_get_explorer', 'wpendeavouresu_getexplorerdata');
+// Add the handler for AJAX request to get explorer details 
+add_action('wp_ajax_get_explorerdata', 'wpendeavouresu_getexplorerdata');
 
-// Add the handler for AJAX request to view explorer details 
-add_action('wp_ajax_get_explorer', 'wpendeavouresu_updateexplorerdata');
+// Add the handler for AJAX request to update explorer details 
+add_action('wp_ajax_update_explorerdata', 'wpendeavouresu_updateexplorerdata');
 
 // 5
 // SELECT U.display_name, U.user_login, E.ExpDateStart, E.ExpDateEnd, S.Description, E.TotalNightsAway, E.TotalHikes FROM edvr1_users U, exp1_expstatus S, exp1_explorers E WHERE U.ID = E.ExpWPID AND S.ExpStatusID = E.ExpStatusID AND E.ExpID = 5
