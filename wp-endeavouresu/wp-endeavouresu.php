@@ -61,39 +61,50 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     // Table head
     $content = $content . "\t<thead>\n\t\t<tr>\n";
     $content = $content . "\t\t\t<td>Explorer Name</td>\n";
+    $content = $content . "\t\t\t<td>Type</td>\n";
     $content = $content . "\t\t\t<td>Status</td>\n";
+    $content = $content . "\t\t\t<td>Nights Away</td>\n";
+    $content = $content . "\t\t\t<td>Hikes</td>\n";
     $content = $content . "\t\t\t<td>Start date</td>\n";
     $content = $content . "\t\t\t<td>End date</td>\n";
     $content = $content . "\t\t</tr>\n\t</thead>\n";
 
     // Table content
-    $sql = "SELECT U.display_name, S.Description, E.ExpDateStart, E.ExpDateEnd, E.ExpID ";
-    $sql = $sql . "FROM " . $wpdb->base_prefix . "users U, exp1_explorers E, exp1_expstatus S ";
-    $sql = $sql . "WHERE U.ID = E.ExpWPID AND E.ExpStatusID = S.ExpStatusID AND E.Deleted = 0 ";
-    $sql = $sql . "ORDER BY U.display_name";
+    // $sql = "SELECT E.ExpID, U.display_name, exp1_exptypetypes.Description, S.Description, E.TotalNightsAway, E.TotalHikes, E.ExpDateStart, E.ExpDateEnd ";
+    // $sql = $sql . "FROM " . $wpdb->base_prefix . "users U, exp1_explorers E, exp1_expstatus S, exp1_exptypetypes, exp1_exptypes ";
+    // $sql = $sql . "WHERE U.ID = E.ExpWPID AND E.Deleted = 0 AND E.ExpStatusID = S.ExpStatusID AND exp1_exptypetypes.ExpTypeTypeID = exp1_exptypes.ExpTypeTypeID AND exp1_exptypes.ExpID = E.ExpID AND exp1_exptypes.DateEnd IS NULL ";
+    // $sql = $sql . "ORDER BY U.display_name";
+    $sql = "CALL GetAllExplorers()";
     // Flush the DB cache and run the query
     $wpdb->flush();
-    $result = $wpdb->get_results($sql, ARRAY_N);
-    if (($i = count($result)) > 0) {
-        // Query returned rows
-        foreach ($result as $row) {
-            $content = $content . "\t\t<tr><td class=\"explorer\" data-toggle=\"modal\" data-target=\"#modalGetExplorer\" id=\"" . esc_html($row[4]). "\">" . esc_html($row[0]) . "</td>";
-            $content = $content . "<td>" . esc_html($row[1]) . "</td>";
+    $dbdata = $wpdb->get_results($sql, ARRAY_N);
+    if (count($dbdata) > 0) {
+        foreach ($dbdata as $row) {
+            $content = $content . "\t\t<tr><td class=\"explorer\" data-toggle=\"modal\" data-target=\"#modalGetExplorer\" id=\"" . $row[0]. "\">" . esc_html($row[1]) . "</td>";
             $content = $content . "<td>" . esc_html($row[2]) . "</td>";
-            $content = $content . "<td>" . esc_html($row[3]) . "</td></tr>\n";
+            $content = $content . "<td>" . esc_html($row[3]) . "</td>";
+            $content = $content . "<td>" . esc_html($row[4]) . "</td>";
+            $content = $content . "<td>" . esc_html($row[5]) . "</td>";
+            $content = $content . "<td>" . esc_html($row[6]) . "</td>";
+            if ($row[7] == "") {
+                $content = $content . "<td>Current</td></tr>\n";
+            } else {
+                $content = $content . "<td>" . esc_html($row[7]) . "</td></tr>\n";
+            }
         }
         $wpdb->flush();
     } else {
-        $content = $content . "\t\t<tr><td colspan=4 class=\"text-align-center\">There are no explorer records in the database.</td></tr>\n";
+        $content = $content . "\t\t<tr><td colspan=7 class=\"text-align-center\">There are no explorer records in the database.</td></tr>\n";
     }
     // Close the table
     $content = $content . "</table></div>\n";
     $content = $content . "<div class=\"text-align-center\"><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalAddExplorers\" id=\"btnAddExplorers\">Add explorers</button></div>\n";
+    $content = $content . "<div class=\"text-align-center\"><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalAddEvent\" id=\"btnAddEventNA\">Add explorers</button></div>\n";
+    $content = $content . "<div class=\"text-align-center\"><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalAddEvent\" id=\"btnAddEventHike\">Add explorers</button></div>\n";
+    $content = $content . "<div class=\"text-align-center\"><button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalAddEvent\" id=\"btnAddEventBadge\">Add explorers</button></div>\n";
 
     // $content = $content . "SQL: " . $sql . ";\n";
     
-    $nonce_allexplorers = wp_create_nonce( 'wp-endeavouresu_allexplorers' );
-
     $content = $content . "<div class=\"modal fade\" id=\"modalAddExplorers\" tabindex=\"-1\" aria-labelledby=\"modalAddExplorersLabel\" aria-hidden=\"true\">\n";
     $content = $content . "\t<div class=\"modal-dialog  modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
     $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalAddExplorersLabel\">Add explorers from user list</h5>\n";
@@ -101,12 +112,21 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-body\" id=\"modalAddExplorersBody\">\n";
     $content = $content . "\t\t\t<h5>Retrieving Data</h5>\n";
     $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n";
-    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\">Close</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" id=\"btnCloseExplorers\" data-dismiss=\"modal\">Close</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" id=\"btnSaveExplorers\">Save changes</button>\n";
     $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
 
-    $nonce_allexplorers = wp_create_nonce( 'wp-endeavouresu_getexplorer' );
-
+    $content = $content . "<div class=\"modal fade\" id=\"modalAddEvent\" tabindex=\"-1\" aria-labelledby=\"modalAddEventLabel\" aria-hidden=\"true\">\n";
+    $content = $content . "\t<div class=\"modal-dialog  modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
+    $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalAddEventLabel\">Retrieving data</h5>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
+    $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-body\" id=\"modalAddEventBody\">\n";
+    $content = $content . "\t\t\t<h5>Retrieving Data</h5>\n";
+    $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" id=\"btnCloseEvent\" data-dismiss=\"modal\">Close</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" id=\"btnSaveEvent\">Save changes</button>\n";
+    $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
+    
     $content = $content . "<div class=\"modal fade\" id=\"modalGetExplorer\" tabindex=\"-1\" aria-labelledby=\"modalGetExplorerLabel\" aria-hidden=\"true\">\n";
     $content = $content . "\t<div class=\"modal-dialog modal-xl modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
     $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalGetExplorerLabel\">Retrieving explorer name</h5>\n";
@@ -119,8 +139,19 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnEditType\">Edit Type</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddNA\">Nights Away</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddHike\">Hikes</button>\n";
-    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddAward\">Badges & Awards</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddBadge\">Badges & Awards</button>\n";
     $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
+
+    $content = $content . "\t\t\t\t<div class=\"modal fade\" id=\"modalUpdateExplorer\" tabindex=\"-1\" aria-labelledby=\"modalUpdateExplorerLabel\" aria-hidden=\"true\">\n";
+    $content = $content . "\t\t\t\t<div class=\"modal-dialog modal-xl modal-dialog-centered\">\n\t\t\t\t<div class=\"modal-content\">\n\t\t\t\t<div class=\"modal-header\">\n";
+    $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalUpdateExplorerLabel\">Retrieving explorer name</h5>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
+    $content = $content . "\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-body\" id=\"modalUpdateExplorerBody\">\n";
+    $content = $content . "\t\t\t\t<h5>Retrieving Data</h5>\n";
+    $content = $content . "\t\t\t\t</div>\n\t\t\t\t<div class=\"modal-footer\">\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\">Close</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" id=\"btnUpdateSave\" name=\"btnUpdateSave\">Save changes</button>\n";
+    $content = $content . "\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t</div>\n";
 
     // always return
     return $content;
@@ -169,8 +200,9 @@ function wpendeavouresu_getnonexpusers() {
 
     // Flush the DB cache and run the query
     $wpdb->flush();
-    $sql = "SELECT ID, display_name FROM " . $wpdb->base_prefix . "users ";
-    $sql = $sql . "WHERE " . $wpdb->base_prefix . "users.ID NOT IN (SELECT DISTINCT ExpWPID FROM exp1_explorers) ORDER BY display_name ASC";
+    // $sql = "SELECT ID, display_name FROM " . $wpdb->base_prefix . "users ";
+    // $sql = $sql . "WHERE " . $wpdb->base_prefix . "users.ID NOT IN (SELECT DISTINCT ExpWPID FROM exp1_explorers) ORDER BY display_name ASC";
+    $sql = "CALL GetNonExplorerUsers()";
     $result = $wpdb->get_results($sql, ARRAY_N);
     $content = array();
     $explist = array();
@@ -183,6 +215,17 @@ function wpendeavouresu_getnonexpusers() {
     $content['expno'] = count($result);
     $content['explist'] = $explist;
     $wpdb->flush();
+    $sql = "SELECT ExpTypeTypeID, Description FROM exp1_exptypetypes WHERE Deleted = 0 ORDER BY Description";
+    $dbdata = $wpdb->get_results($sql, ARRAY_N);
+    $typesdata = array();
+    if (count($dbdata) > 0) {
+        foreach($dbdata as $dbrow) {
+            $typesdata[] = array('TypeID' => esc_html($dbrow[0]), 'Description' => esc_html($dbrow[1]));
+        }
+    }
+    $wpdb->flush();
+    $content['ExpTypesNo'] = count($typesdata);
+    $content['ExpTypes'] = $typesdata;
 
     // Send the data back
     wp_send_json($content);
@@ -199,17 +242,33 @@ function wpendeavouresu_savenewexplorers() {
     if (! empty($_POST['dbdata'])) {
         // $newexp = json_decode($_POST['dbdata'], true);
         $newexp = $_POST['dbdata'];
-       
+        if ($_POST['rdoType'] != null) {
+            $rdoType = $_POST['rdoType'];
+        } else {
+            $rdoType = 0;
+        }
+        if ($_POST['dateFrom'] != null) {
+            $dateFrom = $_POST['dateFrom'];
+        } else {
+            $dateFrom = "CURRENT_DATE";
+        }
+        $wpdb->flush();
         foreach ($newexp as $explorer) {
-            if (strlen($explorer.['name']) < 4) continue;
-            $wpdb->flush();
-            $sql = "INSERT INTO exp1_explorers (ExpWPID, ExpDateStart, ExpStatusID) VALUES (" . $explorer['value'] . ", CURRENT_DATE, 1)";
-            // query returns the number of affected rows - ignored.
-            $wpdb->query($sql);       
-            $dbrecords++;
+            switch ($explorer['name']) {
+                case "rdoType":
+                case "dateFrom":
+                    // Ignore
+                    break;
+                default:
+                    if (strlen($explorer['name']) < 4) break;
+                    $sql = "CALL AddExplorer(" . $explorer['value'] . ", " . $rdoType . ", '" . $dateFrom . "')";
+                    $wpdb->query($sql);
+                    $wpdb->flush();
+                    $dbrecords++;
+                    break;
+            }
         }
     }
-    $wpdb->flush();
     $content['dbrecords'] = $dbrecords;
     wp_send_json($content);
 
@@ -230,10 +289,10 @@ function wpendeavouresu_getexplorer() {
         $sql = "SELECT U.display_name, U.user_login, E.ExpDateStart, E.ExpDateEnd, S.Description, E.TotalNightsAway, E.TotalHikes ";
         $sql = $sql . "FROM " . $wpdb->base_prefix . "users U, exp1_expstatus S, exp1_explorers E ";
         $sql = $sql . "WHERE U.ID = E.ExpWPID AND S.ExpStatusID = E.ExpStatusID AND E.ExpID = " . $expID;
-        // echo $sql;
         $expdata = $wpdb->get_row($sql, ARRAY_N, 0);
         if (count($expdata) > 0) {
             $content = array(
+                'SQL1' => $sql,
                 'Name'=> esc_html($expdata[0]),
                 'Login' => esc_html($expdata[1]),
                 'DateStart' => esc_html($expdata[2]),               
@@ -251,25 +310,25 @@ function wpendeavouresu_getexplorer() {
         }
         $wpdb->flush();
 
-        $sql = "SELECT ExpHikeID, Description, DateStart, DateEnd FROM exp1_exphikes WHERE ExpID = " .$expID . " ORDER BY DateStart DESC";
-        // echo $sql;
+        $sql = "SELECT ExpHikeID, Description, HikeDays, DateStart, DateEnd FROM exp1_exphikes WHERE ExpID = " .$expID . " ORDER BY DateStart DESC";
+        $content['SQL2'] = $sql;
         $hikedata = $wpdb->get_results($sql, ARRAY_N);
         $exphikes = array();
         if (count($hikedata) > 0) {
             foreach($hikedata as $hike) {
-                $exphikes[] = array('ExpHikeID' => esc_html($hike[0]), 'Description' => esc_html($hike[1]), 'DateStart' => esc_html($hike[2]), 'DateEnd' => esc_html($hike[3]));
+                $exphikes[] = array('ExpHikeID' => esc_html($hike[0]), 'Description' => esc_html($hike[1]), 'HikeDays' => esc_html($hike[2]), 'DateStart' => esc_html($hike[3]), 'DateEnd' => esc_html($hike[4]));
             }
         }
         $content['HikeNo'] = count($exphikes);
         $wpdb->flush();
 
-        $sql = "SELECT ExpNightAwayID, DateStart, DateEnd, NALocation, NADays FROM exp1_expna WHERE ExpID = " . $expID . " ORDER BY DateStart DESC";
+        $sql = "SELECT ExpNightAwayID, DateStart, DateEnd, Description, NALocation, NADays FROM exp1_expna WHERE ExpID = " . $expID . " ORDER BY DateStart DESC";
         // echo $sql;
         $nadata = $wpdb->get_results($sql, ARRAY_N);
         $expnas = array();
         if (count($nadata) > 0) {
             foreach($nadata as $expna) {
-                $expnas[] = array('ExpNAID' => esc_html($expna[0]), 'DateStart' => esc_html($expna[1]), 'DateEnd' => esc_html($expna[2]), 'NALocation' => esc_html($expna[3]), 'NADays' => esc_html($expna[4]));
+                $expnas[] = array('ExpNAID' => esc_html($expna[0]), 'DateStart' => esc_html($expna[1]), 'DateEnd' => esc_html($expna[2]), 'Description' => esc_html($expna[3]), 'NALocation' => esc_html($expna[4]), 'NADays' => esc_html($expna[5]));
             }
         }
         $content['NANo'] = count($expnas);
@@ -278,8 +337,8 @@ function wpendeavouresu_getexplorer() {
         $sql = "SELECT E.ExpTypeID, T.Description, E.DateStart FROM exp1_exptypes E, exp1_exptypetypes T ";
         $sql = $sql . "WHERE E.ExpID = " . $expID . " AND E.ExpTypeTypeID = T.ExpTypeTypeID AND E.DateEnd IS NULL";
         // echo $sql;
-        $typedata = $wpdb->get_results($sql, ARRAY_N);
-        if (count($typedata) > 0) {
+        $typedata = $wpdb->get_row($sql, ARRAY_N);
+        if (! empty($typedata)) {
             $content['ExpTypeID'] = esc_html($typedata[0]);
             $content['ExpType'] = esc_html($typedata[1]);
             $content['ExpTypeDateStart'] = esc_html($typedata[2]);
@@ -289,22 +348,21 @@ function wpendeavouresu_getexplorer() {
             $content['ExpTypeDateStart'] = esc_html('Date not set');
         }
         $wpdb->flush();
-        $sql = "SELECT B.BadgeID , B.Name, B.Description, B.IconPath, S.Description, T.Description, E.ExpBadgeID, E.DateStart, E.DateEnd ";
+        $sql = "SELECT B.BadgeID, B.IconPath, CONCAT(B.Name, ' (', S.Description, ', ', T.Description, ')'), B.Description, E.ExpBadgeID, E.DateStart, E.DateEnd  ";
         $sql = $sql . "FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T, exp1_expbadges E ";
         $sql = $sql . "WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID AND B.BadgeID = E.BadgeID AND E.ExpID = " . $expID . " ";
-        $sql = $sql . "GROUP BY B.BadgeTypeID ORDER BY B.Description";
-        // echo $sql;
+        $sql = $sql . "ORDER BY B.BadgeTypeID, B.Description";
+        $content['SQL'] = $sql;
         $badgedata = $wpdb->get_results($sql, ARRAY_N);
         $expbadges = array();
         if (count($badgedata) > 0) {
             foreach($badgedata as $badge) {
-                $expbadges[] = array('BadgeID' => esc_html($badge[0]), 'BadgeName' => esc_html($badge[1]),
-                                    'BadgeDescription' => esc_html($badge[2]), 'IconPath' => esc_html($badge[3]),
-                                    'BadgeStatus' => esc_html($badge[4]), 'BadgeType' => esc_html($badge[5]),
-                                    'ExpBadgeID' => esc_html($badge[6]), 'DateStart' => esc_html($badge[7]), 'DateEnd' => esc_html($badge[8]) );
+                $expbadges[] = array('BadgeID' => esc_html($badge[0]), 'IconPath' => esc_html($badge[1]),
+                                    'Description' => esc_html($badge[2]), 'BadgeDescription' => esc_html($badge[3]),
+                                    'ExpBadgeID' => esc_html($badge[4]), 'DateStart' => esc_html($badge[5]), 'DateEnd' => esc_html($badge[6]) );
             }
         }
-        $content['BadgeNo'] = count($expbadges);
+        $content['BadgesNo'] = count($expbadges);
         $wpdb->flush();
 
         if (count($exphikes) > 0) $content['ExpHikes'] = $exphikes;
@@ -336,7 +394,7 @@ function wpendeavouresu_getexplorerdata() {
             case "EditStatus":
                 $sql = "SELECT ExpStatusID FROM exp1_explorers WHERE ExpID = " . $expID;
                 $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
-                if (count($dbdata) > 0) {
+                if ($dbdata != null) {
                     $content['ExpStatusID'] = $dbdata[0];
                     $wpdb->flush();               
                     $sql = "SELECT ExpStatusID, Description FROM exp1_expstatus WHERE Deleted = 0 ORDER BY Description";
@@ -351,6 +409,41 @@ function wpendeavouresu_getexplorerdata() {
                     $content['ExpStatus'] = $statusdata;
                 }
                 break;
+            case "EditType":
+                $sql = "SELECT ExpTypeTypeID FROM exp1_exptypes WHERE ExpID = " . $expID . " AND DateEnd IS NULL";
+                $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
+                if ($dbdata != null) {
+                    $content['ExpTypeID'] = $dbdata[0];
+                    $wpdb->flush();
+                }                    
+                $sql = "SELECT ExpTypeTypeID, Description FROM exp1_exptypetypes WHERE Deleted = 0 ORDER BY Description";
+                $dbdata = $wpdb->get_results($sql, ARRAY_N);
+                $typesdata = array();
+                if (count($dbdata) > 0) {
+                    foreach($dbdata as $dbrow) {
+                        $typesdata[] = array('TypeID' => esc_html($dbrow[0]), 'Description' => esc_html($dbrow[1]));
+                    }
+                }
+                $content['ExpTypesNo'] = count($typesdata);
+                $content['ExpTypes'] = $typesdata;
+                break;
+            case "AddBadge":
+                $sql = "SELECT B.BadgeID, CONCAT(B.Name, ' (', S.Description, ', ', T.Description, ')'), B.Description ";
+                $sql = $sql . "FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T ";
+                $sql = $sql . "WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID ";
+                $sql = $sql . "ORDER BY T.Description, B.Description";
+                $content['SQL'] = $sql;
+                $badges = array();
+                $dbdata = $wpdb->get_results($sql, ARRAY_N);
+                if ($dbdata != null) {
+                    foreach($dbdata as $dbrow) {
+                        $badges[] = array( "BadgeID" => $dbrow[0], "Description" => esc_html($dbrow[1]));
+                    }
+                }                    
+                $wpdb->flush();
+                $content['BadgesNo'] = count($badges);
+                $content['Badges'] = $badges;
+                break;
             default:
                 break;
         }
@@ -363,28 +456,211 @@ function wpendeavouresu_getexplorerdata() {
     wp_die(); // All ajax handlers die when finished
 }
 
-
 function wpendeavouresu_updateexplorerdata() {
     global  $wpdb;
     
-    check_ajax_referer('wpendeavouresu_updateexplorerdata');
+    // check_ajax_referer('wpendeavouresu_updateexplorerdata');
     
     // Declare the return data
     $content = array();
-    
-    if ((! empty($_POST['dbdata'])) && (! empty($_POST['updatetype']))) {
-        // $newexp = json_decode($_POST['dbdata'], true);
+    if ((! empty($_POST['dbdata'])) && (! empty($_POST['actiontype']))) {
         $newdata = $_POST['dbdata'];
+        foreach ($newdata as $dbdata) {
+            switch ($dbdata['name']) {
+                case "ExplorerID":
+                    $expID = $dbdata['value'];
+                    break;
+                case "ExplorerName":
+                    $expName = $dbdata['value'];
+                    break;
+                case "UpdateType":
+                    $updatetype = $dbdata['value'];
+                    break;
+                default:
+                    break;
+            }
+        }
+        // echo "Action: " . $_POST['actiontype'] . " for ID: " . $expID . ". ";
 
+        if (empty($expID)) {
+            $content['success'] = 0;
+            $content['error'] = "ExplorerID is empty";
+            wp_send_json($content);
+            wp_die();
+        }
+     
         $wpdb->flush();
-        switch ($_POST['updatetype']) {
+        switch ($_POST['actiontype']) {
             case "EditStatus":
-                $sql = "UPDATE exp1_explorers SET ExpStatusID = " . $_POST['rdoActive'] . " WHERE ExpID = " . $_POST['ExplorerID'];
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "rdoStatus":
+                            $rdoStatus = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                $sql = "UPDATE exp1_explorers SET ExpStatusID = " . intval($rdoStatus) . " WHERE ExpID = " . intval($expID);
+                // echo "SQL: " . $sql . "; ";
                 // query returns the number of affected rows - ignored.
                 $dbresult = $wpdb->query($sql);
-                if ($dbresult > 0) $content['success'] = 1;
+                if ($dbresult > 0) {
+                    $content['success'] = 1;
+                } else {
+                    $content['success'] = 0;
+                }
                 break;
-            default:
+            case "EditType":
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "rdoType":
+                            $rdoType = $dbdata['value'];
+                            break;
+                        case "dateFrom":
+                            $dateFrom = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                // Close previous type. This may or may not update anything.
+                $sql = "UPDATE exp1_exptypes SET DateEnd = '" . $dateFrom . "' WHERE ExpID = " . intval($expID) . " AND DateEnd IS NULL";
+                $dbresult = $wpdb->query($sql);
+                // echo "SQL: " . $sql . "; ";
+                $wpdb->flush();
+
+                $sql = "INSERT INTO exp1_exptypes (ExpID, ExpTypeTypeID, DateStart) VALUES (" . intval($expID) . ", " . intval($rdoType) . ", '" . $dateFrom . "')";
+                // echo "SQL: " . $sql . "; ";
+                // query returns the number of affected rows - ignored.
+                $dbresult = $wpdb->query($sql);
+                if ($dbresult > 0) {
+                    $content['success'] = 1;
+                } else {
+                    $content['success'] = 0;
+                }
+                break;
+            case "AddNA":
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "txtDays":
+                            $txtDays = $dbdata['value'];
+                            break;
+                        case "txtDescription":
+                            $txtDescription = $dbdata['value'];
+                            break;
+                        case "txtLocation":
+                            $txtLocation = $dbdata['value'];
+                            break;
+                        case "dateStart":
+                            $dateStart = $dbdata['value'];
+                            break;
+                        case "dateEnd":
+                            $dateEnd = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                $sql = "INSERT INTO exp1_expna (ExpID, NADays, Description , NALocation, DateStart, DateEnd) VALUES (" . intval($expID) . ", " . intval($txtDays) . ", '" . $txtDescription . "', '" . $txtLocation . "', '" . $dateStart . "', '" . $dateEnd . "')";
+                // echo "SQL: " . $sql . "; ";
+                $dbresult = $wpdb->query($sql);
+                if ($dbresult > 0) {
+                    $wpdb->flush();
+                    $sql = "SELECT SUM(NADays) FROM exp1_expna WHERE ExpID = " . $expID;
+                    // echo "SQL: " . $sql . "; ";
+                    $dbresult = $wpdb->get_row($sql, ARRAY_N);
+                    if ($dbresult != null) {
+                        $wpdb->flush();
+                        $sql = "UPDATE exp1_explorers SET TotalNightsAway = " . $dbresult[0] . " WHERE ExpID = " . $expID;
+                        // echo "SQL: " . $sql . "; ";
+                        $dbresult = $wpdb->query($sql);
+                        if ($dbresult != false) {
+                            $content['success'] = 1;
+                        } else {
+                            $content['success'] = 0;
+                        }
+                    } else {
+                        $content['success'] = 0;
+                    }
+                } else {
+                    $content['success'] = 0;
+                }
+                break;
+            case "AddHike":
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "txtDescription":
+                            $txtDescription = $dbdata['value'];
+                            break;
+                        case "txtHikeDays":
+                            $txtHikeDays = $dbdata['value'];
+                            break;
+                        case "dateStart":
+                            $dateStart = $dbdata['value'];
+                            break;
+                        case "dateEnd":
+                            $dateEnd = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                $sql = "INSERT INTO exp1_exphikes (ExpID, Description, HikeDays, DateStart, DateEnd) VALUES (" . intval($expID) . ", '" . $txtDescription . "', " . $txtHikeDays . ", '" . $dateStart . "', '" . $dateEnd . "')";
+                // echo "SQL: " . $sql . "; ";
+                $dbresult = $wpdb->query($sql);
+                if ($dbresult > 0) {
+                    $wpdb->flush();
+                    $sql = "SELECT SUM(HikeDays) FROM exp1_exphikes WHERE ExpID = " . $expID;
+                    // echo "SQL: " . $sql . "; ";
+                    $dbresult = $wpdb->get_row($sql, ARRAY_N);
+                    if ($dbresult != null) {
+                        $wpdb->flush();
+                        $sql = "UPDATE exp1_explorers SET TotalHikes = " . $dbresult[0] . " WHERE ExpID = " . $expID;
+                        // echo "SQL: " . $sql . "; ";
+                        $dbresult = $wpdb->query($sql);
+                        if ($dbresult != false) {
+                            $content['success'] = 1;
+                        } else {
+                            $content['success'] = 0;
+                        }
+                    } else {
+                        $content['success'] = 0;
+                    }
+                } else {
+                    $content['success'] = 0;
+                }
+                break;
+            case "AddBadge":
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "selBadge":
+                            $selBadge = $dbdata['value'];
+                            break;
+                        case "dateStart":
+                            $dateStart = $dbdata['value'];
+                            break;
+                        case "dateEnd":
+                            $dateEnd = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (! empty($dateEnd)) {
+                    $sql = "INSERT INTO exp1_expbadges (ExpID, BadgeID, DateStart, DateEnd) VALUES (" . $expID . ", " . $selBadge . ", '" . $dateStart . "', '" . $dateEnd . "')";
+                } else {
+                    $sql = "INSERT INTO exp1_expbadges (ExpID, BadgeID, DateStart) VALUES (" . $expID . ", " . $selBadge . ", '" . $dateStart . "')";
+                }
+                // echo "SQL: " . $sql . "; ";
+                $dbresult = $wpdb->query($sql);
+                if ($dbresult > 0) {
+                    $content['success'] = 1;
+                } else {
+                    $content['success'] = 0;
+                }
+                break;
+           default:
                 break;
         }
     }
@@ -393,6 +669,8 @@ function wpendeavouresu_updateexplorerdata() {
 
     wp_die(); // All ajax handlers die when finished
 }
+
+
 
 // Shortcode to trigger the plugin from the page
 add_shortcode('EndeavourESU_AllExplorers', 'wpendeavouresu_allexplorers');

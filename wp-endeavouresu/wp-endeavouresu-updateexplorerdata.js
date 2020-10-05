@@ -15,7 +15,7 @@ jQuery(document).ready(function($) {
             if (newdata.success == 1) {
                 $('#modalUpdateExplorer').modal('hide');
             } else {
-                document.getElementById("modalUpdateExplorer").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
+                document.getElementById("modalUpdateExplorerBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
             }
         });
     });
