@@ -11,11 +11,97 @@ BEGIN
 		THEN 
 		SELECT LAST_INSERT_ID() INTO @LAST_ID;
 		INSERT INTO exp1_exptypes (ExpID, ExpTypeTypeID, DateStart) VALUES (@LAST_ID, TypeID, DateFrom);
-	END IF
+	END IF;
 END // 
 DELIMITER ;
 
-CALL AddExplorer(1, 1, '2020-10-02');
+CALL AddExplorer(3, 2, '2020-10-02');
+
+use endvrwpdb1;
+DELIMITER //
+CREATE PROCEDURE GetExpBadgeID (
+	IN SelExpID			SMALLINT(2),
+	IN SelBadgeID		SMALLINT(2),
+    IN SelDateFrom		DATE
+)
+BEGIN   
+    SELECT COUNT(*) INTO @NOBADGEROWS FROM exp1_expbadges WHERE BadgeID = SelBadgeID AND ExpID = SelExpID;
+    IF @NOBADGEROWS > 0 THEN
+		SELECT ExpBadgeID INTO @TEMPEXPBADGEID FROM exp1_expbadges WHERE BadgeID = SelBadgeID and ExpID = SelExpID;
+	ELSE 
+		INSERT INTO exp1_expbadges(ExpID, BadgeID, DateStart) VALUES (SelExpID, SelBadgeID, SelDateFrom);
+        SELECT LAST_INSERT_ID() INTO @TEMPEXPBADGEID;	
+    END IF;
+    
+    SELECT @TEMPEXPBADGEID;
+END // 
+DELIMITER ;
+
+
+SELECT ExpBadgeID FROM exp1_expbadges WHERE BadgeID = 46 and ExpID = 2
+INSERT INTO exp1_expbadges(ExpID, BadgeID, DateStart) VALUES (2, 46, '2020-10-10');
+call GetExpBadgeID (2, 46, '2020-10-07')
+CALL GetExpBadgeID (2, 38, '2020-10-16')
+
+DELIMITER //
+CREATE PROCEDURE GetAllBadges ()
+BEGIN
+	SELECT B.BadgeID, CONCAT(B.Name, ' (', S.Description, ', ', T.Description, ')'), B.Description 
+	FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T 
+	WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID
+	ORDER BY T.Description, B.Description;
+END // 
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE AddNightAway(
+	IN NAExpID			SMALLINT(2),
+    IN Days				TINYINT(1),
+    IN Description		VARCHAR(50),
+    IN Location			VARCHAR(50),
+    IN NADateStart		DATE,
+    IN NADateEnd		DATE
+)
+BEGIN
+	INSERT INTO exp1_expna (ExpID, NADays, Description , NALocation, DateStart, DateEnd)
+    VALUES (NAExpID, Days, Description, Location, NADateStart, NADateEnd);
+    
+    SELECT SUM(NADays) INTO @TotalNA FROM exp1_expna WHERE ExpID = NAExpID;
+    
+    UPDATE exp1_explorers SET TotalNightsAway = @TotalNA WHERE ExpID = NAExpID;
+    
+    SELECT 1;
+END // 
+DELIMITER ;
+
+CALL AddNightAway(2, 3, 'TEST NA', 'Wiltshire', '2020-10-20', '2020-10-24');
+
+
+DELIMITER //
+CREATE PROCEDURE AddHike (
+	IN HikeExpID		SMALLINT(2),
+    IN Description		VARCHAR(50),
+    IN Days				TINYINT(1),
+    IN NADateStart		DATE,
+    IN NADateEnd		DATE
+)
+BEGIN
+	INSERT INTO exp1_exphikes (ExpID, Description, HikeDays, DateStart, DateEnd)
+    VALUES (HikeExpID, Description, Days, NADateStart, NADateEnd);
+    
+    SELECT SUM(HikeDays) INTO @Hikes FROM exp1_exphikes WHERE ExpID = HikeExpID;
+    
+    UPDATE exp1_explorers SET TotalHikes = @Hikes WHERE ExpID = HikeExpID;
+    
+    SELECT 1;
+END // 
+DELIMITER ;
+
+CALL AddHike(2, 'TEST HIKE', 5, '2020-10-20', '2020-10-24');
+
+
+
 
 DELIMITER //
 CREATE PROCEDURE GetAllExplorers (
@@ -146,7 +232,8 @@ INSERT INTO `endvrwpdb1`.`exp1_exproletypes` (`Description`) VALUES ('Assitant P
 INSERT INTO `endvrwpdb1`.`exp1_exproletypes` (`Description`) VALUES ('Patrol Leader');
 
 SET FOREIGN_KEY_CHECKS=0;
-TRUNCATE `endvrwpdb1`.`exp1_expsexp1_exptypestatus`;
+TRUNCATE `endvrwpdb1`.`exp1_expbadgereqts`;
+TRUNCATE `endvrwpdb1`.`exp1_expbadges`;
 SET FOREIGN_KEY_CHECKS=1;
 INSERT INTO `endvrwpdb1`.`exp1_expstatus` (`Description`) VALUES ('Active');
 INSERT INTO `endvrwpdb1`.`exp1_expstatus` (`Description`) VALUES ('Inactive');
@@ -155,9 +242,9 @@ INSERT INTO `endvrwpdb1`.`exp1_expstatus` (`Description`) VALUES ('Inactive');
 use endvrwpdb1;
 SELECT SUM(NADays) FROM exp1_expna WHERE ExpID = 14
 UPDATE exp1_explorers SET TotalNightsAway = 89 WHERE ExpID = 14
-UPDATE exp1_explorers SET TotalNightsAway = ' . $dbresult[0] . ' WHERE ExpID = " . $expID;
+
 SET FOREIGN_KEY_CHECKS=0;
-TRUNCATE `endvrwpdb1`.`exp1_exptypes`;
+TRUNCATE `endvrwpdb1`.`exp1_badgereqts`;
 SET FOREIGN_KEY_CHECKS=1;
 
 SELECT B.BadgeID , B.Name, B.Description, S.Description, T.Description
