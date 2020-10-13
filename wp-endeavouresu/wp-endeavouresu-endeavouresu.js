@@ -70,7 +70,7 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td>\t\t\t\t\t\t<table class=\"table\">\n" 
             if (newdata.BadgesNo > 0) {
                 for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
-                    newcontent = newcontent + "\t\t\t\t\t\t<tr><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
+                    newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
                     newcontent = newcontent + "<td>"  + newdata.ExpBadges[i].DateStart + " - ";
                     if (newdata.ExpBadges[i].DateEnd === "") {
                         newcontent = newcontent + "in progress";
@@ -119,9 +119,9 @@ jQuery(document).ready(function($) {
         }, function(newdata) {
             console.log("callback");
             newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"EditStatus\">";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\">";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\">";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"EditStatus\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required>";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             if (newdata.ExpStatusNo > 0) {
                 for (var i = 0 ; i < newdata.ExpStatusNo ; i++) {
@@ -153,9 +153,9 @@ jQuery(document).ready(function($) {
             ExpID: expID,
         }, function(newdata) {
             newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"EditType\">";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\">";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\">";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"EditType\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required>";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             if (newdata.ExpTypesNo > 0) {
                 for (var i = 0 ; i < newdata.ExpTypesNo ; i++) {
@@ -180,15 +180,15 @@ jQuery(document).ready(function($) {
         var expID = ExplorerID.value;
         var expName = ExplorerName.value;
         newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddNA\">";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\">";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\">";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddNA\" required>\n";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required>\n";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required>\n";
         newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>Location:</td><td><input type=\"text\" id=\"txtLocation\" name=\"txtLocation\" size=50></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>No of Nights Away:</td><td><input type=\"text\" id=\"txtDays\" name=\"txtDays\" size=10></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50 required></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>Location:</td><td><input type=\"text\" id=\"txtLocation\" name=\"txtLocation\" size=50 required></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>No of Nights Away:</td><td><input type=\"text\" id=\"txtDays\" name=\"txtDays\" size=10 required></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required></td></tr>\n";
         newcontent = newcontent + "\t\t\t\t</table>\n";
         newcontent = newcontent + "\t\t\t\t</form>\n";
         document.getElementById("modalUpdateExplorerLabel").innerHTML = expName + " (id: " + expID + ")";
@@ -201,14 +201,14 @@ jQuery(document).ready(function($) {
         var expID = ExplorerID.value;
         var expName = ExplorerName.value;
         newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddHike\">";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\">";
-        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\">";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddHike\" required=\"required\">\n";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required=\"required\">\n";
+        newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required=\"required\">\n";
         newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>No of Days:</td><td><input type=\"text\" id=\"txtHikeDays\" name=\"txtHikeDays\" size=10></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
-        newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50 required=\"required\"></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>No of Days:</td><td><input type=\"text\" id=\"txtHikeDays\" name=\"txtHikeDays\" size=10 required=\"required\"></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required=\"required\"></td></tr>\n";
+        newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required=\"required\"></td></tr>\n";
         newcontent = newcontent + "\t\t\t\t</table>\n";
         newcontent = newcontent + "\t\t\t\t</form>\n";
         document.getElementById("modalUpdateExplorerLabel").innerHTML = expName + " (id: " + expID + ")";
@@ -231,12 +231,12 @@ jQuery(document).ready(function($) {
         }, function(newdata) {
             // console.log("callback");
             newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddBadge\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"AddBadge\" required=\"required\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required=\"required\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required=\"required\">\n";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             if (newdata.BadgesNo > 0) {
-                newcontent = newcontent + "\t\t\t\t\t<tr><td>Badge:</td><td><select id=\"selBadge\" name=\"selBadge\">\n";
+                newcontent = newcontent + "\t\t\t\t\t<tr><td>Badge:</td><td><select id=\"selBadge\" name=\"selBadge\" class=\"expbadgereqts\" required=\"required\">\n";
                 for (var i = 0 ; i < newdata.BadgesNo ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t<option value=\"" + newdata.Badges[i].BadgeID + "\">" + newdata.Badges[i].Description + "</option>\n";
                 }
@@ -244,8 +244,9 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not retrieve data from server.</td></tr>\n";
             }
-            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required=\"required\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required=\"required\"></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             document.getElementById("modalUpdateExplorerLabel").innerHTML = expName + " (id: " + expID + ")";
@@ -254,12 +255,9 @@ jQuery(document).ready(function($) {
     });
     // 
     $( "#btnUpdateSave").click(function() {
-        console.log("Saving explorer data.");
         var i = 0;
         var formdata = $("#frmExplorerData").serializeArray();
         var updatetype = document.getElementById("UpdateType").value;
-
-        console.log("Sending AJAX request.");
         $.post(ajaxdata_updateexplorerdata.ajax_url, {
             _ajax_nonce: ajaxdata_updateexplorerdata.nonce,
             action: "update_explorerdata",
@@ -267,7 +265,9 @@ jQuery(document).ready(function($) {
             dbdata: formdata,
         }, function(newdata) {
             if (newdata.success == 1) {
+                alert("Database succesfully updated.");
                 $('#modalUpdateExplorer').modal('hide');
+                $('#modalGetExplorer').modal('show');
             } else {
                 document.getElementById("modalUpdateExplorerBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
             }
@@ -294,7 +294,7 @@ jQuery(document).ready(function($) {
                 newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">There are no explorer records in the database.</td></tr>\n";
             }
             if (newdata.BadgesNo > 0) {
-                newcontent = newcontent + "\t\t\t\t\t<tr><td>Badge:</td><td><select id=\"selBadge\" name=\"selBadge\">\n";
+                newcontent = newcontent + "\t\t\t\t\t<tr><td>Badge:</td><td><select id=\"selBadge\" name=\"selBadge\" class=\"expbadgereqts\">\n";
                 for (var i = 0 ; i < newdata.BadgesNo ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t<option value=\"" + newdata.Badges[i].BadgeID + "\">" + newdata.Badges[i].Description + "</option>\n";
                 }
@@ -302,8 +302,9 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not retrieve data from server.</td></tr>\n";
             }
-            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             // console.log(newcontent);
@@ -349,7 +350,6 @@ jQuery(document).ready(function($) {
             action: "get_eventdata",
             actiontype: "AddEventReqt",
         }, function(newdata) {
-            // console.log("callback");
             newcontent = "\t\t\t\t<form name=\"frmAddEvent\" id=\"frmAddEvent\" method=\"POST\" action=\"\">\n";
             newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"AddEventType\" name=\"AddEventType\" value=\"AddEventReqt\">\n";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
@@ -370,7 +370,7 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not retrieve data from server.</td></tr>\n";
             }
-            newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
@@ -389,7 +389,7 @@ jQuery(document).ready(function($) {
         }, function(newdata) {
             // console.log("callback");
             var newcontent = "\t\t\t\t<form name=\"frmAddEvent\" id=\"frmAddEvent\" method=\"POST\" action=\"\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"AddEventType\" name=\"AddEventType\" value=\"AddEventHike\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"AddEventType\" name=\"AddEventType\" value=\"AddEventHike\" required=\"required\">\n";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             if (newdata.ExpNo > 0) {
                 for (var i = 0 ; i < newdata.ExpNo ; i++) {
@@ -399,14 +399,70 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">There are no explorer records in the database.</td></tr>\n";
             }
-            newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>No of Days:</td><td><input type=\"text\" id=\"txtHikeDays\" name=\"txtHikeDays\" size=10></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Description:</td><td><input type=\"text\" id=\"txtDescription\" name=\"txtDescription\" size=50 required=\"required\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>No of Days:</td><td><input type=\"text\" id=\"txtHikeDays\" name=\"txtHikeDays\" size=10v></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required=\"required\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required=\"required\"></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             document.getElementById("modalAddEventLabel").innerHTML = "Add Hike for multiple explorers";
             document.getElementById("modalAddEventBody").innerHTML = newcontent;
+        });
+    });
+    $("#btnUpdateEvent").click(function() {
+        var i = 0;
+        var formdata = $("#frmUpdateEvent").serializeArray();
+        var updatetype = document.getElementById("UpdateType").value;
+        $.post(ajaxdata_updateexplorerdata.ajax_url, {
+            _ajax_nonce: ajaxdata_updateexplorerdata.nonce,
+            action: "update_explorerdata",
+            actiontype: updatetype,
+            dbdata: formdata,
+        }, function(newdata) {
+            if (newdata.success == 1) {
+                alert("Information updated succesfully.");
+                $('#modalUpdateEvent').modal('hide');
+            } else {
+                document.getElementById("modalUpdateEventBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
+            }
+        });
+    });
+    $( "#btnSaveEvent").click(function() {
+        var i = 0;
+        var formdata = $("#frmAddEvent").serializeArray();
+        var updatetype = document.getElementById("AddEventType").value;
+
+        $.post(ajaxdata_addeventdata.ajax_url, {
+            _ajax_nonce: ajaxdata_addeventdata.nonce,
+            action: "add_eventdata",
+            actiontype: updatetype,
+            dbdata: formdata,
+        }, function(newdata) {
+            if (newdata.success > 0) {
+                alert("Event added succesfully (" + newdata.success + " event rows added).");
+                $('#modalAddEvent').modal('hide');
+            } else {
+                document.getElementById("modalAddEventBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
+            }
+        });
+    });
+    $("body").on('change', 'select.expbadgereqts', function() {
+        $.get(ajaxdata_getbadgereqts.ajax_url, {
+            _ajax_nonce: ajaxdata_getbadgereqts.nonce,
+            action: "get_badgereqts",
+            actiontype: document.getElementById("selBadge").value,
+        }, function(newdata) {
+            var newcontent = "\t\t\t\t\t<table class=\"table-sm\">\n";
+            if (newdata.reqtsno > 0) {
+                for (var i = 0 ; i < newdata.reqtsno ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"reqt" + newdata.reqts[i].reqtid + "\" name=\"reqt" + newdata.reqts[i].reqtid + "\" value=\"" + newdata.reqts[i].reqtid + "\"></td>";
+                    newcontent = newcontent + "<td><label for =\"reqt" + newdata.reqts[i].reqtid + "\">" + newdata.reqts[i].reqtdesc + "</label></td></tr>\n";
+                }
+            } else {
+                newcontent = newcontent + "\t\t\t\t\t<tr><td colspan=2 class=\"text-align-center\">There are no matching badge requirements records in the database.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t\t</table>\n";
+            document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
     });
     $("body").on('change', 'select.badgereqts', function() {
@@ -427,26 +483,96 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t\t</table>\n";
             document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
-    })
-    $( "#btnSaveEvent").click(function() {
-        console.log("Saving explorer data.");
-        var i = 0;
-        var formdata = $("#frmAddEvent").serializeArray();
-        var updatetype = document.getElementById("AddEventType").value;
-
-        $.post(ajaxdata_addeventdata.ajax_url, {
-            _ajax_nonce: ajaxdata_addeventdata.nonce,
-            action: "add_eventdata",
-            actiontype: updatetype,
-            dbdata: formdata,
+    });
+    $("body").on('click', '.badge', function() {
+        var newcontent;
+        $.get(ajaxdata_getexpeventdata.ajax_url, {
+            _ajax_nonce: ajaxdata_getexpeventdata.nonce,
+            action: "get_expeventdata",
+            actiontype: "getbadgedata",
+            ExpBadgeID: this.id,
         }, function(newdata) {
-            if (newdata.success == 1) {
-                alert("Event added succesfully.");
-                $('#modalAddEvent').modal('hide');
+            // console.log("callback");
+            newcontent = "\t\t\t\t<form name=\"frmUpdateEvent\" id=\"frmUpdateEvent\" method=\"POST\" action=\"\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"UpdateBadge\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"BadgeID\" name=\"BadgeID\" value=\"" + newdata.BadgeID + "\">\n"
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExpBadgeID\" name=\"ExpBadgeID\" value=\"" + newdata.ExpBadgeID + "\">\n"
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + newdata.ExpID + "\">\n"
+            newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Explorer:</td><td>" + newdata.ExpName + "</td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Badge:</td><td>" + newdata.BadgeName + "</td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" value=\"" + newdata.ExpBadgeStart + "\"></td></tr>\n";
+            if (newdata.ExpBadgeEnd != null) {
+                newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" value=\"" + newdata.ExpBadgeEnd + "\"></td></tr>\n";
             } else {
-                document.getElementById("modalAddEventBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
+                newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
             }
+            if (newdata.BadgeReqtsNo > 0) {
+                for (var i = 0 ; i < newdata.BadgeReqtsNo ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" name=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" value=\"" + newdata.BadgeReqts[i].BadgeReqtID + "\"";
+                    if (newdata.ExpBadgeReqtsNo > 0) {
+                        for (var j = 0 ; j < newdata.ExpBadgeReqtsNo ; j++) {
+                            if (newdata.ExpBadgeReqts[j].BadgeReqtID == newdata.BadgeReqts[i].BadgeReqtID ) {
+                                newcontent = newcontent + " checked";
+                            }
+                        }
+                    }
+                    newcontent = newcontent + "></td>";                   
+                    newcontent = newcontent + "<td><label for =\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\">" + newdata.BadgeReqts[i].ReqtDesc + "</label></td></tr>\n";
+                }
+            } else {
+                newcontent['Error'] = "No Badge requirements match this BadgeID.";
+                newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not load database data.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t</table>\n";
+            newcontent = newcontent + "\t\t\t\t</form>\n";
+            // console.log(newcontent);
+            document.getElementById("modalUpdateEventLabel").innerHTML = "Update badge progress information";
+            document.getElementById("modalUpdateEventBody").innerHTML = newcontent;
         });
+    });
+    $("body").on('click', '.nightaway', function() {
+        $.get(ajaxdata_getbadgereqts.ajax_url, {
+            _ajax_nonce: ajaxdata_getbadgereqts.nonce,
+            action: "get_badgereqts",
+            actiontype: document.getElementById("selBadgeReqt").value,
+        }, function(newdata) {
+            var newcontent = "\t\t\t\t\t<table class=\"table-sm\">\n";
+            if (newdata.reqtsno > 0) {
+                for (var i = 0 ; i < newdata.reqtsno ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"reqt" + newdata.reqts[i].reqtid + "\" name=\"reqt" + newdata.reqts[i].reqtid + "\" value=\"" + newdata.reqts[i].reqtid + "\"></td>";
+                    newcontent = newcontent + "<td><label for =\"reqt" + newdata.reqts[i].reqtid + "\">" + newdata.reqts[i].reqtdesc + "</label></td></tr>\n";
+                }
+            } else {
+                newcontent = newcontent + "\t\t\t\t\t<tr><td colspan=2 class=\"text-align-center\">There are no matching badge requirements records in the database.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t\t</table>\n";
+            document.getElementById("tdBadgeReqts").innerHTML = newcontent;
+        });
+    });
+    $("body").on('click', '.hike', function() {
+        $.get(ajaxdata_getbadgereqts.ajax_url, {
+            _ajax_nonce: ajaxdata_getbadgereqts.nonce,
+            action: "get_badgereqts",
+            actiontype: document.getElementById("selBadgeReqt").value,
+        }, function(newdata) {
+            var newcontent = "\t\t\t\t\t<table class=\"table-sm\">\n";
+            if (newdata.reqtsno > 0) {
+                for (var i = 0 ; i < newdata.reqtsno ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"reqt" + newdata.reqts[i].reqtid + "\" name=\"reqt" + newdata.reqts[i].reqtid + "\" value=\"" + newdata.reqts[i].reqtid + "\"></td>";
+                    newcontent = newcontent + "<td><label for =\"reqt" + newdata.reqts[i].reqtid + "\">" + newdata.reqts[i].reqtdesc + "</label></td></tr>\n";
+                }
+            } else {
+                newcontent = newcontent + "\t\t\t\t\t<tr><td colspan=2 class=\"text-align-center\">There are no matching badge requirements records in the database.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t\t</table>\n";
+            document.getElementById("tdBadgeReqts").innerHTML = newcontent;
+        });
+    });
+    $('.modal').on("hidden.bs.modal", function (e) { 
+        if ($('.modal:visible').length) { 
+            $('body').addClass('modal-open');
+        }
     });
 });
 

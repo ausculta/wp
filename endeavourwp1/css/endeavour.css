@@ -5,3 +5,5 @@
 body {
     font-family: 'Nunito Sans';
 }
+
+.modal { overflow: auto !important; }
