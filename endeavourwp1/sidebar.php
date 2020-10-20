@@ -15,7 +15,12 @@
 	<div class="alert alert-warning" role="alert">
 			<a href="/wp-login.php" title="Unit area" rel="home">Login</a>
 	</div>
-	<?php } ?>
+	<?php } 
+	if ($logedin) {
+		echo "<div class=\"alert alert-primary\" role=\"alert\">";
+		echo wpendeavouresu_listexplorers();
+		echo "</div>";
+	} ?>
 	<div class="alert alert-primary" role="alert">
 		<a href="https://endeavouresu.uk/gsim/" class="alert-heading">Simulator project</a><br />
 		<a href="https://endeavouresu.uk/category/bsim/" class="alert-heading">Simulator blog</a><br />

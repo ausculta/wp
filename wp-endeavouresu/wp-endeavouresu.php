@@ -52,6 +52,141 @@ function wpendeavouresu_textdomain() {
     load_plugin_textdomain( 'wpendeavouresu', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 
+function wpendeavouresu_activate() {
+
+}
+
+function wpendeavouresu_deactivate() {
+
+}
+
+function wpendeavouresu_listexplorers($atts = [], $content = null) {
+    global $wpdb;
+
+    $ExpID = get_current_user_id();
+
+    $content = "";
+    $sql = "SELECT E.ExpID, U.ID, U.display_name FROM " . $wpdb->base_prefix . "users U, exp1_explorers E WHERE U.ID = E.ExpWPID AND (E.ExpWPPID1 = " . $ExpID . " OR E.ExpWPPID2 = " . $ExpID . " OR E.ExpWPPID3 = " . $ExpID . ") ORDER BY U.display_name";
+    $dbdata = $wpdb->get_results($sql, ARRAY_N, 0);
+    if (! empty($dbdata)) {
+        $content = $content . "Badge records:\n"; 
+        foreach ($dbdata as $dbrow) {
+            $content = $content . "<br><A HREF=\"/explorer-progress-record/?ExpID=" . $dbrow[1] . "\">" . $dbrow[2] . "</a>\n";
+        }
+    } else {
+        $content = $content . "<A HREF=\"/explorer-progress-record/\">My progress report</a>\n";
+    }
+    // always return
+    return $content;
+}
+
+function wpendeavouresu_explorer($atts = [], $content = null) {
+    global $wpdb;
+
+    $content = "";
+    if (! empty($_GET['ExpID'])) {
+        $ExpID = null;
+        $UserID = get_current_user_id();
+        $sql = "SELECT E.ExpWPPID1, E.ExpWPPID2, E.ExpWPPID3 FROM exp1_explorers E WHERE E.ExpWPID = " . $_GET['ExpID'];
+        $expdata = $wpdb->get_row($sql, ARRAY_N, 0);
+        if (! empty($expdata)) {
+            if (($expdata[0] == $UserID) || ($expdata[1] == $UserID) || ($expdata[2] == $UserID)) {
+                $ExpID  = $_GET['ExpID'];
+                // $content = $content . "<h5 class=\"text-center\">ExpID matches a Parent ID.</h5>\n";
+            }
+        } 
+        if (empty($ExpID)) {
+            $content = $content . "<h5 class=\"text-center\">You are not authorised to view this data.</h5>\n";
+        }
+        $wpdb->flush();
+    } else {
+        $ExpID = get_current_user_id();
+    }
+    if (! empty($ExpID)) {
+        //echo "ExpID: " . $ExpID;
+        $wpdb->flush();
+        $sql = "SELECT U.display_name, U.user_login, E.ExpDateStart, E.ExpDateEnd, S.Description, E.TotalNightsAway, E.TotalHikes, E.ExpID ";
+        $sql = $sql . "FROM " . $wpdb->base_prefix . "users U, exp1_expstatus S, exp1_explorers E ";
+        $sql = $sql . "WHERE U.ID = E.ExpWPID AND S.ExpStatusID = E.ExpStatusID AND U.ID = " . $ExpID;
+        $expdata = $wpdb->get_row($sql, ARRAY_N, 0);
+        if (count($expdata) > 0) {
+             if (is_null($expdata[3])) {
+                $dateEnd = "current";
+            } else {
+                $dateEnd = esc_html($expdata[3]);
+            }
+            $ExpID = $expdata[7];
+        } else {
+            $content = $content . "<h5 class=\"text-center\">ExpID not found in database</h5>\n";
+        }
+        $wpdb->flush();
+        $sql = "SELECT ExpHikeID, Description, HikeDays, DateStart, DateEnd FROM exp1_exphikes WHERE ExpID = " .$ExpID . " ORDER BY DateStart DESC";
+        $hikedata = $wpdb->get_results($sql, ARRAY_N);
+        $HikeNo = count($hikedata);
+        $wpdb->flush();
+
+        $sql = "SELECT ExpNightAwayID, DateStart, DateEnd, Description, NALocation, NADays FROM exp1_expna WHERE ExpID = " . $ExpID . " ORDER BY DateStart DESC";
+        $nadata = $wpdb->get_results($sql, ARRAY_N);
+        $NANo = count($nadata);
+        $wpdb->flush();
+
+        $sql = "SELECT E.ExpTypeID, T.Description, E.DateStart FROM exp1_exptypes E, exp1_exptypetypes T ";
+        $sql = $sql . "WHERE E.ExpID = " . $ExpID . " AND E.ExpTypeTypeID = T.ExpTypeTypeID AND E.DateEnd IS NULL";
+        $typedata = $wpdb->get_row($sql, ARRAY_N);
+        if (! empty($typedata)) {
+            $ExpType = esc_html($typedata[1]);
+        } else {
+            $ExpType = esc_html('Type not set');
+        }
+        $wpdb->flush();
+        $sql = "SELECT B.BadgeID, B.IconPath, CONCAT(B.Name, ' (', S.Description, ', ', T.Description, ')'), B.Description, E.ExpBadgeID, E.DateStart, E.DateEnd  ";
+        $sql = $sql . "FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T, exp1_expbadges E ";
+        $sql = $sql . "WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID AND B.BadgeID = E.BadgeID AND E.ExpID = " . $ExpID . " ";
+        $sql = $sql . "ORDER BY B.BadgeTypeID, B.Description";
+        $badgedata = $wpdb->get_results($sql, ARRAY_N);
+        $BadgesNo = count($badgedata);
+        $wpdb->flush();
+
+        $content = $content . "<table class=\"table-sm w-100\">\n";
+        $content = $content . "\t<tr><td colspan=2><h5 class=\"text-center\">" . esc_html($expdata[0]) . " (" . esc_html($expdata[1]) . " - " . esc_html($expdata[4]) . " - " . $ExpType . " - " . esc_html($expdata[2]) . " - " . $dateEnd . ")</h5></td></tr>\n";
+        $content = $content . "\t<tr><td class=\"align-text-top\">" . esc_html($BadgesNo) . " Awards / Badges:</td><td>\n\t\t<table class=\"table\">\n";
+        
+        if (count($badgedata) > 0) {
+            foreach($badgedata as $badge) {
+                $content = $content . "\t\t\t<tr class=\"expbadge\" data-toggle=\"modal\" data-target=\"#modalExpBadgeReqts\" id=\"" . esc_html($badge[0]) . "\"><td><img height=\"25px\" src=\"" . esc_html($badge[1]) . "\"></td><td>" . esc_html($badge[3]) . "</td>";
+                $content = $content . "<td>" . esc_html($badge[5]) . " - ";
+                if ($badge[6] === "") {
+                    $content = $content . "in progress";
+                } else {
+                    $content = $content . esc_html($badge[6]);
+                }
+                $content = $content . "</td><tr>\n";
+            }
+        }
+        $content = $content . "\t\t</table></td></tr>\n";
+        $content = $content . "\t<tr><td class=\"align-text-top\">" . esc_html($expdata[5]) . " nights away:</td><td>\n\t\t<table class=\"table\">\n";
+        if (count($nadata) > 0) {
+            foreach($nadata as $expna) {
+                $content = $content . "\t\t\t<tr><td>" . esc_html($expna[3]) . " (" . esc_html($expna[4]) . ": " . esc_html($expna[5]) . " night(s) - " . esc_html($expna[1]) . " - " . esc_html($expna[2])  . ")</td><tr>";
+            }
+        }
+        $content = $content . "\t\t</table></td></tr>\n";
+        $content = $content . "\t<tr><td class=\"align-text-top\">" . esc_html($expdata[6]) . " Hikes:</td><td>\n\t\t<table class=\"table\">\n";
+        if (count($hikedata) > 0) {
+            foreach($hikedata as $hike) {
+                $content = $content . "\t\t\t<tr><td>" . esc_html($hike[1]) . " (" . esc_html($hike[2]) . " hikes: " . esc_html($hike[3]) . " - " . esc_html($hike[4]) . ")</td><tr>";
+            }
+        }
+        $content = $content . "\t\t</table></td></tr>\n";
+        $content = $content . "\t</table>\n";
+        $content = $content . "</form>\n";
+    }
+
+    // always return
+    return $content;
+
+}
+
 function wpendeavouresu_allexplorers($atts = [], $content = null) {
     global  $wpdb;
 
@@ -136,6 +271,7 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" data-dismiss=\"modal\" data-target=\"#modalAddExplorers\" id=\"btnExplorerClose\">Close</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnEditStatus\">Edit Status</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnEditLinks\">Edit Links</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnEditType\">Edit Type</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddNA\">Nights Away</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddHike\">Hikes</button>\n";
@@ -378,6 +514,31 @@ function wpendeavouresu_getexplorerdata() {
                     $content['ExpStatus'] = $statusdata;
                 }
                 break;
+            case "EditLinks":
+                $sql = "SELECT U.ID, U.display_name FROM " . $wpdb->base_prefix . "users U WHERE U.ID NOT IN (SELECT ExpWPID FROM exp1_explorers) ORDER BY U.display_name";
+                $dbdata = $wpdb->get_results($sql, ARRAY_N, 0);
+                $wpdb->flush();               
+                if ($dbdata != null) {
+                    $content['Parents'] = $dbdata[0];
+                    $parents = array();
+                    foreach ($dbdata as $dbrow) {
+                        $parents[] = array('ID' => $dbrow[0], 'Description' => $dbrow[1]);
+                    }
+                    $content['Parents'] = $parents;
+                    $content['ParentsNo'] = count($parents);
+                    $wpdb->flush();
+                } else {
+                    $content['ParentsNo'] = 0;
+                }
+                $sql = "SELECT ExpWPPID1, ExpWPPID2, ExpWPPID3 FROM exp1_explorers WHERE ExpID = " . $expID;
+                $dbdata = $wpdb->get_row($sql, ARRAY_N);
+                $wpdb->flush();               
+                if (! empty($dbdata)) {
+                    $content['Link1ID'] = $dbdata[0];
+                    $content['Link2ID'] = $dbdata[1];
+                    $content['Link3ID'] = $dbdata[2];
+                }
+                break;
             case "EditType":
                 $sql = "SELECT ExpTypeTypeID FROM exp1_exptypes WHERE ExpID = " . $expID . " AND DateEnd IS NULL";
                 $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
@@ -506,6 +667,71 @@ function wpendeavouresu_updateexplorerdata() {
                     $content['success'] = 0;
                 }
                 break;
+            case "EditLinks":
+                foreach ($newdata as $dbdata) {
+                    switch ($dbdata['name']) {
+                        case "selLink1":
+                            $selLink1 = $dbdata['value'];
+                            break;
+                        case "selLink2":
+                            $selLink2 = $dbdata['value'];
+                            break;
+                        case "selLink3":
+                            $selLink3 = $dbdata['value'];
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                $sql = "UPDATE exp1_explorers SET ExpWPPID1 = ";
+                if ($selLink1 > 0) {
+                    $sql = $sql . $selLink1;
+                } else {
+                    $sql = $sql . "NULL";
+                }
+                $sql = $sql . " WHERE ExpID = " . $expID;
+                $dbresult = $wpdb->query($sql);
+                $wpdb->flush();
+                if ($dbresult > 0) {
+                    $content['success1'] = 1;
+                } else {
+                    $content['success1'] = 0;
+                }
+                $sql = "UPDATE exp1_explorers SET ExpWPPID2 = ";
+                if ($selLink2 > 0) {
+                    $sql = $sql . $selLink2;
+                } else {
+                    $sql = $sql . "NULL";
+                }
+                $sql = $sql . " WHERE ExpID = " . $expID;
+                $dbresult = $wpdb->query($sql);
+                $wpdb->flush();
+                if ($dbresult > 0) {
+                    $content['success2'] = 1;
+                } else {
+                    $content['success2'] = 0;
+                }
+                $sql = "UPDATE exp1_explorers SET ExpWPPID3 = ";
+                if ($selLink3 > 0) {
+                    $sql = $sql . $selLink3;
+                } else {
+                    $sql = $sql . "NULL";
+                }
+                $sql = $sql . " WHERE ExpID = " . $expID;
+                $dbresult = $wpdb->query($sql);
+                $wpdb->flush();
+                if ($dbresult > 0) {
+                    $content['success3'] = 1;
+                } else {
+                    $content['success3'] = 0;
+                }
+                if (($content['success1'] == 0) || ($content['success2'] == 0) || ($content['success3'] == 0)) {
+                    $content['success'] = 0;
+                } else {
+                    $content['success'] = 1;
+                }
+                $content['success'] = 1;
+                break;
             case "AddNA":
                 foreach ($newdata as $dbdata) {
                     switch ($dbdata['name']) {
@@ -611,7 +837,7 @@ function wpendeavouresu_updateexplorerdata() {
                         }
                         $content["SQL_INSERT"] = $sql;
                         $wpdb->query($sql);
-                        $wpdb->flush();        
+                        $wpdb->flush();
                         $sql = "SELECT ExpBadgeID FROM exp1_expbadges WHERE ExpID = " . intval($ExpID) . " AND BadgeID = " . intval($BadgeID);
                         $content["SQL_SELECT"] = $sql;
                         $dbresult = $wpdb->get_results($sql, ARRAY_N);
@@ -1111,8 +1337,19 @@ function wpendeavouresu_enqueuescript( $hook ) {
      ) ); 
 }
 
-// Shortcode to trigger the plugin from the page
+
+register_activation_hook( __FILE__, 'wpendeavouresu_activate' );
+register_deactivation_hook( __FILE__, 'wpendeavouresu_deactivate' );
+
+
+// Shortcode to trigger the leader plugin from the page 
 add_shortcode('EndeavourESU_AllExplorers', 'wpendeavouresu_allexplorers');
+
+// Shortcode to trigger the explorer plugin from the page
+add_shortcode('EndeavourESU_Explorer', 'wpendeavouresu_explorer');
+
+// Shortcode to trigger the list explorers plugin from the page
+add_shortcode('EndeavourESU_ListExplorers', 'wpendeavouresu_listexplorers');
 
 // Add the JQuery scripts to the page
 add_action('wp_enqueue_scripts' , 'wpendeavouresu_enqueuescript');

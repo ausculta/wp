@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + newdata.Name + "\">";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             newcontent = newcontent + "\t\t\t\t\t<tr><td>Login:</td><td>" + newdata.Login + " (" + newdata.Status + " - " + newdata.ExpType + " - " + newdata.DateStart + " - " + newdata.DateEnd + ")</td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td>\t\t\t\t\t\t<table class=\"table\">\n" 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.BadgesNo > 0) {
                 for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
@@ -81,13 +81,13 @@ jQuery(document).ready(function($) {
                 }
             }
             newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td>\t\t\t\t\t\t<table class=\"table\">\n\n" 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.NANo > 0) {
                 for (i = 0 ; i < newdata.ExpNAs.length ; i++)
                 newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpNAs[i].Description + " ("+ newdata.ExpNAs[i].NALocation + ": " + newdata.ExpNAs[i].NADays + " night(s) - " + newdata.ExpNAs[i].DateStart + " - " + newdata.ExpNAs[i].DateEnd  + ")</td><tr>";
             }
             newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td>\t\t\t\t\t\t<table class=\"table\">\n\n" 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.HikeNo > 0) {
                 for (i = 0 ; i < newdata.ExpHikes.length ; i++)
                 newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpHikes[i].Description + " (" + newdata.ExpHikes[i].HikeDays + " hikes: " + newdata.ExpHikes[i].DateStart + " - " + newdata.ExpHikes[i].DateEnd  + ")</td><tr>";
@@ -131,6 +131,64 @@ jQuery(document).ready(function($) {
                 }
             } else {
                 newcontent = newcontent + "\t\t<tr><td class=\"text-align-center\">Could not retrieve data from server.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t</table>\n";
+            newcontent = newcontent + "\t\t\t\t</form>\n";
+            document.getElementById("modalUpdateExplorerLabel").innerHTML = expName + " (id: " + expID + ")";
+            document.getElementById("modalUpdateExplorerBody").innerHTML = newcontent;
+        });
+    });
+    $( "#btnEditLinks" ).click(function() {
+        var ExplorerID = document.getElementById("ExplorerID");
+        var ExplorerName = document.getElementById("ExplorerName");
+        var expID = ExplorerID.value;
+        var expName = ExplorerName.value;
+
+        var newcontent;
+        $.get(ajaxdata_getexplorerdata.ajax_url, {
+            _ajax_nonce: ajaxdata_getexplorerdata.nonce,
+            action: "get_explorerdata",
+            actiontype: "EditLinks",
+            ExpID: expID,
+        }, function(newdata) {
+            newcontent = "\t\t\t\t<form name=\"frmExplorerData\" id=\"frmExplorerData\" method=\"POST\" action=\"\">\n";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"UpdateType\" name=\"UpdateType\" value=\"EditLinks\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + expID + "\" required>";
+            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + expName + "\" required>";
+            newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
+            if (newdata.ParentsNo > 0) {
+                newcontent = newcontent + "\t\t\t\t\t<tr><td>Link 1:</td><td><select id=\"selLink1\" name=\"selLink1\" required=\"required\">\n";
+                newcontent = newcontent + "\t\t\t\t\t<option value=-1";
+                if (newdata.Link1ID == null) newcontent = newcontent + " selected";
+                newcontent = newcontent + ">None selected</option>\n";
+                for (var i = 0 ; i < newdata.ParentsNo ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<option value=\"" + newdata.Parents[i].ID + "\"";
+                    if (newdata.Link1ID == newdata.Parents[i].ID) newcontent = newcontent + " selected";
+                    newcontent = newcontent + ">" + newdata.Parents[i].Description; + "</option>\n";
+                }
+                newcontent = newcontent + "\t\t\t\t\t</select></td></tr>\n";
+                newcontent = newcontent + "\t\t\t\t\t<tr><td>Link 2:</td><td><select id=\"selLink2\" name=\"selLink2\" required=\"required\">\n";
+                newcontent = newcontent + "\t\t\t\t\t<option value=-1";
+                if (newdata.Link2ID == null) newcontent = newcontent + " selected";
+                newcontent = newcontent + ">None selected</option>\n";
+                for (var i = 0 ; i < newdata.ParentsNo ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<option value=\"" + newdata.Parents[i].ID + "\"";
+                    if (newdata.Link2ID == newdata.Parents[i].ID) newcontent = newcontent + " selected";
+                    newcontent = newcontent + ">" + newdata.Parents[i].Description; + "</option>\n";
+                }
+                newcontent = newcontent + "\t\t\t\t\t</select></td></tr>\n";
+                newcontent = newcontent + "\t\t\t\t\t<tr><td>Link 3:</td><td><select id=\"selLink3\" name=\"selLink3\" required=\"required\">\n";
+                newcontent = newcontent + "\t\t\t\t\t<option value=-1";
+                if (newdata.Link3ID == null) newcontent = newcontent + " selected";
+                newcontent = newcontent + ">None selected</option>\n";
+                for (var i = 0 ; i < newdata.ParentsNo ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<option value=\"" + newdata.Parents[i].ID + "\"";
+                    if (newdata.Link3ID == newdata.Parents[i].ID) newcontent = newcontent + " selected";
+                    newcontent = newcontent + ">" + newdata.Parents[i].Description; + "</option>\n";
+                }
+                newcontent = newcontent + "\t\t\t\t\t</select></td></tr>\n";
+            } else {
+                newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not retrieve data from server.</td></tr>\n";
             }
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";

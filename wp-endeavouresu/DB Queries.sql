@@ -258,3 +258,7 @@ AND Y.ExpTypeTypeID = T.ExpTypeTypeID AND T.ExpID = E.ExpID AND T.DateEnd IS NUL
 ORDER BY U.display_name;
 
 SELECT X.ExpID, U.display_name, B.Description, X.BadgeID, X.DateStart, X.DateEnd FROM exp1_explorers E, edvr1_users U, exp1_expbadges X, exp1_badges B WHERE E.ExpWPID = U.ID AND E.ExpID = X.ExpID AND X.BadgeID = B.BadgeID AND X.ExpBadgeID = 52
+
+use endvrwpdb1;
+SELECT E.ExpID, U.display_name FROM edvr1_users U, exp1_explorers E WHERE U.ID = E.ExpWPID AND (E.ExpWPPID1 = 2 OR E.ExpWPPID2 = 2 OR E.ExpWPPID3 = 2)
+SELECT U.ID, U.display_name FROM edvr1_users U WHERE U.ID NOT IN (SELECT ExpWPID FROM exp1_explorers) ORDER BY U.display_name
