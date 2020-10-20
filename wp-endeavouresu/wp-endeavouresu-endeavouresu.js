@@ -589,6 +589,46 @@ jQuery(document).ready(function($) {
             document.getElementById("modalUpdateEventBody").innerHTML = newcontent;
         });
     });
+    $("body").on('click', '.expbadge', function() {
+        var newcontent;
+        $.get(ajaxdata_getexpeventdata.ajax_url, {
+            _ajax_nonce: ajaxdata_getexpeventdata.nonce,
+            action: "get_expeventdata",
+            actiontype: "getbadgedata",
+            ExpBadgeID: this.id,
+        }, function(newdata) {
+            // console.log("callback");
+            newcontent = "\t\t\t\t<table class=\"table-sm\">\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Badge:</td><td>" + newdata.BadgeName + "</td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td>" + newdata.ExpBadgeStart + "</td></tr>\n";
+            if (newdata.ExpBadgeEnd != null) {
+                newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td>" + newdata.ExpBadgeEnd + "</td></tr>\n";
+            } else {
+                newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td>In progress</td></tr>\n";
+            }
+            if (newdata.BadgeReqtsNo > 0) {
+                for (var i = 0 ; i < newdata.BadgeReqtsNo ; i++) {
+                    newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" name=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" value=\"" + newdata.BadgeReqts[i].BadgeReqtID + "\"";
+                    if (newdata.ExpBadgeReqtsNo > 0) {
+                        for (var j = 0 ; j < newdata.ExpBadgeReqtsNo ; j++) {
+                            if (newdata.ExpBadgeReqts[j].BadgeReqtID == newdata.BadgeReqts[i].BadgeReqtID ) {
+                                newcontent = newcontent + " checked";
+                            }
+                        }
+                    }
+                    newcontent = newcontent + "></td>";                   
+                    newcontent = newcontent + "<td><label for =\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\">" + newdata.BadgeReqts[i].ReqtDesc + "</label></td></tr>\n";
+                }
+            } else {
+                newcontent['Error'] = "No Badge requirements match this BadgeID.";
+                newcontent = newcontent + "\t\t<tr><td colspan=2 class=\"text-align-center\">Could not load database data.</td></tr>\n";
+            }
+            newcontent = newcontent + "\t\t\t\t</table>\n";
+            // console.log(newcontent);
+            document.getElementById("modalExpUpdateEventLabel").innerHTML = "Badge progress information";
+            document.getElementById("modalExpUpdateEventBody").innerHTML = newcontent;
+        });
+    });
     $("body").on('click', '.nightaway', function() {
         $.get(ajaxdata_getbadgereqts.ajax_url, {
             _ajax_nonce: ajaxdata_getbadgereqts.nonce,

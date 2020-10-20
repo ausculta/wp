@@ -74,7 +74,7 @@ function wpendeavouresu_listexplorers($atts = [], $content = null) {
             $content = $content . "<br><A HREF=\"/explorer-progress-record/?ExpID=" . $dbrow[1] . "\">" . $dbrow[2] . "</a>\n";
         }
     } else {
-        $content = $content . "<A HREF=\"/explorer-progress-record/\">My progress report</a>\n";
+        $content = $content . "<A HREF=\"/explorer-progress-record/\">My badge records</a>\n";
     }
     // always return
     return $content;
@@ -109,7 +109,7 @@ function wpendeavouresu_explorer($atts = [], $content = null) {
         $sql = $sql . "FROM " . $wpdb->base_prefix . "users U, exp1_expstatus S, exp1_explorers E ";
         $sql = $sql . "WHERE U.ID = E.ExpWPID AND S.ExpStatusID = E.ExpStatusID AND U.ID = " . $ExpID;
         $expdata = $wpdb->get_row($sql, ARRAY_N, 0);
-        if (count($expdata) > 0) {
+        if (! empty($expdata)) {
              if (is_null($expdata[3])) {
                 $dateEnd = "current";
             } else {
@@ -153,7 +153,7 @@ function wpendeavouresu_explorer($atts = [], $content = null) {
         
         if (count($badgedata) > 0) {
             foreach($badgedata as $badge) {
-                $content = $content . "\t\t\t<tr class=\"expbadge\" data-toggle=\"modal\" data-target=\"#modalExpBadgeReqts\" id=\"" . esc_html($badge[0]) . "\"><td><img height=\"25px\" src=\"" . esc_html($badge[1]) . "\"></td><td>" . esc_html($badge[3]) . "</td>";
+                $content = $content . "\t\t\t<tr class=\"expbadge\" data-toggle=\"modal\" data-target=\"#modalExpUpdateEvent\" id=\"" . esc_html($badge[4]) . "\"><td><img height=\"25px\" src=\"" . esc_html($badge[1]) . "\"></td><td>" . esc_html($badge[3]) . "</td>";
                 $content = $content . "<td>" . esc_html($badge[5]) . " - ";
                 if ($badge[6] === "") {
                     $content = $content . "in progress";
@@ -181,6 +181,16 @@ function wpendeavouresu_explorer($atts = [], $content = null) {
         $content = $content . "\t</table>\n";
         $content = $content . "</form>\n";
     }
+
+    $content = $content . "<div class=\"modal fade\" id=\"modalExpUpdateEvent\" tabindex=\"-1\" aria-labelledby=\"modalExpUpdateEventLabel\" aria-hidden=\"true\">\n";
+    $content = $content . "\t<div class=\"modal-dialog  modal-lg modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
+    $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalExpUpdateEventLabel\">Retrieving data</h5>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
+    $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-body\" id=\"modalExpUpdateEventBody\">\n";
+    $content = $content . "\t\t\t<h5>Retrieving Data</h5>\n";
+    $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-footer\">\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-secondary\" id=\"btnCloseEvent\" data-dismiss=\"modal\">Close</button>\n";
+    $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
 
     // always return
     return $content;
@@ -454,7 +464,7 @@ function wpendeavouresu_getexplorer() {
             $content['ExpTypeDateStart'] = esc_html('Date not set');
         }
         $wpdb->flush();
-        $sql = "SELECT B.BadgeID, B.IconPath, CONCAT(B.Name, ' (', S.Description, ', ', T.Description, ')'), B.Description, E.ExpBadgeID, E.DateStart, E.DateEnd  ";
+        $sql = "SELECT B.BadgeID, B.IconPath, CONCAT(B.Name, ' (', T.Description, ')'), B.Description, E.ExpBadgeID, E.DateStart, E.DateEnd  ";
         $sql = $sql . "FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T, exp1_expbadges E ";
         $sql = $sql . "WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID AND B.BadgeID = E.BadgeID AND E.ExpID = " . $expID . " ";
         $sql = $sql . "ORDER BY B.BadgeTypeID, B.Description";
@@ -1222,7 +1232,11 @@ function wpendeavouresu_addeventdata() {
                 foreach ($expid as $explorer) {
                     if (intval($explorer['value']) == 0) break;
                     // Check that there is an expbadges record for this explorer and this badge. If there isn't one, create one
-                    $sql = "CALL GetExpBadgeID (" . intval($explorer['value']) . ", " . intval($selBadge) . ", '" . $dateStart . "')";
+                    if (empty($dateEnd)) {
+                        $sql = "CALL GetExpBadgeID (" . intval($explorer['value']) . ", " . intval($selBadge) . ", '" . $dateStart . "', NULL)";
+                    } else {
+                        $sql = "CALL GetExpBadgeID (" . intval($explorer['value']) . ", " . intval($selBadge) . ", '" . $dateStart . "', '" . $dateEnd . "')";
+                    }
                     $content["SQLReqtID"] = $sql;
                     $dbresult = $wpdb->get_results($sql, ARRAY_N);
                     $expbadgeID = $dbresult[0][0];

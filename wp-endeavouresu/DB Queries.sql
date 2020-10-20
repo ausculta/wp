@@ -262,3 +262,6 @@ SELECT X.ExpID, U.display_name, B.Description, X.BadgeID, X.DateStart, X.DateEnd
 use endvrwpdb1;
 SELECT E.ExpID, U.display_name FROM edvr1_users U, exp1_explorers E WHERE U.ID = E.ExpWPID AND (E.ExpWPPID1 = 2 OR E.ExpWPPID2 = 2 OR E.ExpWPPID3 = 2)
 SELECT U.ID, U.display_name FROM edvr1_users U WHERE U.ID NOT IN (SELECT ExpWPID FROM exp1_explorers) ORDER BY U.display_name
+Update exp1_exptypes set DateEnd = null where ExpID = 7
+CALL GetAllExplorers()
+update exp1_expbadges set dateend = null where expbadgeID = 24
