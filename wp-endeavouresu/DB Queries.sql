@@ -265,3 +265,6 @@ SELECT U.ID, U.display_name FROM edvr1_users U WHERE U.ID NOT IN (SELECT ExpWPID
 Update exp1_exptypes set DateEnd = null where ExpID = 7
 CALL GetAllExplorers()
 update exp1_expbadges set dateend = null where expbadgeID = 24
+
+
+CALL GetAllPolls()

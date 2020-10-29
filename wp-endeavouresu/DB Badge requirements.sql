@@ -39,6 +39,9 @@ INSERT INTO `endvrwpdb1`.`exp1_badges` (`BadgeStatusID`, `BadgeTypeID`, `Name`, 
 INSERT INTO `endvrwpdb1`.`exp1_badges` (`BadgeStatusID`, `BadgeTypeID`, `Name`, `Description`, `IconPath`, `DateStart`) VALUES ('1', '5', 'Young Leader - Module I', 'Young Leader - Module I', '/assets/badges/yl-modulea.png', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badges` (`BadgeStatusID`, `BadgeTypeID`, `Name`, `Description`, `IconPath`, `DateStart`) VALUES ('1', '5', 'Young Leader - Module J', 'Young Leader - Module J', '/assets/badges/yl-modulea.png', '2010-01-01');
 
+INSERT INTO `endvrwpdb1`.`exp1_badges` (`BadgeStatusID`, `BadgeTypeID`, `Name`, `Description`, `IconPath`, `DateStart`) VALUES ('1', '6', 'Wings - Gliding', 'Wings - Gliding', '/assets/badges/wingsgliding.png', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badges` (`BadgeStatusID`, `BadgeTypeID`, `Name`, `Description`, `IconPath`, `DateStart`) VALUES ('1', '6', 'Wings - Canopy', 'Wings - Canopy', '/assets/badges/wingscanopy.png', '2010-01-01');
+
 
 
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (1, 1, 'Be a member of Explorer Scouts for at least six months.', '2010-01-01');
@@ -92,10 +95,10 @@ INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Des
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (161, 1, 'Young Leader - Module H', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (162, 1, 'Young Leader - Module I', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (163, 1, 'Young Leader - Module J', '2010-01-01');
-INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (12, 1, 'Young Leader - Mission 1', '2010-01-01');
-INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (13, 1, 'Young Leader - Mission 2', '2010-01-01');
-INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (14, 1, 'Young Leader - Mission 3', '2010-01-01');
-INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (15, 1, 'Young Leader - Mission 4', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (12, 1, 'Plan and run a minimum of three games with the section you are volunteering with. At least one game should take place indoors and one outdoors.', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (13, 1, 'Plan and run an activity (not a game) with the section you are volunteering with.', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (14, 1, 'Take the section’s programme ideas to a programme planning meeting.', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (15, 1, 'Take responsibility for organising and running part of the section programme.', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (16, 1, 'Young Leader - Attend all Young Leader training modules', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (16, 1, 'Young Leader - Complete all 4 missions', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (17, 1, 'Young Leader - Belt buckle', '2010-01-01');
@@ -594,3 +597,16 @@ INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Des
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (150, 1, 'Debrief', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (150, 1, 'Presentation', '2010-01-01');
 INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (150, 1, 'Assessment', '2010-01-01');
+
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (164, 1, 'Solo glider launch #1', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (164, 1, 'Solo glider launch #2', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (164, 1, 'Solo glider launch #3', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (164, 1, 'Solo glider launch #4', '2010-01-01');
+
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #1', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #2', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #3', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #4', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #5', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #6', '2010-01-01');
+INSERT INTO `endvrwpdb1`.`exp1_badgereqts` (`BadgeID`, `BadgeReqtStatusID`, `Description`, `DateStart`) VALUES (165, 1, 'Static line jump #7', '2010-01-01');

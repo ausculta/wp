@@ -262,7 +262,7 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
 
     $content = $content . "<div class=\"modal fade\" id=\"modalAddEvent\" tabindex=\"-1\" aria-labelledby=\"modalAddEventLabel\" aria-hidden=\"true\">\n";
-    $content = $content . "\t<div class=\"modal-dialog  modal-lg modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
+    $content = $content . "\t<div class=\"modal-dialog modal-lg modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
     $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalAddEventLabel\">Retrieving data</h5>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
     $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-body\" id=\"modalAddEventBody\">\n";
