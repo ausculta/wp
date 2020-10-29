@@ -90,7 +90,10 @@ function wpendeavourpoll_poll($atts = [], $content = null) {
         
         $sql = "SELECT PollReplyID, ReplyValue, ReplyComment FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
         $dbreply = $wpdb->get_row($sql, ARRAY_N, 0);
-        if (count($dbreply) > 0) $PollReplyID = $dbreply[0];
+        if (count($dbreply) > 0) {
+            $PollReplyID = $dbreply[0];
+            $tokens = explode(";", $dbreply[1]);
+        }
 
         $content = $content . "\t\t\t<form name=\"frmEditReply\" id=\"frmEditReply\" method=\"POST\" action=\"\">\n";
         $content = $content . "<input type=\"hidden\" id=\"PollID\" name=\"PollID\" value=\"" . $PollID . "\">";
@@ -111,11 +114,8 @@ function wpendeavourpoll_poll($atts = [], $content = null) {
                 case 1: // Checkboxes
                     $content = $content . "<tr><td><input type=\"checkbox\" value=\"" . $dboption[0] . "\" name=\"chkPollOption" . $dboption[0] . "\" id=\"chkPollOption" . $dboption[0] . "\"";
                     if (! empty($PollReplyID)) {
-                        $token = strtok($dbreply[1], ";");
-                        while ($token !== null) {
-                            $dbvalue = intval($token);
-                            if ($dboption[0] == $dbvalue) $content = $content . " checked";
-                            $token = strtok(";");
+                        for ($i = 0 ; $i < count($token) ; $i++) {
+                            if ($dboption[0] == intval($token[$i])) $content = $content . " checked";
                         }
                     }
                     $content = $content . "></td><td><label for=\"chkPollOption" . $dboption[0] . "\">" . $dboption[1] . "</label></td></tr>\n";
