@@ -285,6 +285,7 @@ function wpendeavouresu_allexplorers($atts = [], $content = null) {
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnEditType\">Edit Type</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddNA\">Nights Away</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddHike\">Hikes</button>\n";
+    $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddReqt\">Badges Reqt.</button>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#modalUpdateExplorer\" id=\"btnAddBadge\">Badges & Awards</button>\n";
     $content = $content . "\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n";
 
@@ -629,6 +630,7 @@ function wpendeavouresu_updateexplorerdata() {
         }
      
         $wpdb->flush();
+        $content['actiontype'] = $_POST['actiontype'];
         switch ($_POST['actiontype']) {
             case "EditStatus":
                 foreach ($newdata as $dbdata) {
@@ -772,6 +774,20 @@ function wpendeavouresu_updateexplorerdata() {
                 } else {
                     $content['success'] = 0;
                 }
+
+
+                $sql = "SELECT ExpNightAwayID, DateStart, DateEnd, Description, NALocation, NADays FROM exp1_expna WHERE ExpID = " . $expID . " ORDER BY DateStart DESC";
+                $nadata = $wpdb->get_results($sql, ARRAY_N);
+                $expnas = array();
+                if (count($nadata) > 0) {
+                    foreach($nadata as $expna) {
+                        $expnas[] = array('ExpNAID' => esc_html($expna[0]), 'DateStart' => esc_html($expna[1]), 'DateEnd' => esc_html($expna[2]), 'Description' => esc_html($expna[3]), 'NALocation' => esc_html($expna[4]), 'NADays' => esc_html($expna[5]));
+                    }
+                }
+                $content['NANo'] = count($expnas);
+                $wpdb->flush();      
+        
+                if (count($expnas) > 0) $content['ExpNAs'] = $expnas;
                 break;
             case "AddHike":
                 foreach ($newdata as $dbdata) {
@@ -800,6 +816,20 @@ function wpendeavouresu_updateexplorerdata() {
                 } else {
                     $content['success'] = 0;
                 }
+
+                $sql = "SELECT ExpHikeID, Description, HikeDays, DateStart, DateEnd FROM exp1_exphikes WHERE ExpID = " . $expID . " ORDER BY DateStart DESC";
+                $hikedata = $wpdb->get_results($sql, ARRAY_N);
+                $exphikes = array();
+                if (count($hikedata) > 0) {
+                    foreach($hikedata as $hike) {
+                        $exphikes[] = array('ExpHikeID' => esc_html($hike[0]), 'Description' => esc_html($hike[1]), 'HikeDays' => esc_html($hike[2]), 'DateStart' => esc_html($hike[3]), 'DateEnd' => esc_html($hike[4]));
+                    }
+                }
+                $content['HikeNo'] = count($exphikes);
+                if (count($exphikes) > 0) $content['ExpHikes'] = $exphikes;
+
+                $wpdb->flush();
+        
                 break;
             case "AddBadge":
             case "UpdateBadge":
@@ -848,7 +878,8 @@ function wpendeavouresu_updateexplorerdata() {
                         $content["SQL_INSERT"] = $sql;
                         $wpdb->query($sql);
                         $wpdb->flush();
-                        $sql = "SELECT ExpBadgeID FROM exp1_expbadges WHERE ExpID = " . intval($ExpID) . " AND BadgeID = " . intval($BadgeID);
+
+                        $sql = "SELECT ExpBadgeID FROM exp1_expbadges WHERE ExpID = " . intval($expID) . " AND BadgeID = " . intval($BadgeID);
                         $content["SQL_SELECT"] = $sql;
                         $dbresult = $wpdb->get_results($sql, ARRAY_N);
                         if (count($dbresult) > 0) {
@@ -902,6 +933,23 @@ function wpendeavouresu_updateexplorerdata() {
                         $wpdb->query($sql);
                         $wpdb->flush();        
                     }
+
+                    $sql = "SELECT B.BadgeID, B.IconPath, CONCAT(B.Name, ' (', T.Description, ')'), B.Description, E.ExpBadgeID, E.DateStart, E.DateEnd  ";
+                    $sql = $sql . "FROM exp1_badges B, exp1_badgestatus S, exp1_badgetypes T, exp1_expbadges E ";
+                    $sql = $sql . "WHERE T.BadgeTypeID = B.BadgeTypeID AND S.BadgeStatusID = B.BadgeStatusID AND B.BadgeID = E.BadgeID AND E.ExpID = " . $expID . " ";
+                    $sql = $sql . "ORDER BY B.BadgeTypeID, B.Description";
+                    $badgedata = $wpdb->get_results($sql, ARRAY_N);
+                    $expbadges = array();
+                    if (count($badgedata) > 0) {
+                        foreach($badgedata as $badge) {
+                            $expbadges[] = array('BadgeID' => esc_html($badge[0]), 'IconPath' => esc_html($badge[1]),
+                                                'Description' => esc_html($badge[2]), 'BadgeDescription' => esc_html($badge[3]),
+                                                'ExpBadgeID' => esc_html($badge[4]), 'DateStart' => esc_html($badge[5]), 'DateEnd' => esc_html($badge[6]) );
+                        }
+                    }
+                    $content['BadgesNo'] = count($expbadges);
+                    $wpdb->flush();
+                    if (count($expbadges) > 0) $content['ExpBadges'] = $expbadges;                    
                 }
                 break;
            default:

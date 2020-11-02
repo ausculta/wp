@@ -114,8 +114,8 @@ function wpendeavourpoll_poll($atts = [], $content = null) {
                 case 1: // Checkboxes
                     $content = $content . "<tr><td><input type=\"checkbox\" value=\"" . $dboption[0] . "\" name=\"chkPollOption" . $dboption[0] . "\" id=\"chkPollOption" . $dboption[0] . "\"";
                     if (! empty($PollReplyID)) {
-                        for ($i = 0 ; $i < count($token) ; $i++) {
-                            if ($dboption[0] == intval($token[$i])) $content = $content . " checked";
+                        for ($i = 0 ; $i < count($tokens) ; $i++) {
+                            if ($dboption[0] == intval($tokens[$i])) $content = $content . " checked";
                         }
                     }
                     $content = $content . "></td><td><label for=\"chkPollOption" . $dboption[0] . "\">" . $dboption[1] . "</label></td></tr>\n";
@@ -493,16 +493,16 @@ function wpendeavourpoll_savereply() {
         foreach ($formdata as $formentry) {
             switch ($formentry['name']) {
                 case "PollID":
-                    $PollID = $formentry['value'];
+                    $PollID = intval($formentry['value']);
                     break;
                 case "OptionOptionID":
-                    $OptionID = $formentry['value'];
+                    $OptionID = intval($formentry['value']);
                     break;
                 case "txtPollComment":
-                    $OptionComment = $formentry['value'];
+                    $OptionComment = sanitize_text_field($formentry['value']);
                     break;
                 case "rdoPollOption":
-                    $rdoPollOption = $formentry["value"];
+                    $rdoPollOption = intval($formentry["value"]);
                     break;
                 default:
                     if (strlen($formentry['name']) < 4) break;
@@ -514,7 +514,7 @@ function wpendeavourpoll_savereply() {
                             $chkValue = $chkValue . $formentry['value'] . ";";
                         }
                     } elseif (strncmp($formentry['name'], "txtPollOption", 13) == 0) {
-                        $txtValue = $formentry['value'];
+                        $txtValue = sanitize_text_field($formentry['value']);
                     }
                     break;
             }
@@ -525,11 +525,11 @@ function wpendeavourpoll_savereply() {
             $sql = "SELECT PollReplyID FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
             $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
             if (! empty($rdoPollOption)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $rdoPollOption . "', ReplyComment='" . $OptionComment . "', DateSubmitted = CURRENT_TIMESTAMP WHERE PollReplyID = " . $dbdata[0];
+                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $rdoPollOption . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
             } elseif (! empty($chkValue)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $chkValue . "', ReplyComment='" . $OptionComment . "', DateSubmitted = CURRENT_TIMESTAMP WHERE PollReplyID = " . $dbdata[0];
+                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $chkValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
             } elseif (! empty($txtValue)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $txtValue . "', ReplyComment='" . $OptionComment . "', DateSubmitted = CURRENT_TIMESTAMP WHERE PollReplyID = " . $dbdata[0];
+                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $txtValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
             }
         } else {
             if (! empty($rdoPollOption)) {
@@ -537,9 +537,9 @@ function wpendeavourpoll_savereply() {
             } elseif (! empty($chkValue)) {
                 // remove the final semicolon
                 $chkValue = substr($chkValue, 0, strlen($chkValue) - 1);
-                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . $chkValue . "', '" . $OptionComment . "', CURRENT_TIMESTAMP)";
+                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($chkValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
             } elseif (! empty($txtValue)) {
-                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . $txtValue . "', '" . $OptionComment . "', CURRENT_TIMESTAMP)";
+                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($txtValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
             }
            
         }

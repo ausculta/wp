@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + newdata.Name + "\">";
             newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
             newcontent = newcontent + "\t\t\t\t\t<tr><td>Login:</td><td>" + newdata.Login + " (" + newdata.Status + " - " + newdata.ExpType + " - " + newdata.DateStart + " - " + newdata.DateEnd + ")</td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td name=\"tdExpBadges\" id=\"tdExpBadges\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.BadgesNo > 0) {
                 for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
@@ -81,13 +81,13 @@ jQuery(document).ready(function($) {
                 }
             }
             newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td name=\"tdExpNAs\" id=\"tdExpNAs\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.NANo > 0) {
                 for (i = 0 ; i < newdata.ExpNAs.length ; i++)
                 newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpNAs[i].Description + " ("+ newdata.ExpNAs[i].NALocation + ": " + newdata.ExpNAs[i].NADays + " night(s) - " + newdata.ExpNAs[i].DateStart + " - " + newdata.ExpNAs[i].DateEnd  + ")</td><tr>";
             }
             newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td>\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td name=\"tdExpHikes\" id=\"tdExpHikes\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
             if (newdata.HikeNo > 0) {
                 for (i = 0 ; i < newdata.ExpHikes.length ; i++)
                 newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpHikes[i].Description + " (" + newdata.ExpHikes[i].HikeDays + " hikes: " + newdata.ExpHikes[i].DateStart + " - " + newdata.ExpHikes[i].DateEnd  + ")</td><tr>";
@@ -329,6 +329,44 @@ jQuery(document).ready(function($) {
             } else {
                 document.getElementById("modalUpdateExplorerBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
             }
+            // REFRESH THE MODAL WINDOW WITH THE UPDATED DATA
+            switch (newdata.actiontype) {
+                case "AddNA":
+                    newcontent = "\t\t\t\t\t\t<table class=\"table\">\n"; 
+                    if (newdata.NANo > 0) {
+                        for (i = 0 ; i < newdata.ExpNAs.length ; i++)
+                        newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpNAs[i].Description + " ("+ newdata.ExpNAs[i].NALocation + ": " + newdata.ExpNAs[i].NADays + " night(s) - " + newdata.ExpNAs[i].DateStart + " - " + newdata.ExpNAs[i].DateEnd  + ")</td><tr>";
+                    }
+                    newcontent = newcontent + "\t\t\t\t\t\t</table>\n";
+                    document.getElementById('tdExpNAs').innerHTML = newcontent;
+                    break;
+                case "AddHike":
+                    newcontent = "\t\t\t\t\t<table class=\"table\">\n"; 
+                    if (newdata.HikeNo > 0) {
+                        for (i = 0 ; i < newdata.ExpHikes.length ; i++)
+                        newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpHikes[i].Description + " (" + newdata.ExpHikes[i].HikeDays + " hikes: " + newdata.ExpHikes[i].DateStart + " - " + newdata.ExpHikes[i].DateEnd  + ")</td><tr>";
+                    }
+                    newcontent = newcontent + "\t\t\t\t\t\t</table>\n";
+                    document.getElementById('tdExpHikes').innerHTML = newcontent;
+                    break;
+                case "AddBadge":
+                    newcontent = "\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+                    if (newdata.BadgesNo > 0) {
+                        for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
+                            newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
+                            newcontent = newcontent + "<td>"  + newdata.ExpBadges[i].DateStart + " - ";
+                            if (newdata.ExpBadges[i].DateEnd === "") {
+                                newcontent = newcontent + "in progress";
+                            } else {
+                                newcontent = newcontent + newdata.ExpBadges[i].DateEnd;
+                            }
+                            newcontent = newcontent + "</td><tr>\n";
+                        }
+                    }
+                    newcontent = newcontent + "\t\t\t\t\t\t</table>\n";
+                    document.getElementById('tdExpBadges').innerHTML = newcontent;
+                    break
+            } 
         });
     });
     // Add badge button on main plugin page (adds to selected explorers explorer)
@@ -500,6 +538,7 @@ jQuery(document).ready(function($) {
                 alert("Event added succesfully (" + newdata.success + " event rows added).");
                 $('#modalAddEvent').modal('hide');
             } else {
+                alert("An error occured: the database was not updated.");
                 document.getElementById("modalAddEventBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
             }
         });
