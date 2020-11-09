@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
         });
     });
     // Click handler for explorer list on modalAddExplorer
-     $('#btnSaveExplorers').click(function() {
+    $( '#btnSaveExplorers' ).click(function() {
         var i = 0;
         var nonexpform = $("#frmAllExplorers").serializeArray()
         rdoType = document.getElementById("frmAllExplorers")["rdoType"].value;
@@ -51,10 +51,10 @@ jQuery(document).ready(function($) {
             window.location.reload();
         });
     });
-    $('#btnCloseExplorers').click(function() {
+    $( '#btnCloseExplorers' ).click(function() {
         window.location.reload();
     })
-     // Click handler for explorer list on main plugin page: displays and explorer (badges, hikes, NA, etc.)
+     // Click handler for explorer list on main plugin page: displays an explorer (badges, hikes, NA, etc.)
     $( ".explorer" ).click(function() {
         var newcontent;
         $.get(ajaxdata_getexplorer.ajax_url, {
@@ -62,45 +62,10 @@ jQuery(document).ready(function($) {
             action: "get_explorer",
             ExpID: this.id,
         }, function(newdata) {
-            newcontent = "\t\t\t\t<form name=\"frmExplorer\" id=\"frmExplorer\" method=\"POST\" action=\"\">\n";
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + newdata.ExpID + "\">\n"
-            newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + newdata.Name + "\">";
-            newcontent = newcontent + "\t\t\t\t<table class=\"table-sm\">\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td>Login:</td><td>" + newdata.Login + " (" + newdata.Status + " - " + newdata.ExpType + " - " + newdata.DateStart + " - " + newdata.DateEnd + ")</td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td name=\"tdExpBadges\" id=\"tdExpBadges\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
-            if (newdata.BadgesNo > 0) {
-                for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
-                    newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
-                    newcontent = newcontent + "<td>"  + newdata.ExpBadges[i].DateStart + " - ";
-                    if (newdata.ExpBadges[i].DateEnd === "") {
-                        newcontent = newcontent + "in progress";
-                    } else {
-                        newcontent = newcontent + newdata.ExpBadges[i].DateEnd;
-                    }
-                    newcontent = newcontent + "</td><tr>\n";
-                }
-            }
-            newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td name=\"tdExpNAs\" id=\"tdExpNAs\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
-            if (newdata.NANo > 0) {
-                for (i = 0 ; i < newdata.ExpNAs.length ; i++)
-                newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpNAs[i].Description + " ("+ newdata.ExpNAs[i].NALocation + ": " + newdata.ExpNAs[i].NADays + " night(s) - " + newdata.ExpNAs[i].DateStart + " - " + newdata.ExpNAs[i].DateEnd  + ")</td><tr>";
-            }
-            newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td name=\"tdExpHikes\" id=\"tdExpHikes\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
-            if (newdata.HikeNo > 0) {
-                for (i = 0 ; i < newdata.ExpHikes.length ; i++)
-                newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpHikes[i].Description + " (" + newdata.ExpHikes[i].HikeDays + " hikes: " + newdata.ExpHikes[i].DateStart + " - " + newdata.ExpHikes[i].DateEnd  + ")</td><tr>";
-            }
-            newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t</table>\n";
-            newcontent = newcontent + "\t\t\t\t</form>\n";
-        
-            document.getElementById("modalGetExplorerLabel").innerHTML = newdata.Name + " (id: " + newdata.ExpID + ")";
-            document.getElementById("modalGetExplorerBody").innerHTML = newcontent;
+            updateExplorerView(newdata);
         });
     });
-    $('#btnExplorerClose').click(function() {
+    $( '#btnExplorerClose' ).click(function() {
         window.location.reload();
     });
     // Edit Status button on modalGetExplorer (edits a single explorer) 
@@ -304,7 +269,11 @@ jQuery(document).ready(function($) {
             }
             newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required=\"required\"></td></tr>\n";
-            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required=\"required\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required=\"required\"></td></tr>\n";           
+            newcontent = newcontent + "\t\t\t\t<tr class=\"align-text-top\"><td>Badge Issued:</td><td>";
+            newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\" checked> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+            newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\"> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            newcontent = newcontent + "</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             document.getElementById("modalUpdateExplorerLabel").innerHTML = expName + " (id: " + expID + ")";
@@ -312,7 +281,7 @@ jQuery(document).ready(function($) {
         });
     });
     // 
-    $( "#btnUpdateSave").click(function() {
+    $( "#btnUpdateSave" ).click(function() {
         var i = 0;
         var formdata = $("#frmExplorerData").serializeArray();
         var updatetype = document.getElementById("UpdateType").value;
@@ -360,6 +329,11 @@ jQuery(document).ready(function($) {
                             } else {
                                 newcontent = newcontent + newdata.ExpBadges[i].DateEnd;
                             }
+                            if (newdata.ExpBadges[i].BadgeIssued == 1) {
+                                newcontent = newcontent + "</td><td>Issued";
+                            } else {
+                                newcontent = newcontent + "</td><td>Not issued";
+                            }                
                             newcontent = newcontent + "</td><tr>\n";
                         }
                     }
@@ -369,7 +343,7 @@ jQuery(document).ready(function($) {
             } 
         });
     });
-    // Add badge button on main plugin page (adds to selected explorers explorer)
+    // Add badge button on main plugin page (adds to selected explorers)
     $( "#btnAddEventBadge" ).click(function() {
         var newcontent;
         $.get(ajaxdata_geteventdata.ajax_url, {
@@ -401,6 +375,11 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\" required></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\" required></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr class=\"align-text-top\"><td>Badge Issued:</td><td>";
+            newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\" checked> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+            newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\"> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            newcontent = newcontent + "</td></tr>\n";
+
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             // console.log(newcontent);
@@ -408,8 +387,8 @@ jQuery(document).ready(function($) {
             document.getElementById("modalAddEventBody").innerHTML = newcontent;
         });
     });
-   // Add NA button on main plugin page (adds to all selected explorers explorer)
-   $( "#btnAddEventNA" ).click(function() {
+    // Add NA button on main plugin page (adds to all selected explorers explorer)
+    $( "#btnAddEventNA" ).click(function() {
         var newcontent;
         $.get(ajaxdata_geteventdata.ajax_url, {
             _ajax_nonce: ajaxdata_geteventdata.nonce,
@@ -469,6 +448,15 @@ jQuery(document).ready(function($) {
             newcontent = newcontent + "\t\t\t\t<tr><td>Req'ts:</td><td name=\"tdBadgeReqts\" id=\"tdBadgeReqts\">Select a badge to load requirements.</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>Start:</td><td><input type=\"date\" id=\"dateStart\" name=\"dateStart\"></td></tr>\n";
             newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
+            newcontent = newcontent + "\t\t\t\t<tr class=\"align-text-top\"><td>Badge Issued:</td><td>";
+            if (newdata.BadgeIssued == 1) {
+                newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\"> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+                newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\" checked> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            } else {
+                newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\" checked> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+                newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\"> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            }
+            newcontent = newcontent + "</td></tr>\n";
             newcontent = newcontent + "\t\t\t\t</table>\n";
             newcontent = newcontent + "\t\t\t\t</form>\n";
             // console.log(newcontent);
@@ -477,7 +465,7 @@ jQuery(document).ready(function($) {
         });
     });  
     // Add Hike button on main plugin page (adds to all selected explorers explorer)
-   $( "#btnAddEventHike" ).click(function() {
+    $( "#btnAddEventHike" ).click(function() {
         $.get(ajaxdata_geteventdata.ajax_url, {
             _ajax_nonce: ajaxdata_geteventdata.nonce,
             action: "get_eventdata",
@@ -505,7 +493,7 @@ jQuery(document).ready(function($) {
             document.getElementById("modalAddEventBody").innerHTML = newcontent;
         });
     });
-    $("#btnUpdateEvent").click(function() {
+    $( "#btnUpdateEvent" ).click(function() {
         var i = 0;
         var formdata = $("#frmUpdateEvent").serializeArray();
         var updatetype = document.getElementById("UpdateType").value;
@@ -516,14 +504,17 @@ jQuery(document).ready(function($) {
             dbdata: formdata,
         }, function(newdata) {
             if (newdata.success == 1) {
-                alert("Information updated succesfully.");
+                if (newdata.BadgesNo > 0) {
+                    badgecontent = getExplorerBadgeTable(newdata);
+                    document.getElementById("tdExpBadges").innerHTML = badgecontent;
+                }
                 $('#modalUpdateEvent').modal('hide');
             } else {
                 document.getElementById("modalUpdateEventBody").innerHTML = "<h5 class=\"text-align-center\">An error occured: the database was not updated.</h5>\n";
             }
         });
     });
-    $( "#btnSaveEvent").click(function() {
+    $( "#btnSaveEvent" ).click(function() {
         var i = 0;
         var formdata = $("#frmAddEvent").serializeArray();
         var updatetype = document.getElementById("AddEventType").value;
@@ -543,7 +534,7 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    $("body").on('change', 'select.expbadgereqts', function() {
+    $( "body" ).on('change', 'select.expbadgereqts', function() {
         $.get(ajaxdata_getbadgereqts.ajax_url, {
             _ajax_nonce: ajaxdata_getbadgereqts.nonce,
             action: "get_badgereqts",
@@ -562,7 +553,7 @@ jQuery(document).ready(function($) {
             document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
     });
-    $("body").on('change', 'select.badgereqts', function() {
+    $( "body" ).on('change', 'select.badgereqts', function() {
         $.get(ajaxdata_getbadgereqts.ajax_url, {
             _ajax_nonce: ajaxdata_getbadgereqts.nonce,
             action: "get_badgereqts",
@@ -581,7 +572,7 @@ jQuery(document).ready(function($) {
             document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
     });
-    $("body").on('click', '.badge', function() {
+    $( "body" ).on('click', '.badges', function() {
         var newcontent;
         $.get(ajaxdata_getexpeventdata.ajax_url, {
             _ajax_nonce: ajaxdata_getexpeventdata.nonce,
@@ -604,6 +595,15 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td><input type=\"date\" id=\"dateEnd\" name=\"dateEnd\"></td></tr>\n";
             }
+            newcontent = newcontent + "\t\t\t\t<tr class=\"align-text-top\"><td>Badge Issued:</td><td>";
+            if (newdata.BadgeIssued == 1) {
+                newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\"> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+                newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\" checked> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            } else {
+                newcontent = newcontent + "<input type=\"radio\" id=\"BadgeNotIssued\" name=\"BadgeIssued\" required=\"required\" value=\"0\" checked> <label for=\"BadgeNotIssued\">Badge not issued to explorer</label>";
+                newcontent = newcontent + "<br /><input type=\"radio\" id=\"BadgeIssued\" name=\"BadgeIssued\" required=\"required\" value=\"1\"> <label for=\"BadgeIssued\">Badge issued to explorer</label>";
+            }
+            newcontent = newcontent + "</td></tr>\n";
             if (newdata.BadgeReqtsNo > 0) {
                 for (var i = 0 ; i < newdata.BadgeReqtsNo ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" name=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" value=\"" + newdata.BadgeReqts[i].BadgeReqtID + "\"";
@@ -628,7 +628,7 @@ jQuery(document).ready(function($) {
             document.getElementById("modalUpdateEventBody").innerHTML = newcontent;
         });
     });
-    $("body").on('click', '.expbadge', function() {
+    $( "body" ).on('click', '.expbadge', function() {
         var newcontent;
         $.get(ajaxdata_getexpeventdata.ajax_url, {
             _ajax_nonce: ajaxdata_getexpeventdata.nonce,
@@ -645,6 +645,11 @@ jQuery(document).ready(function($) {
             } else {
                 newcontent = newcontent + "\t\t\t\t<tr><td>End:</td><td>In progress</td></tr>\n";
             }
+            newcontent = newcontent + "\t\t\t\t<tr><td>Badge issued:</td><td>";
+            if (newdata.BadgeIssued == 0) {
+                newcontent = newcontent + "Not";
+            }
+            newcontent = newcontent + " issued</td></tr>\n";
             if (newdata.BadgeReqtsNo > 0) {
                 for (var i = 0 ; i < newdata.BadgeReqtsNo ; i++) {
                     newcontent = newcontent + "\t\t\t\t\t<tr><td><input type=\"checkbox\" id=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" name=\"chk" + newdata.BadgeReqts[i].BadgeReqtID + "\" value=\"" + newdata.BadgeReqts[i].BadgeReqtID + "\"";
@@ -668,7 +673,7 @@ jQuery(document).ready(function($) {
             document.getElementById("modalExpUpdateEventBody").innerHTML = newcontent;
         });
     });
-    $("body").on('click', '.nightaway', function() {
+    $( "body" ).on('click', '.nightaway', function() {
         $.get(ajaxdata_getbadgereqts.ajax_url, {
             _ajax_nonce: ajaxdata_getbadgereqts.nonce,
             action: "get_badgereqts",
@@ -687,7 +692,7 @@ jQuery(document).ready(function($) {
             document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
     });
-    $("body").on('click', '.hike', function() {
+    $( "body" ).on('click', '.hike', function() {
         $.get(ajaxdata_getbadgereqts.ajax_url, {
             _ajax_nonce: ajaxdata_getbadgereqts.nonce,
             action: "get_badgereqts",
@@ -706,10 +711,68 @@ jQuery(document).ready(function($) {
             document.getElementById("tdBadgeReqts").innerHTML = newcontent;
         });
     });
-    $('.modal').on("hidden.bs.modal", function (e) { 
+    $( '.modal' ).on("hidden.bs.modal", function (e) { 
         if ($('.modal:visible').length) { 
             $('body').addClass('modal-open');
         }
     });
 });
 
+function updateExplorerView(newdata) {
+    let newcontent;
+
+    newcontent = "\t\t\t\t<form name=\"frmExplorer\" id=\"frmExplorer\" method=\"POST\" action=\"\">\n";
+    newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerID\" name=\"ExplorerID\" value=\"" + newdata.ExpID + "\">\n"
+    newcontent = newcontent + "\t\t\t\t<input type=\"hidden\" id=\"ExplorerName\" name=\"ExplorerName\" value=\"" + newdata.Name + "\">";
+    newcontent = newcontent + "\t\t\t\t<table class=\"table\">\n";
+    newcontent = newcontent + "\t\t\t\t\t<tr><td>Login:</td><td>" + newdata.Login + " (" + newdata.Status + " - " + newdata.ExpType + " - " + newdata.DateStart + " - " + newdata.DateEnd + ")</td></tr>\n";
+    newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.BadgesNo + " Awards / Badges:</td><td name=\"tdExpBadges\" id=\"tdExpBadges\"></td></tr>\n";
+    newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.NightsAway + " nights away:</td><td name=\"tdExpNAs\" id=\"tdExpNAs\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+    if (newdata.NANo > 0) {
+        for (i = 0 ; i < newdata.ExpNAs.length ; i++) {
+            newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpNAs[i].Description + " ("+ newdata.ExpNAs[i].NALocation + ": " + newdata.ExpNAs[i].NADays + " night(s) - " + newdata.ExpNAs[i].DateStart + " - " + newdata.ExpNAs[i].DateEnd  + ")</td><tr>";
+        }
+    }
+    newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
+    newcontent = newcontent + "\t\t\t\t\t<tr><td class=\"align-text-top\">" + newdata.Hikes + " Hikes:</td><td name=\"tdExpHikes\" id=\"tdExpHikes\">\n\t\t\t\t\t\t<table class=\"table\">\n"; 
+    if (newdata.HikeNo > 0) {
+        for (i = 0 ; i < newdata.ExpHikes.length ; i++) {
+            newcontent = newcontent + "\t\t\t\t\t\t<tr><td>" + newdata.ExpHikes[i].Description + " (" + newdata.ExpHikes[i].HikeDays + " hikes: " + newdata.ExpHikes[i].DateStart + " - " + newdata.ExpHikes[i].DateEnd  + ")</td><tr>";
+        }
+    }
+    newcontent = newcontent + "\t\t\t\t\t\t</table></td></tr>\n";
+    newcontent = newcontent + "\t\t\t\t</table>\n";
+    newcontent = newcontent + "\t\t\t\t</form>\n";
+
+    badgecontent = getExplorerBadgeTable(newdata);
+
+    document.getElementById("modalGetExplorerLabel").innerHTML = newdata.Name + " (id: " + newdata.ExpID + ")";
+    document.getElementById("modalGetExplorerBody").innerHTML = newcontent;
+    document.getElementById("tdExpBadges").innerHTML = badgecontent;
+}
+
+function getExplorerBadgeTable(newdata) {
+    let badgetable = "\t\t\t\t\t\t<table class=\"table table-sm\">\n"; 
+    badgetable = badgetable + "\t\t\t\t\t<thead><tr><th scope=\"col\">Badge</th><th scope=\"col\">Description</th><th scope=\"col\">Dates</th><th scope=\"col\">Issued</th></tr></thead>\n\t\t\t\t\t<tbody>\n"; 
+    // class=\"badge\" 
+    if (newdata.BadgesNo > 0) {
+        for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
+            badgetable = badgetable + "\t\t\t\t\t\t<tr class=\"badges\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\"><th scope=\"row\"><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\" /></th><td>" + newdata.ExpBadges[i].Description + "</td>";
+            badgetable = badgetable + "<td>"  + newdata.ExpBadges[i].DateStart + " - ";
+            if (newdata.ExpBadges[i].DateEnd === "") {
+                badgetable = badgetable + "in progress";
+            } else {
+                badgetable = badgetable + newdata.ExpBadges[i].DateEnd;
+            }
+            if (newdata.ExpBadges[i].BadgeIssued == 1) {
+                badgetable = badgetable + "</td><td>Issued";
+            } else {
+                badgetable = badgetable + "</td><td>Not issued";
+            }
+            badgetable = badgetable + "</td></tr>\n";
+        }
+    }
+    badgetable = badgetable + "\t\t\t\t\t\t</tbody></table>";
+
+    return badgetable;
+}

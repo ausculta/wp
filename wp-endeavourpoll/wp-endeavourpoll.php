@@ -53,11 +53,11 @@ function wpendeavourpoll_textdomain() {
 }
 
 function wpendeavourpoll_activate() {
-
+    // Nothing to do, assume tables have been created already
 }
 
 function wpendeavourpoll_deactivate() {
-
+    // Nothing to do
 }
 
 function wpendeavourpoll_poll($atts = [], $content = null) {
@@ -167,11 +167,11 @@ function wpendeavourpoll_allpolls($atts = [], $content = null) {
     $content = $content . "\t\t\t<th scope=\"col\">No. options</th>\n";
     $content = $content . "\t\t\t<th scope=\"col\">Type</th>\n";
     $content = $content . "\t\t\t<th scope=\"col\">Status</th>\n";
+    $content = $content . "\t\t\t<th scope=\"col\">Replies</th>\n";
 
     $content = $content . "\t\t</tr>\n\t</thead>\n";
 
     // Table content
-    $wpdb->flush();
     $sql = "CALL GetAllPolls()";
     // $sql = "SELECT P.PollID, P.PollTitle, P.PollDescription, P.DeadlineDate, P.DeadlineTime, P.NoOptions, T.Description, S.Description, P.Deleted ";
     // $sql = $sql . "FROM	exp1_polls P, exp1_polltypes T, exp1_pollstatus S ";
@@ -188,9 +188,9 @@ function wpendeavourpoll_allpolls($atts = [], $content = null) {
             $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[4]) . "</td>";
             $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[5]) . "</td>";
             $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[6]) . "</td>";
-            $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[7]) . "</td></tr>\n";
+            $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[7]) . "</td>";
+            $content = $content . "<td class=\"text-center\">" . esc_html($dbrow[8]) . "</td></tr>\n";
         }
-        $wpdb->flush();
     } else {
         $content = $content . "\t\t<tr><td colspan=8 class=\"text-align-center\">There are no poll records in the database.</td></tr>\n";
     }
@@ -201,7 +201,7 @@ function wpendeavourpoll_allpolls($atts = [], $content = null) {
     $content = $content . "</div>\n";
    
     $content = $content . "<div class=\"modal fade\" id=\"modalEditPoll\" tabindex=\"-1\" aria-labelledby=\"modalEditPollLabel\" aria-hidden=\"true\">\n";
-    $content = $content . "\t<div class=\"modal-dialog modal-lg modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
+    $content = $content . "\t<div class=\"modal-dialog modal-xl modal-dialog-centered\">\n\t\t<div class=\"modal-content\">\n\t\t\t<div class=\"modal-header\">\n";
     $content = $content . "\t\t\t\t<h5 class=\"modal-title\" id=\"modalEditPollLabel\">Add new / Edit existing poll</h5>\n";
     $content = $content . "\t\t\t\t<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n";
     $content = $content . "\t\t\t</div>\n\t\t\t<div class=\"modal-body\" id=\"modalEditPollBody\">\n";
@@ -243,12 +243,10 @@ function wpendeavourpoll_getpoll() {
 
     if (! empty($PollID)) {      
         if ($PollID > 0) {
-            $wpdb->flush();
             $sql = "SELECT PollID, PollTitle, PollDescription, DeadlineDate, DeadlineTime, NoOptions, PollStatusID, PollTypeID ";
             $sql = $sql . "FROM exp1_polls WHERE Deleted = 0 AND PollID = " . $PollID;
-            $content['SQL1'] = $sql;
+            // $content['SQL1'] = $sql;
             $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
-            $wpdb->flush();
             if (count($dbdata) > 0) {
                 $content = array(
                     'PollID'=> esc_html($dbdata[0]),
@@ -259,13 +257,13 @@ function wpendeavourpoll_getpoll() {
                     'NoOptions' => esc_html($dbdata[5]),
                     'PollStatusID' => esc_html($dbdata[6]),
                     'PollTypeID' => esc_html($dbdata[7]));
+                $PollTypeID = $dbdata[7];
             } else {
                 $content['PollID'] = $PollID;
                 $content = array ( 'PollTitle' => 'PollID not found in database');
             }
             $sql = "SELECT PollOptionID, Description FROM exp1_polloptions WHERE Deleted = 0 AND PollID = " . $PollID . " ORDER BY Description ASC";
             $dbdata = $wpdb->get_results($sql, ARRAY_N);
-            $wpdb->flush();
             $PollOptionsData = array();
             if (count($dbdata) > 0) {
                 foreach($dbdata as $dbrow) {
@@ -273,19 +271,45 @@ function wpendeavourpoll_getpoll() {
                 }
             }
             $content['PollOptionsNo'] = count($PollOptionsData);
-            $content['SQL4'] = $sql;
+            // $content['SQL4'] = $sql;
 
             $sql = "SELECT R.PollReplyID, R.WPID, R.ReplyValue, R.ReplyComment, R.DateSubmitted, U.display_name FROM exp1_pollreplies R, " . $wpdb->base_prefix . "users U WHERE R.Deleted = 0 AND U.ID = R.WPID AND R.PollID = " . $PollID;
             $dbdata = $wpdb->get_results($sql, ARRAY_N);
-            $wpdb->flush();
             $PollRepliesData = array();
             if (count($dbdata) > 0) {
                 foreach($dbdata as $dbrow) {
-                    $PollRepliesData[] = array('PollReplyID' => $dbrow[0], 'WPID' => $dbrow[1], 'ReplyValue' => $dbrow[2], 'ReplyComment' => esc_html($dbrow[3]), 'ReplyDate' => $dbrow[4], 'display_name' => esc_html($dbrow[5]));
+                    $pollreply = "";
+                    switch ($PollTypeID) {
+                        case 1: // Checkboxex
+                            if (! empty($dbrow[2])) {
+                                $tokens = explode(";", $dbrow[2]);
+                                for ($i = 0 ; $i < count($tokens) ; $i++) {
+                                    foreach($PollOptionsData as $polloption) {
+                                        if (intval($tokens[$i]) ==  $polloption['PollOptionID']) $pollreply = $pollreply . $polloption['OptionDescription'] . "<br />";
+                                    }            
+                                }
+                            } else {
+                                $pollreply("No data");
+                            }
+                            break;
+                        case 2: // radio button
+                            foreach($PollOptionsData as $polloption) {
+                                if (intval($dbrow[2]) ==  $polloption['PollOptionID']) $pollreply = $polloption['OptionDescription'];
+                            }            
+                            break;
+                        default:
+                            if (! empty($dbrow[2])) {
+                                $pollreply = $dbrow[2];
+                            } else {
+                                $pollreply = "No data";
+                            }
+                            break;
+                    }
+                    $PollRepliesData[] = array('PollReplyID' => $dbrow[0], 'WPID' => $dbrow[1], 'ReplyValue' => $pollreply, 'ReplyComment' => esc_html($dbrow[3]), 'ReplyDate' => $dbrow[4], 'display_name' => esc_html($dbrow[5]));
                 }
             }
             $content['PollRepliesNo'] = count($PollRepliesData);
-            $content['SQL5'] = $sql;
+            // $content['SQL5'] = $sql;
 
             if (count($PollOptionsData) > 0) $content['PollOptionsData'] = $PollOptionsData;
             if (count($PollRepliesData) > 0) $content['PollRepliesData'] = $PollRepliesData;
@@ -296,7 +320,6 @@ function wpendeavourpoll_getpoll() {
 
         $sql = "SELECT PollStatusID, Description FROM exp1_pollstatus WHERE Deleted = 0 ORDER BY Description ASC";
         $dbdata = $wpdb->get_results($sql, ARRAY_N);
-        $wpdb->flush();
         $PollStatusData = array();
         if (count($dbdata) > 0) {
             foreach($dbdata as $dbrow) {
@@ -304,11 +327,10 @@ function wpendeavourpoll_getpoll() {
             }
         }
         $content['PollStatusNo'] = count($PollStatusData);
-        $content['SQL2'] = $sql;
+        // $content['SQL2'] = $sql;
 
         $sql = "SELECT PollTypeID, Description FROM exp1_polltypes WHERE Deleted = 0 ORDER BY Description ASC";
         $dbdata = $wpdb->get_results($sql, ARRAY_N);
-        $wpdb->flush();
         $PollTypesData = array();
         if (count($dbdata) > 0) {
             foreach($dbdata as $dbrow) {
@@ -316,7 +338,7 @@ function wpendeavourpoll_getpoll() {
             }
         }
         $content['PollTypesNo'] = count($PollTypesData);
-        $content['SQL3'] = $sql;
+        // $content['SQL3'] = $sql;
 
         if (count($PollStatusData) > 0) $content['PollStatusData'] = $PollStatusData;
         if (count($PollTypesData) > 0) $content['PollTypesData'] = $PollTypesData;
@@ -373,9 +395,8 @@ function wpendeavourpoll_savepoll($atts = [], $content = null) {
             $sql = $sql . ", DeadlineDate = '" . $DeadlineDate . "', DeadlineTime = '" . $DeadlineTime . "' WHERE PollID = " . $PollID;
         }
         $wpdb->query($sql);
-        $wpdb->flush();
         $content['success'] = 1;
-        $content['SQL'] = $sql;
+        // $content['SQL'] = $sql;
     }
 
     return $content;
@@ -392,13 +413,10 @@ function wpendeavourpoll_getoption() {
     $content['PollOptionID'] = $PollOptionID;
 
     if (! empty($PollOptionID)) {
-        // Flush the DB cache and run the query
         if ($PollOptionID > 0) {
-            $wpdb->flush();
             $sql = "SELECT PollOptionID, Description, PollID FROM exp1_polloptions WHERE Deleted = 0 AND PollOptionID = " . $PollOptionID . " ORDER BY Description ASC";
-            $content['SQL'] = $sql;
+            // $content['SQL'] = $sql;
             $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
-            $wpdb->flush();
             if (count($dbdata) > 0) {
                 $content = array(
                     'PollID'=> esc_html($dbdata[2]),
@@ -470,7 +488,7 @@ function wpendeavourpoll_saveoption() {
         }
         $content['PollOptionsNo'] = count($PollOptionsData);
         if (count($PollOptionsData) > 0) $content['PollOptionsData'] = $PollOptionsData;
-        $content['SQL4'] = $sql;
+        // $content['SQL4'] = $sql;
     }    
     wp_send_json($content);
 
@@ -519,32 +537,48 @@ function wpendeavourpoll_savereply() {
                     break;
             }
         }
-        $sql = "SELECT COUNT(*) FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
+
+        $sql = "SELECT CONCAT(DeadlineDate, ' ', DeadlineTime) FROM exp1_polls WHERE PollID = " . $PollID;
         $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
-        if ($dbdata[0] > 0) {
-            $sql = "SELECT PollReplyID FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
-            $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
-            if (! empty($rdoPollOption)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $rdoPollOption . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
-            } elseif (! empty($chkValue)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $chkValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
-            } elseif (! empty($txtValue)) {
-                $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $txtValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
+        if (! empty($dbdata[0])) {
+            $PollEndDate = date_create($dbdata[0], timezone_open("Europe/London"));
+            $TimestampEnd = $PollEndDate->format('U');           
+            if ($TimestampEnd > time()) {
+                $sql = "SELECT COUNT(*) FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
+                $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
+                if ($dbdata[0] > 0) {
+                    $sql = "SELECT PollReplyID FROM exp1_pollreplies WHERE WPID = " . get_current_user_id() . " AND PollID = " . $PollID;
+                    $dbdata = $wpdb->get_row($sql, ARRAY_N, 0);
+                    if (! empty($rdoPollOption)) {
+                        $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $rdoPollOption . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
+                    } elseif (! empty($chkValue)) {
+                        $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $chkValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
+                    } elseif (! empty($txtValue)) {
+                        $sql = "UPDATE exp1_pollreplies SET ReplyValue='" . $txtValue . "', ReplyComment='" . $OptionComment . "' WHERE PollReplyID = " . $dbdata[0];
+                    }
+                } else {
+                    if (! empty($rdoPollOption)) {
+                        $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . $rdoPollOption . "', '" . $OptionComment . "', CURRENT_TIMESTAMP)";
+                    } elseif (! empty($chkValue)) {
+                        // remove the final semicolon
+                        $chkValue = substr($chkValue, 0, strlen($chkValue) - 1);
+                        $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($chkValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
+                    } elseif (! empty($txtValue)) {
+                        $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($txtValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
+                    }
+                
+                }
+                $wpdb->query($sql);
+                $content['success'] = 1;
+            } else {
+                $content['success'] = 0;
+                $content['error'] = "Deadline has passed, the poll can no longer be replied to.";    
             }
         } else {
-            if (! empty($rdoPollOption)) {
-                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . $rdoPollOption . "', '" . $OptionComment . "', CURRENT_TIMESTAMP)";
-            } elseif (! empty($chkValue)) {
-                // remove the final semicolon
-                $chkValue = substr($chkValue, 0, strlen($chkValue) - 1);
-                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($chkValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
-            } elseif (! empty($txtValue)) {
-                $sql = "INSERT INTO exp1_pollreplies(PollID, WPID, ReplyValue, ReplyComment, DateSubmitted) VALUES (" . $PollID . ", " . get_current_user_id() . ", '" . intval($txtValue) . "', '" . sanitize_text_field($OptionComment) . "', CURRENT_TIMESTAMP)";
-            }
-           
+            $content['success'] = 0;
+            $content['error'] = "Deadline is empty, the poll cannot be replied to.";
         }
-        $wpdb->query($sql);
-        $content['success'] = 1;
+
     } else {
         $content['success'] = 0;
     }

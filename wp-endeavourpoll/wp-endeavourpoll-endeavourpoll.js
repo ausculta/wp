@@ -99,6 +99,7 @@ jQuery(document).ready(function($) {
     });
     $( "#btnSaveReply" ).click(function() {
         var formdata = $("#frmEditReply").serializeArray();
+        
 
         $.post(ajaxdata_savereply.ajax_url, {
             _ajax_nonce: ajaxdata_savereply.nonce,
@@ -110,7 +111,11 @@ jQuery(document).ready(function($) {
             if (newdata.success > 0) {
                 alert ("Reply recorded.");
             } else {
-                alert ("Error recording your ")
+                if (newdata.error != null) {
+                    alert ("Error recording your reply: " + newdata.error);
+                } else {
+                    alert ("Error recording your reply.");
+                }
             }
         });
     });
@@ -179,12 +184,14 @@ jQuery(document).ready(function($) {
             if (newdata.PollRepliesNo > 0) {
                 // There are options for this poll
                 repliescontent = "\t\t\t\t\t<table class=\"table-sm\" border=0>\n";
+                repliescontent = repliescontent + "\t\t\t\t\t<thead><tr><th scope=\"col\">Author</th><th scope=\"col\">Replies</th><th scope=\"col\">Comments</th><th scope=\"col\">Date</th></tr></thead>\n";
+                repliescontent = repliescontent + "\t\t\t\t\t<tbody>\n";
                 for (var i = 0 ; i < newdata.PollRepliesNo ; i++) {
-                    repliescontent = repliescontent + "\t\t\t\t\t<tr class=\"pollreply\" data-toggle=\"modal\" data-target=\"#modalEditReply\" id=\"" + newdata.PollRepliesData[0].PollReplyID + "\">\n";
+                    repliescontent = repliescontent + "\t\t\t\t\t<tr class=\"pollreply align-top\" data-toggle=\"modal\" data-target=\"#modalEditReply\" id=\"" + newdata.PollRepliesData[0].PollReplyID + "\">\n";
                     repliescontent = repliescontent + "\t\t\t\t\t<td>" + newdata.PollRepliesData[i].display_name + "</td><td>" + newdata.PollRepliesData[i].ReplyValue + "</td><td>" + newdata.PollRepliesData[i].ReplyComment + "</td><td>" + newdata.PollRepliesData[i].ReplyDate + "</td>\n";
                     repliescontent = repliescontent + "\t\t\t\t\t</tr>\n";
                 }
-                repliescontent = repliescontent + "\t\t\t\t\t</table>\n";
+                repliescontent = repliescontent + "\t\t\t\t\t</tbody>\n\t\t\t\t\t</table>\n";
             } else {
                 repliescontent = "No replies for this poll, yet.";
             }

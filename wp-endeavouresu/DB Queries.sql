@@ -268,3 +268,5 @@ update exp1_expbadges set dateend = null where expbadgeID = 24
 
 
 CALL GetAllPolls()
+
+SELECT P.PollID, P.PollTitle, P.Description, P.DeadlineDate, P.DeadlineTime, P.NoOptions, T.Description, S.Description, P.Deleted FROM exp1_polls P, exp1_polltypes T, exp1_pollstatus S WHERE P.Deleted = 0 AND T.PollTypeID = P.PollTypeID AND S.PollStatusID = P.PollStatusID ORDER BY P.DeadlineDate, P.DeadlineTime DESC;
