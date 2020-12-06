@@ -319,26 +319,8 @@ jQuery(document).ready(function($) {
                     document.getElementById('tdExpHikes').innerHTML = newcontent;
                     break;
                 case "AddBadge":
-                    newcontent = "\n\t\t\t\t\t\t<table class=\"table\">\n"; 
-                    if (newdata.BadgesNo > 0) {
-                        for (i = 0 ; i < newdata.ExpBadges.length ; i++) {
-                            newcontent = newcontent + "\t\t\t\t\t\t<tr class=\"badge\" data-toggle=\"modal\" data-target=\"#modalUpdateEvent\" id=\"" + newdata.ExpBadges[i].ExpBadgeID + "\"><td><img height=\"25px\" src=\"" + newdata.ExpBadges[i].IconPath + "\"></td><td>" + newdata.ExpBadges[i].Description + "</td>";
-                            newcontent = newcontent + "<td>"  + newdata.ExpBadges[i].DateStart + " - ";
-                            if (newdata.ExpBadges[i].DateEnd === "") {
-                                newcontent = newcontent + "in progress";
-                            } else {
-                                newcontent = newcontent + newdata.ExpBadges[i].DateEnd;
-                            }
-                            if (newdata.ExpBadges[i].BadgeIssued == 1) {
-                                newcontent = newcontent + "</td><td>Issued";
-                            } else {
-                                newcontent = newcontent + "</td><td>Not issued";
-                            }                
-                            newcontent = newcontent + "</td><tr>\n";
-                        }
-                    }
-                    newcontent = newcontent + "\t\t\t\t\t\t</table>\n";
-                    document.getElementById('tdExpBadges').innerHTML = newcontent;
+                    badgecontent = getExplorerBadgeTable(newdata);
+                    document.getElementById('tdExpBadges').innerHTML = badgecontent;
                     break
             } 
         });
