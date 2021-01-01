@@ -71,7 +71,7 @@ RUN { \
 # VOLUME /var/www/html /home /var/log
 
 # Variables for 5.4-en_GB although we're now downloading latest-en_GB that doesn't have a stable SHA1 sum.
-ENV WORDPRESS_VERSION 5.4-en_GB	
+ENV WORDPRESS_VERSION 5.6-en_GB	
 ENV WORDPRESS_SHA1 7a00c4faf89442f660d6167be5820c7cf2d654d6
 
 RUN a2enmod rewrite expires; \
