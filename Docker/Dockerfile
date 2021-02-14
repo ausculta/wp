@@ -105,6 +105,11 @@ RUN chmod 644 /root/.bashrc; \
 	tar xvzfC /tmp/letsencrypt.endeavouresu.tar.gz /; \
 	mkdir /var/www/website; \
 	mkdir /var/www/website/assets; \
+	mkdir /var/www/website/wp-content; \
+	mkdir /var/www/website/wp-content/assets; \
+	mkdir /var/www/website/wp-content/uploads; \
+	mkdir /var/www/website/wp-content/uploads/assets; \
+	mkdir /var/www/website/assets; \
 	chmod 755 /var/www/website; \
 	chmod 755 /var/www/website/assets; \
 	tar xvfC /tmp/website.tar.gz /; \

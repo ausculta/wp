@@ -7,6 +7,8 @@ services:
       - ${WEBAPP_STORAGE_HOME}/LogFiles:/var/log
       - ${WEBAPP_STORAGE_HOME}/site/wwwroot:/var/www/html
       - ${WEBAPP_STORAGE_HOME}/site/wwwroot/assets:/var/www/website/assets
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot/assets:/var/www/website/wp-content/assets
+      - ${WEBAPP_STORAGE_HOME}/site/wwwroot/assets:/var/www/website/wp-content/uploads/assets
     restart: always
     ports:
       - 8080:80
