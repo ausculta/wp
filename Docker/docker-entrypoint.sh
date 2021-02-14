@@ -266,6 +266,8 @@ EOPHP
 	fi
 
 	if [ -d /var/www/website ]; then 
+		ln -s /var/www/website/assets /var/www/website/wp-content/assets
+		ln -s /var/www/website/assets /var/www/website/wp-content/uploads/assets
 		echo "Leaving /var/www/website"
 		popd
 	fi
