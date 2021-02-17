@@ -55,35 +55,35 @@
               } 
               wp_nav_menu( $menu_args );
             ?>
-			</nav>
+			    </nav>
         </div> <!-- /navbar -->
         <h3 class="text-center m-0 p-0">Endeavour Explorer Scout Unit</h3>
         <p class="text-right m-0 p-0">By Land... By Sea... By Air...</p>
-    <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0" >
-      <button class="navbar-toggler" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menumain-navbar" aria-controls="menumain-navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <nav class="collapse navbar-collapse bg-transparent justify-content-start" id="menumain-navbar" role="navigation" aria-label="Main Menu">
-        <?php
-          $menu_args = array(
-            'theme_location'    => 'menumain',
-            'depth'             => 3, // 1 = no dropdowns, 2 = with dropdowns
-            'container'         => false,
-            // 'container'         => 'div',
-            // 'container_class'   => 'collapse navbar-collapse bg-transparent',
-            // 'container_id'      => 'bs_menumain-navbar',
-            'menu_class'        => 'navbar-nav m-0 p-0',
-            'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
-            'walker'            => new WP_Bootstrap_Navwalker(),
-          );
-          if ($logedin) { 
-            $menu_args['menu'] = 'menu_users';
-          } else {
-            $menu_args['menu'] = 'menu_visitors';
-          }
-          wp_nav_menu( $menu_args );
-        ?>
-      </nav>
-    </div> <!-- /navbar -->
+        <div id="main_navbar" class="navbar navbar-expand-md navbar-light m-0 p-0" >
+          <button class="navbar-toggler" type="button" style="font-size:0.75rem;" data-toggle="collapse" data-target="#menumain-navbar" aria-controls="menumain-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <nav class="collapse navbar-collapse bg-transparent justify-content-start" id="menumain-navbar" role="navigation" aria-label="Main Menu">
+            <?php
+              $menu_args = array(
+                'theme_location'    => 'menumain',
+                'depth'             => 3, // 1 = no dropdowns, 2 = with dropdowns
+                'container'         => false,
+                // 'container'         => 'div',
+                // 'container_class'   => 'collapse navbar-collapse bg-transparent',
+                // 'container_id'      => 'bs_menumain-navbar',
+                'menu_class'        => 'navbar-nav m-0 p-0',
+                'fallback_cb'       => 'WP_Bootstrap_Navwalker::fallback',
+                'walker'            => new WP_Bootstrap_Navwalker(),
+              );
+              if ($logedin) { 
+                $menu_args['menu'] = 'menu_users';
+              } else {
+                $menu_args['menu'] = 'menu_visitors';
+              }
+              wp_nav_menu( $menu_args );
+            ?>
+          </nav>
+        </div> <!-- /navbar -->
       </div> <!-- /col -->
     </div> <!-- /row -->
