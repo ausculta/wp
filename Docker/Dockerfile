@@ -1,7 +1,7 @@
 FROM php:7.4-apache-buster
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
-RUN apt list
+# RUN apt list
 
 RUN set -ex; \
 	\
@@ -143,7 +143,7 @@ RUN chmod 644 /usr/local/etc/php/php.ini; \
 
 EXPOSE 80 2222
 
-RUN apt list
+# RUN apt list
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
