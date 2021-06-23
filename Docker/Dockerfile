@@ -97,6 +97,7 @@ COPY ssh_setup.sh /tmp
 COPY letsencrypt.endeavouresu.tar.gz /tmp
 # COPY etc.apache2.endeavouresu.tar.gz /tmp
 COPY website.tar.gz /tmp
+RUN	ls -al /tmp
 
 RUN chmod 644 /root/.bashrc; \
 	chmod -R +x /tmp/ssh_setup.sh; \
